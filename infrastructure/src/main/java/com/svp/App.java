@@ -27,8 +27,8 @@ public class App extends Application{
         super.onCreate();
         DatabaseOrmLiteHelper db = new TetDb(this);
 
-        Button b = new Button(this);
-        b.setOnClickListener(v->v.setBackgroundResource(0));
+//        Button b = new Button(this);
+//        b.setOnClickListener(v->v.setBackgroundResource(0));
 
     }
 

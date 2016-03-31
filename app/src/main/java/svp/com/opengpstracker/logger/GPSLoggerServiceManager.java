@@ -305,6 +305,7 @@ public class GPSLoggerServiceManager
                         {
 //                     Log.d( TAG, "onServiceConnected() "+ Thread.currentThread().getId() );
                             GPSLoggerServiceManager.this.mGPSLoggerRemote = IGPSLoggerServiceRemote.Stub.asInterface( service );
+
                             mBound = true;
                         }
                         if( mOnServiceConnected != null )

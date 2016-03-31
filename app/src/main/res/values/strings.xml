@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Don\'t miss places</string>
     <string name="title_activity_maps">Map</string>
+
+    <string name="service_connectiondisabled"></string>
+    <string name="voiceover_speaking"></string>
 </resources>
