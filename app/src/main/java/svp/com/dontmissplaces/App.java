@@ -8,15 +8,18 @@ import com.svp.infrastructure.mvpvs.PresenterContainer;
 import com.svp.infrastructure.mvpvs.ViewStateContainer;
 import com.svp.infrastructure.mvpvs.viewstate.IViewState;
 
+import svp.com.dontmissplaces.db.Repository;
 import svp.com.dontmissplaces.presenters.MapsPresenter;
 
 public class App extends Application {
     @Override
     public void onCreate() {
+        final Repository repository = new Repository(this);
+
         PresenterContainer.Register(MapsActivity.class, new PresenterContainer.IPresenterCreator() {
             @Override
             public IPresenter create() {
-                return new MapsPresenter();
+                return new MapsPresenter(repository);
             }
         });
 

@@ -33,6 +33,7 @@ public class PresenterContainer {
                 presenter = presenters.get(type);
             }else{
                 presenter = p.create();
+                presenters.put(type,presenter);
             }
             press.add(presenter);
         //}

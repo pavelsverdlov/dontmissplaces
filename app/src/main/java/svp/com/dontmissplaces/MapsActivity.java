@@ -1,7 +1,11 @@
 package svp.com.dontmissplaces;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.os.Bundle;
@@ -14,8 +18,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.svp.infrastructure.common.PermissionUtils;
 import com.svp.infrastructure.mvpvs.view.FragmentActivityView;
 import com.svp.infrastructure.mvpvs.viewstate.ActivityViewState;
@@ -25,10 +32,10 @@ import svp.com.dontmissplaces.presenters.MapsPresenter;
 
 public class MapsActivity
         extends FragmentActivityView<MapsPresenter>
-        implements  OnMapReadyCallback,
-                    GoogleMap.OnMyLocationButtonClickListener,
-                    ActivityCompat.OnRequestPermissionsResultCallback {
-
+        implements OnMapReadyCallback,
+        GoogleMap.OnMyLocationButtonClickListener,
+        GoogleMap.OnMyLocationChangeListener,
+        ActivityCompat.OnRequestPermissionsResultCallback {
 
     public static class ViewState extends ActivityViewState<MapsActivity> {
 
@@ -36,12 +43,25 @@ public class MapsActivity
             super(view);
         }
 
+        public LocationManager getLocationManager(){
+            return (LocationManager)view.getSystemService(Context.LOCATION_SERVICE);
+        }
+
+        public void addPolyline(PolylineOptions options){
+            view.mMap.addPolyline(options);
+        }
+        public void moveCamera(LatLng latLng){
+            view.mMap.addMarker(new MarkerOptions().position(latLng).title("Marker in Sydney"));
+            view.mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        }
+
+
         @Override
         protected void restore() {
 
         }
 
-        public void stateTest(){
+        public void stateTest() {
             Snackbar.make(view.getWindow().getDecorView().getRootView(),
                     "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
@@ -62,10 +82,11 @@ public class MapsActivity
             // First incarnation of this activity.
             mapFragment.setRetainInstance(true);
         }
-
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         mapFragment.getMapAsync(this);
     }
 
+    static CameraPosition cameraPosition;
 
     /**
      * This callback is triggered when the map is ready to be used.
@@ -78,28 +99,26 @@ public class MapsActivity
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-
         mMap.setBuildingsEnabled(true);
         mMap.setIndoorEnabled(true);
-        mMap.setMyLocationEnabled(true);
+        //mMap.setMyLocationEnabled(true);
         //mMap.setTrafficEnabled(false);
 
-        UiSettings mUiSettings = mMap.getUiSettings();
-        mUiSettings.setZoomControlsEnabled(true);
-        mUiSettings.setCompassEnabled(true);
-        mUiSettings.setMyLocationButtonEnabled(true);
-        mUiSettings.setScrollGesturesEnabled(true);
-        mUiSettings.setZoomGesturesEnabled(true);
-        mUiSettings.setTiltGesturesEnabled(true);
-        mUiSettings.setRotateGesturesEnabled(true);
+        getPresenter().onMapReady(mMap.getUiSettings());
 
-        mUiSettings.setIndoorLevelPickerEnabled(true);
+        if(cameraPosition !=null){
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
 
+        enableMyLocation();
+        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition cp) {
+                cameraPosition = cp;
+            }
+        });
         mMap.setOnMyLocationButtonClickListener(this);
+        mMap.setOnMyLocationChangeListener(this);
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
@@ -108,7 +127,7 @@ public class MapsActivity
                         getString(R.string.google_maps_key),
                         new GoogleMapsPlaceService.IGetPlaceCallback() {
 
-                });
+                        });
                 /*
                 IndoorBuilding building = mMap.getFocusedBuilding();
                 if (building != null) {
@@ -125,13 +144,13 @@ public class MapsActivity
                 }*/
             }
         });
-        enableMyLocation();
     }
 
-
-
     //#startregion
-
+    @Override
+    public void onMyLocationChange(Location location) {
+        getPresenter().onMyLocationChange(location);
+    }
     @Override
     public boolean onMyLocationButtonClick() {
         Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();

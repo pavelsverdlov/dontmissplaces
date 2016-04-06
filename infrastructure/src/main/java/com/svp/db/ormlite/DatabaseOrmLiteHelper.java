@@ -40,4 +40,15 @@ public abstract class DatabaseOrmLiteHelper extends OrmLiteSqliteOpenHelper {
     protected abstract void onTableCreate(SQLiteDatabase db,ConnectionSource connectionSource);
     protected abstract void onTableUpdate(SQLiteDatabase db,ConnectionSource connectionSource);
 
+    public void vacuum() {
+        new Thread(){
+            @Override
+            public void run(){
+                SQLiteDatabase sqldb = getWritableDatabase();
+                sqldb.execSQL("VACUUM");
+            }
+        }.start();
+    }
+
+
 }

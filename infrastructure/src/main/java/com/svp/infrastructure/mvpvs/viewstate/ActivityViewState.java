@@ -1,6 +1,7 @@
 package com.svp.infrastructure.mvpvs.viewstate;
 
 import android.app.Activity;
+import android.widget.Toast;
 
 import com.svp.infrastructure.mvpvs.view.IActivityView;
 import com.svp.infrastructure.mvpvs.view.IViewAction;
@@ -20,4 +21,8 @@ public abstract class ActivityViewState<V extends Activity & IActivityView> impl
     }
 
     protected abstract void restore();
+
+    public Toast getToast(CharSequence text){
+        return Toast.makeText(view,text,Toast.LENGTH_SHORT);
+    }
 }
