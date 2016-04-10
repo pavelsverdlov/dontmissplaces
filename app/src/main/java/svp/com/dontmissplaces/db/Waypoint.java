@@ -10,7 +10,7 @@ public class Waypoint {
     private double longitude;
     /** The recorded time */
     long time;
-    /** The speed in meters per second */
+    /** The min in meters per second */
     double speed;
     /** The segment _id to which this segment belongs */
     int track;

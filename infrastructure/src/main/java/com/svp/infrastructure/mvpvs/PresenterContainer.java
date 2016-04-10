@@ -1,5 +1,7 @@
 package com.svp.infrastructure.mvpvs;
 
+import android.util.Log;
+
 import com.svp.infrastructure.mvpvs.presenter.IPresenter;
 import com.svp.infrastructure.mvpvs.presenter.Presenter;
 
@@ -32,6 +34,9 @@ public class PresenterContainer {
             if(presenters.containsKey(type)){
                 presenter = presenters.get(type);
             }else{
+                if(p == null){
+                    throw new InternalError("No any present creators for current View");
+                }
                 presenter = p.create();
                 presenters.put(type,presenter);
             }

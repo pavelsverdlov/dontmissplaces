@@ -9,24 +9,41 @@ import com.svp.infrastructure.mvpvs.ViewStateContainer;
 import com.svp.infrastructure.mvpvs.viewstate.IViewState;
 
 import svp.com.dontmissplaces.db.Repository;
+import svp.com.dontmissplaces.presenters.MainMenuPresenter;
 import svp.com.dontmissplaces.presenters.MapsPresenter;
+import svp.com.dontmissplaces.ui.MapView;
 
 public class App extends Application {
     @Override
     public void onCreate() {
-        final Repository repository = new Repository(this);
+        Thread.setDefaultUncaughtExceptionHandler(new svp.com.dontmissplaces.ui.UncaughtExceptionHandler());
 
-        PresenterContainer.Register(MapsActivity.class, new PresenterContainer.IPresenterCreator() {
+        final Repository repository = new Repository(this);
+        //map view
+        PresenterContainer.Register(MapView.class, new PresenterContainer.IPresenterCreator() {
             @Override
             public IPresenter create() {
                 return new MapsPresenter(repository);
             }
         });
-
-        ViewStateContainer.Register(MapsActivity.class, new ViewStateContainer.IViewStateCreator<MapsActivity>() {
+        ViewStateContainer.Register(MapView.class, new ViewStateContainer.IViewStateCreator<MapView>() {
             @Override
-            public IViewState create(MapsActivity view) {
-                return new MapsActivity.ViewState(view);
+            public IViewState create(MapView view) {
+                return new MapView.ViewState(view);
+            }
+        });
+
+        //Main menu
+        PresenterContainer.Register(MainMenuActivity.class, new PresenterContainer.IPresenterCreator() {
+            @Override
+            public IPresenter create() {
+                return new MainMenuPresenter(repository);
+            }
+        });
+        ViewStateContainer.Register(MainMenuActivity.class, new ViewStateContainer.IViewStateCreator<MainMenuActivity>() {
+            @Override
+            public IViewState create(MainMenuActivity view) {
+                return new MainMenuActivity.ViewState(view);
             }
         });
 

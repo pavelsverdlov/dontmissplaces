@@ -8,7 +8,7 @@ import com.svp.infrastructure.mvpvs.viewstate.IViewState;
 import java.util.HashMap;
 
 public class ViewStateContainer {
-    public interface IViewStateCreator<V extends Activity & IActivityView>{
+    public interface IViewStateCreator<V extends IActivityView>{
         IViewState create(V view);
     }
 
@@ -24,7 +24,7 @@ public class ViewStateContainer {
         creators.put(type, cr);
     }
 
-    public <V extends Activity & IActivityView, VS extends IViewState> VS addView(V view) {
+    public <V extends IActivityView, VS extends IViewState> VS addView(V view) {
         Class<?> type = view.getClass();
         if(states.containsKey(type)) {
             states.get(type).refresh(view);
@@ -33,7 +33,7 @@ public class ViewStateContainer {
         }
         return (VS)states.get(type);
     }
-    public <V extends Activity & IActivityView> void removeView(V view) {
+    public <V extends IActivityView> void removeView(V view) {
 //        UUID id = view.getId();
         Class<?> type = view.getClass();
         states.remove(type);

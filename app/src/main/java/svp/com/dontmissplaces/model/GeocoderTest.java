@@ -10,8 +10,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-import svp.com.dontmissplaces.MapsActivity;
-
 /**
  * Created by Pasha on 3/20/2016.
  */

@@ -45,8 +45,8 @@ public class DatabaseStructure {
         public static final String LONGITUDE = "longitude";
         /** The recorded time */
         public static final String TIME = "time";
-        /** The speed in meters per second */
-        public static final String SPEED = "speed";
+        /** The min in meters per second */
+        public static final String SPEED = "min";
         /** The segment _id to which this track belongs */
         public static final String TRACK = "track";
         /** The accuracy of the fix */

@@ -10,8 +10,8 @@ import com.google.android.gms.maps.model.LatLng;
 public final class LocationEx {
     public static double getSpeed(Location prev, Location current) {
         double speed;
-        if (current.hasSpeed()) {//if there is speed from location
-            //get location speed
+        if (current.hasSpeed()) {//if there is min from location
+            //get location min
             speed = current.getSpeed();
         }else{
             speed = Math.sqrt(

@@ -45,7 +45,7 @@
 
         <activity
             android:name=".MainMenuActivity"
-            android:label="@string/title_activity_maps"
+            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -54,10 +54,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MapActivity"
-            android:label="@string/title_activity_main_menu"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MapsActivity"></activity>
+            android:name=".ui.activities.HistoryTracksActivity"
+            android:label="@string/title_activity_history_tracks"
+            android:parentActivityName=".MainMenuActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="svp.com.dontmissplaces.MainMenuActivity" />
+        </activity>
     </application>
 
 </manifest>

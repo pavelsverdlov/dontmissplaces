@@ -8,7 +8,7 @@ import com.svp.infrastructure.mvpvs.viewstate.IViewState;
 
 import java.util.UUID;
 
-public abstract class Presenter<V extends Activity & IActivityView, VS extends IViewState>
+public abstract class Presenter<V extends IActivityView, VS extends IViewState>
         implements IPresenter{
     public static final UUID id = UUID.randomUUID();
     @Override

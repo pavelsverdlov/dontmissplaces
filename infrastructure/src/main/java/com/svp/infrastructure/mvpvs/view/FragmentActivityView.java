@@ -22,12 +22,6 @@ public class FragmentActivityView<P extends Presenter> extends FragmentActivity 
     protected P getPresenter(){
         return prContainer.get(this.getClass());
     }
-    public static final UUID id = UUID.randomUUID();
-
-    @Override
-    public UUID getId() {
-        return id;
-    }
 
     @Override
     public void showError(String stringErrorWrapper) {
@@ -35,7 +29,7 @@ public class FragmentActivityView<P extends Presenter> extends FragmentActivity 
     }
 
     @Override
-    public <V extends Activity & IActivityView> void executeAction(IViewAction<V> action) {
+    public <V extends IActivityView> void executeAction(IViewAction<V> action) {
         action.execute((V) this);
     }
 
