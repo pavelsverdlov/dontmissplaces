@@ -1,5 +1,7 @@
 package svp.com.dontmissplaces.model;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by Pasha on 4/10/2016.
  */
@@ -23,7 +25,19 @@ public class Traffic {
         }
 
         public SpeedTypes getSpeedType(double speed, double dis, long timeSpent) {
+            long seconds = TimeUnit.MILLISECONDS.toSeconds(timeSpent);
+            double speedBySec = speed / seconds;
+            double calcSpeed = dis / timeSpent;
 
+            if(walking.fast.speed.max < speedBySec && speedBySec > walking.slow.speed.min){
+                if(walking.fast.speed.min <= speedBySec){
+                    return SpeedTypes.Fast;
+                }
+                if(walking.custom.speed.min <= speedBySec){
+                    return SpeedTypes.Custom;
+                }
+                return SpeedTypes.Slow;
+            }
             return SpeedTypes.Undefined;
         }
     }

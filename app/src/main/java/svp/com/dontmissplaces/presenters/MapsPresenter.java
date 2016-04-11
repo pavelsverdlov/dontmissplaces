@@ -43,7 +43,7 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> {
         //state.clearLocationManager(locationManager);.removeUpdates(this);
     }
     public void permissionFineLocationReceived(){
-        if(prevLocation  == null) {
+        if(prevLocation == null) {
             prevLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         }
     }
@@ -70,14 +70,14 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> {
 
     public void onMyLocationChange(Location location){
         try {
+            if(prevLocation == null){
+                return;
+            }
 
             Date currentDate = new Date(location.getTime());
             Date prevDate = new Date(prevLocation.getTime());
 
             long diff =  currentDate.getTime() - prevDate.getTime();
-            long seconds = TimeUnit.MILLISECONDS.toSeconds(diff);
-//            long minutes = TimeUnit.MILLISECONDS.toMinutes(diff);
-
             double speed = LocationEx.getSpeed(prevLocation, location);
             double dis = location.distanceTo(prevLocation);
 
@@ -86,29 +86,27 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> {
                 return;
             }
 
-            double speed2 = dis/seconds;
-
-            LatLng latl = LocationEx.getLatLng(location);
-
-
+//            double speed2 = dis/seconds;
 //            DecimalFormat myFormatter = new DecimalFormat("%f%n");
-            String format ="%1$,.2f";
-            state.getSnackbar(
-                      "loc.min: " + String.format(format,location.getSpeed())
-                    + " calc.min: " + String.format(format,speed) + "/" + String.format(format,speed2) + "\n"
-                    + " dis: " + String.format(format,dis) + " secs: " + seconds)
-                    .show();
+//            String format ="%1$,.2f";
+//            state.getSnackbar(
+//                      "loc.min: " + String.format(format,location.getSpeed())
+//                    + " calc.min: " + String.format(format,speed) + "/" + String.format(format,speed2) + "\n"
+//                    + " dis: " + String.format(format,dis) + " secs: " + seconds)
+//                    .show();
 
-//            state.addPolyline(new PolylineOptions()
-//                    .add(new LatLng(prevLocation.getLatitude(), prevLocation.getLongitude()), latl)
-//                    .width(5)
-//                    .color(Color.BLUE)
-//                    .geodesic(true));
+            state.addPolyline(new PolylineOptions()
+                    .add(LocationEx.getLatLng(prevLocation), LocationEx.getLatLng(location))
+                    .width(5)
+                    .color(Color.BLUE)
+                    .geodesic(true));
 
-            prevLocation = location;
+
         }catch (Exception ex){
-//            Throwable cause = ex.getCause();
-            throw ex;
+           Throwable cause = ex.getCause();
+            //throw ex;
+        }finally {
+            prevLocation = location;
         }
     }
 
