@@ -12,4 +12,6 @@
     <dimen name="android_standard_subheading">16sp</dimen>
     <dimen name="android_standard_toolbar_subtitle">48dp</dimen>
     <dimen name="android_standard_list_item">72dp</dimen>
+
+    <dimen name="android_standard_list_item_padding">16dp</dimen>
 </resources>

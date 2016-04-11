@@ -6,12 +6,15 @@ import android.app.Application;
 import com.svp.infrastructure.mvpvs.presenter.IPresenter;
 import com.svp.infrastructure.mvpvs.PresenterContainer;
 import com.svp.infrastructure.mvpvs.ViewStateContainer;
+import com.svp.infrastructure.mvpvs.view.IActivityView;
 import com.svp.infrastructure.mvpvs.viewstate.IViewState;
 
 import svp.com.dontmissplaces.db.Repository;
+import svp.com.dontmissplaces.presenters.HistoryTracksPresenter;
 import svp.com.dontmissplaces.presenters.MainMenuPresenter;
 import svp.com.dontmissplaces.presenters.MapsPresenter;
 import svp.com.dontmissplaces.ui.MapView;
+import svp.com.dontmissplaces.ui.activities.HistoryTracksActivity;
 
 public class App extends Application {
     @Override
@@ -47,6 +50,40 @@ public class App extends Application {
             }
         });
 
+        //History Tracks
+        PresenterContainer.Register(HistoryTracksActivity.class, new PresenterContainer.IPresenterCreator() {
+            @Override
+            public IPresenter create() {
+                return new HistoryTracksPresenter(repository);
+            }
+        });
+        ViewStateContainer.Register(HistoryTracksActivity.class, new ViewStateContainer.IViewStateCreator<HistoryTracksActivity>() {
+            @Override
+            public IViewState create(HistoryTracksActivity view) {
+                return new HistoryTracksActivity.ViewState(view);
+            }
+        });
+
+        Register(HistoryTracksActivity.class,
+                new PresenterContainer.IPresenterCreator() {
+                    @Override
+                    public IPresenter create() {
+                        return new HistoryTracksPresenter(repository);
+                    }
+                },
+                new ViewStateContainer.IViewStateCreator<HistoryTracksActivity>() {
+                    @Override
+                    public IViewState create(HistoryTracksActivity view) {
+                        return new HistoryTracksActivity.ViewState(view);
+                    }
+                });
         super.onCreate();
+    }
+
+    private static <T extends IActivityView> void Register(Class<?> _class,
+                                                           PresenterContainer.IPresenterCreator pcreator,
+                                                           ViewStateContainer.IViewStateCreator<T> stateCreator){
+        PresenterContainer.Register(_class, pcreator);
+        ViewStateContainer.Register(_class, stateCreator);
     }
 }

@@ -2,10 +2,17 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <!-- status bar 300-->
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <!-- app bar 100-->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <!-- 50 -->
+        <item name="android:windowBackground">@color/windowBackground</item>
+
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
+
         <item name="colorAccent">@color/colorAccent</item>
+        <!--<item name="android:textColorPrimary">@android:color/white</item>-->
     </style>
 
     <style name="AppTheme.NoActionBar">

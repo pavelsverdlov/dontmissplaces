@@ -43,6 +43,10 @@ public class MapView
             return (LocationManager)view.activity.getSystemService(Context.LOCATION_SERVICE);
         }
 
+        public boolean checkPermissionFineLocation(){
+            return view.permissions.checkPermissionFineLocation();
+        }
+
         public void addPolyline(PolylineOptions options){
             view.mMap.addPolyline(options);
         }
@@ -71,9 +75,11 @@ public class MapView
 
     private GoogleMap mMap;
     private final FragmentActivity activity;
+    private final ActivityPermissions permissions;
 
-    public MapView(FragmentActivity activity){
+    public MapView(FragmentActivity activity, ActivityPermissions permissions){
         this.activity = activity;
+        this.permissions = permissions;
     }
 
     public void onCreate(Bundle savedInstanceState) {
@@ -107,6 +113,7 @@ public class MapView
         //mMap.setTrafficEnabled(false);
 
         getPresenter().onMapReady(mMap.getUiSettings());
+
         enableMyLocation();
 
         if(cameraPosition !=null){
@@ -162,14 +169,11 @@ public class MapView
     }
 
     public void enableMyLocation() {
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission to access the location is missing.
-            PermissionUtils.requestPermission(activity, Consts.LOCATION_PERMISSION_REQUEST_CODE,
-                    Manifest.permission.ACCESS_FINE_LOCATION, true);
-        } else {
-            // Access to the location has been granted to the app.
+        if(permissions.isFineLocationGranted()) {
             mMap.setMyLocationEnabled(true);
+            getPresenter().permissionFineLocationReceived();
+        }else {
+            mMap.setMyLocationEnabled(false);
         }
     }
     public void onResume() {

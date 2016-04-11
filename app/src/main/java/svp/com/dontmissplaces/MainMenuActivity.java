@@ -22,6 +22,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import svp.com.dontmissplaces.presenters.MainMenuPresenter;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
+import svp.com.dontmissplaces.ui.ActivityPermissions;
 import svp.com.dontmissplaces.ui.Consts;
 import svp.com.dontmissplaces.ui.MapView;
 import svp.com.dontmissplaces.ui.TrackRecordingToolbarView;
@@ -70,13 +71,15 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
     private final MapView mapView;
     private final ActivityCommutator commutator;
+    private final ActivityPermissions permissions;
     private TrackRecordingToolbarView recordingToolbarView;
 
     @Bind(R.id.track_recording_fabtoolbar) com.bowyer.app.fabtransitionlayout.FooterLayout trackRecordingFooter;
     @Bind(R.id.track_recording_start_fab) FloatingActionButton fabTrackRecordingBtn;
 
     public MainMenuActivity(){
-        mapView = new MapView(this);
+        permissions = new ActivityPermissions(this);
+        mapView = new MapView(this,permissions);
         commutator = new ActivityCommutator(this, ActivityCommutator.ActivityOperationResult.MainMenu);
     }
 
@@ -116,10 +119,8 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     }
     @Override
     protected void onResume(){
-        if (mPermissionDenied) {
-            // Permission was not granted, display error dialog.
-            showMissingPermissionError();
-            mPermissionDenied = false;
+        if (this.permissions.fineLocationPermissionDenied) {
+            this.permissions.showMissingPermissionError();// Permission was not granted, display error dialog.
         }
         mapView.onResume();
         super.onResume();
@@ -173,35 +174,18 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         }
     }
 
-
-    /**
-     * Flag indicating whether a requested permission has been denied after returning in
-     * {@link #onRequestPermissionsResult(int, String[], int[])}.
-     */
-    private boolean mPermissionDenied = false;
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        if (requestCode != Consts.LOCATION_PERMISSION_REQUEST_CODE) {
+        if (requestCode != ActivityPermissions.LOCATION_PERMISSION_REQUEST_CODE) {
             return;
         }
-        if (PermissionUtils.isPermissionGranted(permissions, grantResults,
-                Manifest.permission.ACCESS_FINE_LOCATION)) {
-            // Enable the my location layer if the permission has been granted.
-           mapView.enableMyLocation();
-        } else {
-            // Display the missing permission error dialog when the fragments resume.
-            mPermissionDenied = true;
+        if (this.permissions.isFineLocationGranted(permissions, grantResults)){
+            mapView.enableMyLocation();
+        }else{
+            this.permissions.fineLocationPermissionDenied = true;
         }
     }
-    /**
-     * Displays a dialog with error message explaining that the location permission is missing.
-     */
-    private void showMissingPermissionError() {
-        PermissionUtils.PermissionDeniedDialog
-                .newInstance(true).show(getSupportFragmentManager(), "dialog");
-    }
-
     /**
     * Start recording track btn
     */

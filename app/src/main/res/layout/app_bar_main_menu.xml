@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         app:ft_container_gravity="center"
-        app:ft_color="@color/colorPrimary">
+        app:ft_color="@color/colorAccent">
 
         <RelativeLayout
             android:layout_width="match_parent"
