@@ -11,6 +11,9 @@ public class DatabaseStructure {
                         "," + " " + Tracks.NAME          + " " + Tracks.NAME_TYPE +
                         "," + " " + Tracks.CREATION_TIME + " " + Tracks.CREATION_TIME_TYPE +
                         ");";
+        public static final String SELECT_ALL = "SELECT * FROM " + Tracks.TABLE + ";";
+
+
     }
 
     public static final class Waypoints extends WaypointsColumns implements android.provider.BaseColumns{

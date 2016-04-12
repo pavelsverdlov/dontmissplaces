@@ -15,7 +15,7 @@ public class TrackView {
     @Bind(R.id.history_tracks_item_text) TextView title;
 
     public void parse(Cursor cursor) {
-
+        //title =
     }
 
     public void initView(View view) {

@@ -153,4 +153,8 @@ public class Repository extends SQLiteOpenHelper {
         return new Track(trackId, name, currentTime);
     }
 
+    public Cursor getCursorTracks() {
+        SQLiteDatabase sqldb = getWritableDatabase();
+        return sqldb.rawQuery(Tracks.SELECT_ALL, null);
+    }
 }

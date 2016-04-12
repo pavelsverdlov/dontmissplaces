@@ -28,7 +28,7 @@ public class HistoryTracksPresenter extends Presenter<HistoryTracksActivity,Hist
     }
 
     public Cursor getCursorTracks(){
-        return null;//repository.getTracks();
+        return repository.getCursorTracks();
     }
 
 
