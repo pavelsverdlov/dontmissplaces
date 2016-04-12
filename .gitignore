@@ -6,3 +6,7 @@
 /build
 /captures
 app/src/debug/res/values/google_maps_api.xml
+
+.idea*/
+infrastructure/infrastructure.iml
+app/app.iml
