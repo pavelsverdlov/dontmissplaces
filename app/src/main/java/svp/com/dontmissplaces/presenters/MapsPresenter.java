@@ -4,14 +4,11 @@ package svp.com.dontmissplaces.presenters;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.CountDownTimer;
 
 import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.svp.infrastructure.mvpvs.presenter.Presenter;
 
-import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -78,11 +75,11 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> {
             Date prevDate = new Date(prevLocation.getTime());
 
             long diff =  currentDate.getTime() - prevDate.getTime();
-            double speed = LocationEx.getSpeed(prevLocation, location);
+            //double speed = LocationEx.getSpeed(prevLocation, location);
             double dis = location.distanceTo(prevLocation);
 
-            Traffic.SpeedTypes speedType = Traffic.walking.getSpeedType(speed, dis, diff);
-            if(speedType == Traffic.SpeedTypes.Undefined){
+            Traffic.CustomMovement movement = Traffic.walking.createMovement(dis, TimeUnit.MILLISECONDS.toSeconds(diff));
+            if(movement.type == Traffic.SpeedTypes.Undefined){
                 return;
             }
 

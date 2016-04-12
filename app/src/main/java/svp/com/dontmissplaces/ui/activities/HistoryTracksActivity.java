@@ -1,14 +1,9 @@
 package svp.com.dontmissplaces.ui.activities;
 
 import android.app.Activity;
-import android.content.Context;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.widget.CursorAdapter;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -18,9 +13,11 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.presenters.HistoryTracksPresenter;
+import svp.com.dontmissplaces.ui.adapters.HistoryCursorAdapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
@@ -47,7 +44,9 @@ public class HistoryTracksActivity extends AppCompatActivityView<HistoryTracksPr
     }
 
 
-    @Bind(R.id.history_tracks_recycler_view) RecyclerView tracksView;
+    @Bind(R.id.history_tracks_view) ListView tracksView;//RecyclerView tracksView;
+
+    private HistoryCursorAdapter cursorAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,18 +70,16 @@ public class HistoryTracksActivity extends AppCompatActivityView<HistoryTracksPr
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
-        tracksView.setHasFixedSize(true);
-
+        //tracksView.setHasFixedSize(true);
         // use a linear layout manager
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        tracksView.setLayoutManager(mLayoutManager);
+//        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+//        tracksView.setLayoutManager(mLayoutManager);
+//        RecyclerView.Adapter mAdapter = new HistoryListAdapter(new String[] {"fd" });
+//        tracksView.setAdapter(mAdapter);
+//        tracksView.setClickable(true);
 
-        RecyclerView.Adapter mAdapter = new HistoryListAdapter(new String[] {"fd" });
-        tracksView.setAdapter(mAdapter);
-
-        tracksView.setClickable(true);
-
-        HistoryTracksPresenter.HistoryCursorAdapter cursorAdapter = new HistoryTracksPresenter.HistoryCursorAdapter(this, getPresenter().getCursorTracks());
+        cursorAdapter = new HistoryCursorAdapter(this, getPresenter().getCursorTracks());
+        tracksView.setAdapter(cursorAdapter);
 
     }
 

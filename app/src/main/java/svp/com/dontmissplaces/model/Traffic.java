@@ -1,7 +1,5 @@
 package svp.com.dontmissplaces.model;
 
-import java.util.concurrent.TimeUnit;
-
 /**
  * Created by Pasha on 4/10/2016.
  */
@@ -13,6 +11,17 @@ public class Traffic {
     );
 
 
+    public static final class CustomMovement{
+        public final Value speed;
+        public final SpeedTypes type;
+        public final Movement defaultSpeeds;
+
+        public CustomMovement(Value speed, SpeedTypes type) {
+            this.speed = speed;
+            this.type = type;
+            this.defaultSpeeds = walking;
+        }
+    }
     public static final class Movement {
         public final SpeedValue slow;
         public final SpeedValue custom;
@@ -23,22 +32,25 @@ public class Traffic {
             this.custom = custom;
             this.fast = fast;
         }
-
-        public SpeedTypes getSpeedType(double speed, double dis, long timeSpent) {
-            long seconds = TimeUnit.MILLISECONDS.toSeconds(timeSpent);
-            double speedBySec = speed / seconds;
-            double calcSpeed = dis / timeSpent;
-
+        /**
+         * @param dis approximate distance in meters
+         * @param seconds approximate time in seconds
+         * */
+        public CustomMovement createMovement(double dis, long seconds) {
+            // meter / sec
+            float speedBySec = (float) (dis / seconds);
+            Value speed = new Value(speedBySec,speedBySec);
+            SpeedTypes type = SpeedTypes.Undefined;
             if(walking.fast.speed.max < speedBySec && speedBySec > walking.slow.speed.min){
                 if(walking.fast.speed.min <= speedBySec){
-                    return SpeedTypes.Fast;
+                    type = SpeedTypes.Fast;
+                }else if(walking.custom.speed.min <= speedBySec){
+                    type = SpeedTypes.Custom;
+                }else {
+                    type = SpeedTypes.Slow;
                 }
-                if(walking.custom.speed.min <= speedBySec){
-                    return SpeedTypes.Custom;
-                }
-                return SpeedTypes.Slow;
             }
-            return SpeedTypes.Undefined;
+            return new CustomMovement(speed,type);
         }
     }
     public enum SpeedTypes{
