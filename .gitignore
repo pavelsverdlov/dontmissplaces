@@ -10,3 +10,7 @@ app/src/debug/res/values/google_maps_api.xml
 .idea*/
 infrastructure/infrastructure.iml
 app/app.iml
+app/src/main/res/values/google_maps_api.xml
+infrastructure/infrastructure.iml
+app/app.iml
+.idea/misc.xml
