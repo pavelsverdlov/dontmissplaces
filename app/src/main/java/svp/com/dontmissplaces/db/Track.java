@@ -1,5 +1,7 @@
 package svp.com.dontmissplaces.db;
 
+import android.database.Cursor;
+
 public class Track {
     public final long id;
     String name;
@@ -9,6 +11,9 @@ public class Track {
         id = trackId;
         this.name = name;
         this.creationtime = creationtime;
+    }
 
+    public static String getName(Cursor cursor){
+        return cursor.getString(cursor.getColumnIndex(DatabaseStructure.TracksColumns.NAME));
     }
 }

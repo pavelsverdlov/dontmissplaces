@@ -17,6 +17,8 @@
     </LinearLayout>
 
     <ListView
+        android:choiceMode="singleChoice"
+        android:listSelector="#666666"
         android:clickable="true"
         android:focusable="true"
         android:id="@+id/history_tracks_view"

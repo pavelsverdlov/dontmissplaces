@@ -77,10 +77,13 @@ public class HistoryTracksActivity extends AppCompatActivityView<HistoryTracksPr
 //        RecyclerView.Adapter mAdapter = new HistoryListAdapter(new String[] {"fd" });
 //        tracksView.setAdapter(mAdapter);
 //        tracksView.setClickable(true);
+    }
 
+    @Override
+    public void onStart(){
+        super.onStart();
         cursorAdapter = new HistoryCursorAdapter(this, getPresenter().getCursorTracks());
         tracksView.setAdapter(cursorAdapter);
-
     }
 
     public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.ViewHolder> {

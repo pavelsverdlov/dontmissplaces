@@ -4,21 +4,19 @@ import android.database.Cursor;
 import android.view.View;
 import android.widget.TextView;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import svp.com.dontmissplaces.R;
+import com.svp.infrastructure.common.ViewExtensions;
 
-/**
- * Created by Pasha on 4/11/2016.
- */
+import svp.com.dontmissplaces.R;
+import svp.com.dontmissplaces.db.Track;
+
 public class TrackView {
-    @Bind(R.id.history_tracks_item_text) TextView title;
+    TextView title;
 
     public void parse(Cursor cursor) {
-        //title =
+        title.setText(Track.getName(cursor));
     }
 
     public void initView(View view) {
-        ButterKnife.bind(view);
+        title = ViewExtensions.findViewById(view,R.id.history_tracks_item_text);
     }
 }

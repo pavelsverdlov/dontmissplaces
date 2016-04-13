@@ -12,6 +12,7 @@ public class DatabaseStructure {
                         "," + " " + Tracks.CREATION_TIME + " " + Tracks.CREATION_TIME_TYPE +
                         ");";
         public static final String SELECT_ALL = "SELECT * FROM " + Tracks.TABLE + ";";
+        public static final String DELETE_ALL = "DELETE FROM " + Tracks.TABLE + ";";
 
 
     }

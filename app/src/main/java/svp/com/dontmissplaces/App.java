@@ -17,11 +17,15 @@ import svp.com.dontmissplaces.ui.MapView;
 import svp.com.dontmissplaces.ui.activities.HistoryTracksActivity;
 
 public class App extends Application {
+    private final Repository repository;
+
+    public App(){
+        Thread.setDefaultUncaughtExceptionHandler(new svp.com.dontmissplaces.ui.UncaughtExceptionHandler());
+        repository = new Repository(this);
+    }
+
     @Override
     public void onCreate() {
-        Thread.setDefaultUncaughtExceptionHandler(new svp.com.dontmissplaces.ui.UncaughtExceptionHandler());
-
-        final Repository repository = new Repository(this);
         //map view
         PresenterContainer.Register(MapView.class, new PresenterContainer.IPresenterCreator() {
             @Override
@@ -85,5 +89,16 @@ public class App extends Application {
                                                            ViewStateContainer.IViewStateCreator<T> stateCreator){
         PresenterContainer.Register(_class, pcreator);
         ViewStateContainer.Register(_class, stateCreator);
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        repository.close();
+    }
+    @Override
+    public void onTerminate(){
+        super.onTerminate();
+        repository.close();
     }
 }

@@ -18,7 +18,7 @@ import svp.com.dontmissplaces.db.DatabaseStructure.TracksColumns;
  * Created by Pasha on 4/2/2016.
  */
 public class Repository extends SQLiteOpenHelper {
-    private static final String dbname ="";
+    private static final String dbname ="dmpdb";
     private static final int dbversion =1;
     private static String TAG = Repository.class.getName();
     public Repository(Context context){
@@ -141,8 +141,14 @@ public class Repository extends SQLiteOpenHelper {
         return updates;
     }
 
-    Track inserTrack(String name){
+
+    public void clearTracks(){
+        SQLiteDatabase sqldb = getWritableDatabase();
+        sqldb.execSQL(Tracks.DELETE_ALL);
+    }
+    public Track insertTrack(String name){
         long currentTime = new Date().getTime();
+
         ContentValues args = new ContentValues();
         args.put(TracksColumns.NAME, name);
         args.put(TracksColumns.CREATION_TIME, currentTime);
@@ -152,9 +158,8 @@ public class Repository extends SQLiteOpenHelper {
 
         return new Track(trackId, name, currentTime);
     }
-
     public Cursor getCursorTracks() {
-        SQLiteDatabase sqldb = getWritableDatabase();
+        SQLiteDatabase sqldb = getReadableDatabase();
         return sqldb.rawQuery(Tracks.SELECT_ALL, null);
     }
 }
