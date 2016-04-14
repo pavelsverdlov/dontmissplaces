@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +13,7 @@ import butterknife.ButterKnife;
 import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.presenters.HistoryTracksPresenter;
 import svp.com.dontmissplaces.ui.adapters.HistoryCursorAdapter;
+import svp.com.dontmissplaces.ui.model.TrackView;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
@@ -77,12 +77,24 @@ public class HistoryTracksActivity extends AppCompatActivityView<HistoryTracksPr
 //        RecyclerView.Adapter mAdapter = new HistoryListAdapter(new String[] {"fd" });
 //        tracksView.setAdapter(mAdapter);
 //        tracksView.setClickable(true);
+
+//        tracksView.setClickable(true);
+//        tracksView.setSelected(true);
+//        tracksView.setItemsCanFocus(true);
     }
 
     @Override
     public void onStart(){
         super.onStart();
         cursorAdapter = new HistoryCursorAdapter(this, getPresenter().getCursorTracks());
+        cursorAdapter.setOnItemClickListener(new HistoryCursorAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view,TrackView track) {
+                view.setSelected(true);
+                Snackbar.make(view, "selected " + track.getHeader().toString(), Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
         tracksView.setAdapter(cursorAdapter);
     }
 

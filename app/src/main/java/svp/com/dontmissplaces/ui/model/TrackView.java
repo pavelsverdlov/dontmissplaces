@@ -19,4 +19,8 @@ public class TrackView {
     public void initView(View view) {
         title = ViewExtensions.findViewById(view,R.id.history_tracks_item_text);
     }
+
+    public CharSequence getHeader() {
+        return title.getText();
+    }
 }

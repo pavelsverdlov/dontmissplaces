@@ -7,9 +7,6 @@ import com.svp.infrastructure.mvpvs.presenter.Presenter;
 import svp.com.dontmissplaces.db.Repository;
 import svp.com.dontmissplaces.ui.activities.HistoryTracksActivity;
 
-/**
- * Created by Pasha on 4/11/2016.
- */
 public class HistoryTracksPresenter extends Presenter<HistoryTracksActivity,HistoryTracksActivity.ViewState> {
 
     private final Repository repository;

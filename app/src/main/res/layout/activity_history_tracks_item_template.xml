@@ -4,28 +4,9 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:background="@android:color/transparent"
-    android:layout_height="wrap_content">
-<!--
-    <android.support.v7.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/history_tracks_item_card"
-        android:layout_marginBottom="1dp"
-        android:layout_gravity="center"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        card_view:cardCornerRadius="0dp"
-        card_view:contentPadding="10dp">
-            <TextView
-                android:id="@+id/history_tracks_item_text"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-    </android.support.v7.widget.CardView>
-    -->
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground">
     <RelativeLayout
-        android:background="@android:color/transparent"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/android_standard_list_item"
         android:padding="@dimen/android_standard_list_item_padding">
@@ -38,7 +19,13 @@
             android:id="@+id/history_tracks_item_text"
             android:layout_marginStart="56dp"
             android:layout_width="fill_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:focusableInTouchMode="true"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:marqueeRepeatLimit ="marquee_forever"
+            android:singleLine="false"
+            android:ellipsize="marquee"
+            />
     </RelativeLayout>
 
     <LinearLayout
