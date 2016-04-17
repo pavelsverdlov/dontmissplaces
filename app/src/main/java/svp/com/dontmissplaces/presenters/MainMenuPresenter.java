@@ -1,5 +1,7 @@
 package svp.com.dontmissplaces.presenters;
 
+import android.location.Location;
+
 import com.svp.infrastructure.mvpvs.presenter.Presenter;
 
 import java.util.Date;
@@ -75,6 +77,11 @@ public class MainMenuPresenter extends Presenter<MainMenuActivity,MainMenuActivi
             }
             elapsedMses += intervalMsec;
             state.updateTrackTime(elapsedMses);
+
+            Location loc = state.getLocation();
+            if(loc != null) {
+                state.updateTrackDispance(loc.toString());
+            }
         }
     }
 }

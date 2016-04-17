@@ -126,7 +126,7 @@ public class MapView
                 cameraPosition = cp;
             }
         });
-        mMap.setOnMyLocationButtonClickListener(this);
+       // mMap.setOnMyLocationButtonClickListener(this);
 
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override

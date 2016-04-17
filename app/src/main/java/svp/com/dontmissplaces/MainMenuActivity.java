@@ -3,6 +3,7 @@ package svp.com.dontmissplaces;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -26,6 +27,7 @@ import svp.com.dontmissplaces.ui.ActivityPermissions;
 import svp.com.dontmissplaces.ui.Consts;
 import svp.com.dontmissplaces.ui.MapView;
 import svp.com.dontmissplaces.ui.TrackRecordingToolbarView;
+import svp.com.opengpstracker.logger.GPSLoggerServiceManager;
 
 public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         implements
@@ -63,6 +65,17 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
                     view.recordingToolbarView.updateTime(timeSpent);
                 }});
         }
+        public void updateTrackDispance(final String dis) {
+            view.runOnUiThread(new Runnable(){
+                @Override
+                public void run() {
+                    view.recordingToolbarView.updateDispance(dis);
+                }});
+        }
+
+        public Location getLocation(){
+            return view.mLoggerServiceManager.getLastWaypoint();
+        }
 
         public void beginRise(){
 
@@ -73,6 +86,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     private final ActivityCommutator commutator;
     private final ActivityPermissions permissions;
     private TrackRecordingToolbarView recordingToolbarView;
+    private GPSLoggerServiceManager mLoggerServiceManager;
 
     @Bind(R.id.track_recording_fabtoolbar) com.bowyer.app.fabtransitionlayout.FooterLayout trackRecordingFooter;
     @Bind(R.id.track_recording_start_fab) FloatingActionButton fabTrackRecordingBtn;
@@ -106,11 +120,13 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         navigationView.setNavigationItemSelectedListener(this);
 
         mapView.onCreate(savedInstanceState);
+        mLoggerServiceManager = new GPSLoggerServiceManager(this);
     }
     @Override
     protected void onStart() {
         mapView.onStart();
         super.onStart();
+        mLoggerServiceManager.startGPSLogging("start");
     }
     @Override
     protected void onStop(){
@@ -124,7 +140,20 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         }
         mapView.onResume();
         super.onResume();
+        mLoggerServiceManager.startup(this, new Runnable() {
+            @Override
+            public void run() {
+                //    showDialog( DIALOG_LOGCONTROL );
+            }
+        });
     }
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        mLoggerServiceManager.shutdown(this);
+    }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.mainmenu_drawer_layout);

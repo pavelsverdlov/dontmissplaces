@@ -22,7 +22,8 @@ public class TrackRecordingToolbarView {
 
     @Bind(R.id.track_recording_resume_pause) ImageButton resume_pause;
     @Bind(R.id.track_recording_stop) ImageButton stop;
-    @Bind(R.id.track_recording_timer_output) TextView output;
+    @Bind(R.id.track_recording_timer_output) TextView timeoutput;
+    @Bind(R.id.track_recording_distance_output) TextView disoutput;
 
     public boolean isPause;
 
@@ -39,7 +40,10 @@ public class TrackRecordingToolbarView {
 
         long second = TimeUnit.MILLISECONDS.toSeconds(millis);
 
-        output.setText(String.format("%02d:%02d:%02d", hour, minute, second));
+        timeoutput.setText(String.format("%02d:%02d:%02d", hour, minute, second));
+    }
+    public void updateDispance(String dis){
+        disoutput.setText(dis);
     }
 
     public void setClickListeners(final OnResumePauseClickListener resumePauseListener,

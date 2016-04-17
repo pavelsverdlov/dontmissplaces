@@ -62,6 +62,19 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="svp.com.dontmissplaces.MainMenuActivity" />
         </activity>
+
+        <service
+            android:name="svp.com.opengpstracker.logger.GPSLoggerService"
+            android:enabled="true"
+            android:permission="android.permission.ACCESS_FINE_LOCATION" >
+            <intent-filter android:label="GPS logger" >
+                <action android:name="GPSLoggerService" >
+                </action>
+            </intent-filter>
+        </service>
+        <!--<service android:name="svp.com.opengpstracker.util.BreadcrumbsService" />-->
+
+
     </application>
 
 </manifest>
