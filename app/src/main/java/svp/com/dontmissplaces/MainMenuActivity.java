@@ -21,6 +21,7 @@ import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import svp.com.dontmissplaces.model.gps.GPSServiceProvider;
 import svp.com.dontmissplaces.presenters.MainMenuPresenter;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.ActivityPermissions;
@@ -86,7 +87,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     private final ActivityCommutator commutator;
     private final ActivityPermissions permissions;
     private TrackRecordingToolbarView recordingToolbarView;
-    private GPSLoggerServiceManager mLoggerServiceManager;
+    private GPSServiceProvider mLoggerServiceManager;
 
     @Bind(R.id.track_recording_fabtoolbar) com.bowyer.app.fabtransitionlayout.FooterLayout trackRecordingFooter;
     @Bind(R.id.track_recording_start_fab) FloatingActionButton fabTrackRecordingBtn;
@@ -120,13 +121,13 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         navigationView.setNavigationItemSelectedListener(this);
 
         mapView.onCreate(savedInstanceState);
-        mLoggerServiceManager = new GPSLoggerServiceManager(this);
+        mLoggerServiceManager = new GPSServiceProvider(this);
     }
     @Override
     protected void onStart() {
         mapView.onStart();
         super.onStart();
-        mLoggerServiceManager.startGPSLogging("start");
+        mLoggerServiceManager.startup(this, null);
     }
     @Override
     protected void onStop(){
