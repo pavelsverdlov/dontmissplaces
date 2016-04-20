@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -12,6 +13,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +35,8 @@ import svp.com.opengpstracker.logger.GPSLoggerServiceManager;
 public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         implements
         NavigationView.OnNavigationItemSelectedListener{
+
+    private final String TAG = "MainMenuActivity";
 
     public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<MainMenuActivity> {
 
@@ -75,7 +79,12 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         }
 
         public Location getLocation(){
-            return view.mLoggerServiceManager.getLastWaypoint();
+            try {
+                return view.mLoggerServiceManager.getLocation();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
 
         public void beginRise(){
@@ -127,7 +136,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     protected void onStart() {
         mapView.onStart();
         super.onStart();
-        mLoggerServiceManager.startup(this, null);
+        //mLoggerServiceManager.startup(this, null);
     }
     @Override
     protected void onStop(){
@@ -144,13 +153,12 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         mLoggerServiceManager.startup(this, new Runnable() {
             @Override
             public void run() {
-                //    showDialog( DIALOG_LOGCONTROL );
+                Log.d(TAG,"GPS service startup");
             }
         });
     }
     @Override
-    protected void onPause()
-    {
+    protected void onPause() {
         super.onPause();
         mLoggerServiceManager.shutdown(this);
     }

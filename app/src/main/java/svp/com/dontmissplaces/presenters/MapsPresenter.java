@@ -20,7 +20,7 @@ import svp.com.dontmissplaces.utils.LocationEx;
 public class MapsPresenter extends Presenter<MapView,MapView.ViewState> {
     private Location prevLocation;
     private final Repository repository;
-    LocationManager mLocationManager;
+    //LocationManager mLocationManager;
 
     public MapsPresenter(Repository repository) {
         this.repository = repository;
@@ -28,11 +28,11 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> {
 
     @Override
     protected void onAttachedView(){
-        mLocationManager = state.getLocationManager();
+       // mLocationManager = state.getLocationManager();
 //        Also, it's a good practice to stop lisnerning when there is no need for that by
 //        locationManager.removeUpdates(this);
         if(state.checkPermissionFineLocation()) {
-            prevLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            //prevLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         }
     }
     @Override
@@ -41,7 +41,7 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> {
     }
     public void permissionFineLocationReceived(){
         if(prevLocation == null) {
-            prevLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+           // prevLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         }
     }
 

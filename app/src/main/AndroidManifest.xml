@@ -72,6 +72,16 @@
                 </action>
             </intent-filter>
         </service>
+        <service
+            android:name=".model.gps.GPSService"
+            android:process=":dmp_gps_service"
+            android:enabled="true"
+            >
+            <!--<intent-filter android:label="GPS service" >-->
+                <!--<action android:name="GPSLoggerService" >-->
+                <!--</action>-->
+            <!--</intent-filter>-->
+        </service>
         <!--<service android:name="svp.com.opengpstracker.util.BreadcrumbsService" />-->
 
 

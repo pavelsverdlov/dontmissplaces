@@ -4,10 +4,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.location.Location;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.util.Log;
-
-import svp.com.opengpstracker.logger.IGPSLoggerServiceRemote;
 
 public class GPSServiceProvider {
     private static final String TAG = "GPSServiceProvider";
@@ -19,11 +19,15 @@ public class GPSServiceProvider {
 
     public final Object lock;
     public boolean isRunning;
-    private IGPSLoggerServiceRemote serviceRemote;
+    private IGPSService serviceRemote;
 
     public GPSServiceProvider(Context ctx) {
         lock = new Object();
         ctx.startService(createServiceIntent(ctx));
+    }
+
+    public Location getLocation() throws RemoteException {
+        return serviceRemote.getLastLocation();
     }
 
     public void startup( Context context, final Runnable onServiceConnected ){
@@ -32,7 +36,7 @@ public class GPSServiceProvider {
                 serviceConnection = new ServiceConnection() {
                     public void onServiceConnected( ComponentName className, IBinder service ) {
                         synchronized (lock) {
-                            serviceRemote = IGPSLoggerServiceRemote.Stub.asInterface( service );
+                            serviceRemote = IGPSService.Stub.asInterface( service );
                             isRunning = true;
                         }
                         if(onServiceConnected != null ) {
