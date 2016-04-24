@@ -78,10 +78,10 @@ public class MainMenuPresenter extends Presenter<MainMenuActivity,MainMenuActivi
             elapsedMses += intervalMsec;
             state.updateTrackTime(elapsedMses);
 
-            Location loc = state.getLocation();
-            if(loc != null) {
-                state.updateTrackDispance(loc.toString());
-            }
+//            Location loc = state.getLocation();
+//            if(loc != null) {
+//                state.updateTrackDispance(loc.toString());
+//            }
         }
     }
 }

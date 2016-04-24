@@ -1,15 +1,13 @@
 package svp.com.dontmissplaces.ui;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -20,18 +18,18 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.svp.infrastructure.common.PermissionUtils;
 import com.svp.infrastructure.mvpvs.view.View;
 
 import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.model.Map.GoogleMapsPlaceService;
+import svp.com.dontmissplaces.model.gps.GPSServiceProvider;
 import svp.com.dontmissplaces.presenters.MapsPresenter;
 
 public class MapView
         extends View<MapsPresenter>
         implements OnMapReadyCallback,
-        GoogleMap.OnMyLocationButtonClickListener,
-        GoogleMap.OnMyLocationChangeListener {
+        GoogleMap.OnMyLocationButtonClickListener {
+    private final String TAG = "MapView";
 
     public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<MapView> {
 
@@ -39,8 +37,8 @@ public class MapView
             super(view);
         }
 
-        public LocationManager getLocationManager(){
-            return (LocationManager)view.activity.getSystemService(Context.LOCATION_SERVICE);
+        public GPSServiceProvider getGPSService(){
+            return view.gpsServiceProvider;
         }
 
         public boolean checkPermissionFineLocation(){
@@ -76,10 +74,12 @@ public class MapView
     private GoogleMap mMap;
     private final FragmentActivity activity;
     private final ActivityPermissions permissions;
+    private GPSServiceProvider gpsServiceProvider;
 
     public MapView(FragmentActivity activity, ActivityPermissions permissions){
         this.activity = activity;
         this.permissions = permissions;
+
     }
 
     public void onCreate(Bundle savedInstanceState) {
@@ -92,7 +92,10 @@ public class MapView
             mapFragment.setRetainInstance(true);
         }
         mapFragment.getMapAsync(this);
+        gpsServiceProvider = new GPSServiceProvider(activity);
     }
+    public void onDestroy(){}
+    public void onResume(){}
 
     static CameraPosition cameraPosition;
 
@@ -154,12 +157,6 @@ public class MapView
             }
         });
     }
-
-    //#startregion
-    @Override
-    public void onMyLocationChange(Location location) {
-        getPresenter().onMyLocationChange(location);
-    }
     @Override
     public boolean onMyLocationButtonClick() {
         Toast.makeText(activity, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
@@ -176,15 +173,17 @@ public class MapView
             mMap.setMyLocationEnabled(false);
         }
     }
-    public void onResume() {
-
-    }
 
     public void setLocationChangeNotification(boolean status){
         if(status) {
-            mMap.setOnMyLocationChangeListener(this);
+            gpsServiceProvider.startup(activity, new Runnable() {
+                @Override
+                public void run() {
+                    Log.d(TAG,"GPS service startup");
+                }
+            });
         }else{
-            mMap.setOnMyLocationChangeListener(null);
+            gpsServiceProvider.shutdown(activity);
         }
     }
 

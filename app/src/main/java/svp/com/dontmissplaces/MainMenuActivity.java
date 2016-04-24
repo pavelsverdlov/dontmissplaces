@@ -1,6 +1,5 @@
 package svp.com.dontmissplaces;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
@@ -18,25 +17,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.svp.infrastructure.common.PermissionUtils;
 import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import svp.com.dontmissplaces.model.AlarmReceiver;
 import svp.com.dontmissplaces.model.gps.GPSServiceProvider;
 import svp.com.dontmissplaces.presenters.MainMenuPresenter;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.ActivityPermissions;
-import svp.com.dontmissplaces.ui.Consts;
 import svp.com.dontmissplaces.ui.MapView;
 import svp.com.dontmissplaces.ui.TrackRecordingToolbarView;
-import svp.com.opengpstracker.logger.GPSLoggerServiceManager;
 
 public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         implements
         NavigationView.OnNavigationItemSelectedListener{
 
-    private final String TAG = "MainMenuActivity";
+    private static final String TAG = "MainMenuActivity";
 
     public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<MainMenuActivity> {
 
@@ -78,15 +75,6 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
                 }});
         }
 
-        public Location getLocation(){
-            try {
-                return view.mLoggerServiceManager.getLocation();
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
         public void beginRise(){
 
         }
@@ -96,7 +84,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     private final ActivityCommutator commutator;
     private final ActivityPermissions permissions;
     private TrackRecordingToolbarView recordingToolbarView;
-    private GPSServiceProvider mLoggerServiceManager;
+
 
     @Bind(R.id.track_recording_fabtoolbar) com.bowyer.app.fabtransitionlayout.FooterLayout trackRecordingFooter;
     @Bind(R.id.track_recording_start_fab) FloatingActionButton fabTrackRecordingBtn;
@@ -130,7 +118,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         navigationView.setNavigationItemSelectedListener(this);
 
         mapView.onCreate(savedInstanceState);
-        mLoggerServiceManager = new GPSServiceProvider(this);
+
     }
     @Override
     protected void onStart() {
@@ -150,17 +138,10 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         }
         mapView.onResume();
         super.onResume();
-        mLoggerServiceManager.startup(this, new Runnable() {
-            @Override
-            public void run() {
-                Log.d(TAG,"GPS service startup");
-            }
-        });
     }
     @Override
     protected void onPause() {
         super.onPause();
-        mLoggerServiceManager.shutdown(this);
     }
 
     @Override

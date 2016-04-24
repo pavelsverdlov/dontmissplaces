@@ -1,33 +1,40 @@
 package svp.com.dontmissplaces.model.gps;
 
+import android.Manifest;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
-import android.os.Bundle;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import java.util.HashMap;
 
 public class GPSService extends Service {
-    private static final String TAG = "BOOMBOOMTESTGPS";
+    private static final String TAG = "GPSService";
     private static final int LOCATION_INTERVAL = 1000;
     private static final float LOCATION_DISTANCE = 10f;
 
-    private LocationManager mLocationManager;
-    private final HashMap<String,LocationListener> listeners;
+    private LocationManager locationManager;
+    private final HashMap<String, LocationListener> listeners;
     private final LocationFilter filter;
 
-    public GPSService(){
+    private boolean isNetworkProvider;
+    private boolean isGPSProvider;
+
+    public GPSService() {
         filter = new LocationFilter();
         listeners = new HashMap<>();
-        listeners.put(LocationManager.GPS_PROVIDER,new LocationListener(LocationManager.GPS_PROVIDER, filter));
-        listeners.put(LocationManager.NETWORK_PROVIDER,new LocationListener(LocationManager.NETWORK_PROVIDER, filter));
+        listeners.put(LocationManager.GPS_PROVIDER, new LocationListener(LocationManager.GPS_PROVIDER, filter));
+        listeners.put(LocationManager.NETWORK_PROVIDER, new LocationListener(LocationManager.NETWORK_PROVIDER, filter));
     }
 
     @Nullable
@@ -46,37 +53,60 @@ public class GPSService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (mLocationManager == null) {
-            mLocationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager == null) {
+            locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+            locationManager.addGpsStatusListener(new GpsStatus.Listener() {
+                @Override
+                public void onGpsStatusChanged(int event) {
+                    Log.d(TAG,"onGpsStatusChanged: " + event);
+                }
+            });
         }
-        String provider = LocationManager.NETWORK_PROVIDER;
-        try {
-            mLocationManager.requestLocationUpdates(provider, LOCATION_INTERVAL, LOCATION_DISTANCE,
-                    listeners.get(provider));
-        } catch (java.lang.SecurityException ex) {
-            Log.i(TAG, "fail to request location update, ignore", ex);
-        } catch (IllegalArgumentException ex) {
-            Log.d(TAG, "network provider does not exist, " + ex.getMessage());
-        }
+        //isNetworkProvider = requestLocationUpdates(LocationManager.NETWORK_PROVIDER);
+        isGPSProvider = requestLocationUpdates(LocationManager.GPS_PROVIDER);
 
-        provider = LocationManager.GPS_PROVIDER;
-        try {
-            mLocationManager.requestLocationUpdates(provider, LOCATION_INTERVAL, LOCATION_DISTANCE,
-                    listeners.get(provider));
-        } catch (java.lang.SecurityException ex) {
-            Log.i(TAG, "fail to request location update, ignore", ex);
-        } catch (IllegalArgumentException ex) {
-            Log.d(TAG, "gps provider does not exist " + ex.getMessage());
-        }
+        Log.d(TAG, "onCreate: GPSProvider = " + isGPSProvider);
     }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // We want this service to continue running until it is explicitly
         // stopped, so return sticky.
         return START_STICKY;
     }
+
     @Override
     public void onDestroy() {
+        Log.d(TAG, "onDestroy: ");
         super.onDestroy();
+        locationManager.removeUpdates(listeners.get(LocationManager.GPS_PROVIDER));
+        locationManager.removeUpdates(listeners.get(LocationManager.NETWORK_PROVIDER));
+    }
+
+    private boolean requestLocationUpdates(String provider){
+        try {
+            if(!locationManager.isProviderEnabled(provider)){
+                Log.d(TAG, "requestLocationUpdates: " + provider + " disabled.");
+                return false;
+            }
+
+            filter.addLocation(locationManager.getLastKnownLocation(provider));
+
+            locationManager.requestLocationUpdates(provider, LOCATION_INTERVAL, LOCATION_DISTANCE,
+                    listeners.get(provider));
+
+            return true;
+        } catch (java.lang.SecurityException ex) {
+            Log.i(TAG, "requestLocationUpdates: fail to request location update, ignore", ex);
+        } catch (IllegalArgumentException ex) {
+            Log.d(TAG, "requestLocationUpdates: gps provider does not exist " + ex.getMessage());
+        }
+        return false;
+    }
+    private boolean isNetworkConnected() {
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = connMgr.getActiveNetworkInfo();
+
+        return (info != null && info.isConnected());
     }
 }

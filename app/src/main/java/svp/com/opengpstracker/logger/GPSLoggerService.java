@@ -878,6 +878,7 @@ public class GPSLoggerService extends Service implements LocationListener {
             case REQUEST_NORMALGPS_LOCATIONUPDATES:
                 mMaxAcceptableAccuracy = NORMAL_ACCURACY;
                 intervaltime = NORMAL_INTERVAL;
+                intervaltime = NORMAL_INTERVAL;
                 distance = NORMAL_DISTANCE;
                 startListening(LocationManager.GPS_PROVIDER, intervaltime, distance);
                 break;

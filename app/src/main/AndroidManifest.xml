@@ -16,6 +16,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!-- <permission android:name=".MAPS_RECEIVE" android:protectionLevel="signature"></permission> -->
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
@@ -63,15 +65,6 @@
                 android:value="svp.com.dontmissplaces.MainMenuActivity" />
         </activity>
 
-        <service
-            android:name="svp.com.opengpstracker.logger.GPSLoggerService"
-            android:enabled="true"
-            android:permission="android.permission.ACCESS_FINE_LOCATION" >
-            <intent-filter android:label="GPS logger" >
-                <action android:name="GPSLoggerService" >
-                </action>
-            </intent-filter>
-        </service>
         <service
             android:name=".model.gps.GPSService"
             android:process=":dmp_gps_service"

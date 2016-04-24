@@ -14,13 +14,15 @@ import java.util.concurrent.TimeUnit;
 
 import svp.com.dontmissplaces.db.Repository;
 import svp.com.dontmissplaces.model.Traffic;
+import svp.com.dontmissplaces.model.gps.GPSServiceProvider;
+import svp.com.dontmissplaces.model.gps.OnLocationChangeListener;
 import svp.com.dontmissplaces.ui.MapView;
 import svp.com.dontmissplaces.utils.LocationEx;
 
-public class MapsPresenter extends Presenter<MapView,MapView.ViewState> {
+public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implements OnLocationChangeListener {
     private Location prevLocation;
     private final Repository repository;
-    //LocationManager mLocationManager;
+    GPSServiceProvider gpsService;
 
     public MapsPresenter(Repository repository) {
         this.repository = repository;
@@ -28,11 +30,9 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> {
 
     @Override
     protected void onAttachedView(){
-       // mLocationManager = state.getLocationManager();
-//        Also, it's a good practice to stop lisnerning when there is no need for that by
-//        locationManager.removeUpdates(this);
+        gpsService = state.getGPSService();
         if(state.checkPermissionFineLocation()) {
-            //prevLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            gpsService.setOnLocationChangeListener(this);
         }
     }
     @Override
@@ -65,7 +65,8 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> {
         state.stateTest();
     }
 
-    public void onMyLocationChange(Location location){
+    @Override
+    public void OnLocationChange(Location location) {
         try {
             if(prevLocation == null){
                 return;
@@ -100,14 +101,10 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> {
 
 
         }catch (Exception ex){
-           Throwable cause = ex.getCause();
+            Throwable cause = ex.getCause();
             //throw ex;
         }finally {
             prevLocation = location;
         }
     }
-
-
-
-
 }

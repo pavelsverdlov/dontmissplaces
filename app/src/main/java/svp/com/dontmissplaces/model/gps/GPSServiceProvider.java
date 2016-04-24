@@ -9,9 +9,14 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class GPSServiceProvider {
     private static final String TAG = "GPSServiceProvider";
+    private TrackTimer timer;
     private ServiceConnection serviceConnection;
+    private OnLocationChangeListener listener;
 
     public static Intent createServiceIntent(Context ctx){
         return new Intent(ctx,GPSService.class);
@@ -21,13 +26,17 @@ public class GPSServiceProvider {
     public boolean isRunning;
     private IGPSService serviceRemote;
 
-    public GPSServiceProvider(Context ctx) {
+    public GPSServiceProvider(Context context) {
         lock = new Object();
-        ctx.startService(createServiceIntent(ctx));
+        context.startService(createServiceIntent(context));
     }
 
     public Location getLocation() throws RemoteException {
         return serviceRemote.getLastLocation();
+    }
+
+    public void setOnLocationChangeListener(OnLocationChangeListener listener){
+        this.listener = listener;
     }
 
     public void startup( Context context, final Runnable onServiceConnected ){
@@ -38,13 +47,21 @@ public class GPSServiceProvider {
                         synchronized (lock) {
                             serviceRemote = IGPSService.Stub.asInterface( service );
                             isRunning = true;
+                            timer = startTimer(1000);
                         }
                         if(onServiceConnected != null ) {
                             onServiceConnected.run();
                         }
                     }
                     public void onServiceDisconnected( ComponentName className ) {
-                        synchronized (lock) { isRunning = false; }
+                        synchronized (lock) {
+                            isRunning = false;
+                            if(timer != null) {
+                                timer.stop();
+                                timer = null;
+                            }
+                            //context.stopService()
+                        }
                     }
                 };
                 context.bindService(createServiceIntent(context), this.serviceConnection, Context.BIND_AUTO_CREATE );
@@ -59,7 +76,37 @@ public class GPSServiceProvider {
                     isRunning = false;
                 }
             } catch (IllegalArgumentException e) {
-                Log.w(TAG, "Failed to unbind a service, prehaps the service disapearded?", e );
+                Log.w(TAG, "shutdown: Failed to unbind a service, prehaps the service disapearded?", e );
+            }
+        }
+    }
+
+    private TrackTimer startTimer(long intervalMillisec){
+        if(timer != null){
+            return timer;
+        }
+        return new TrackTimer(intervalMillisec);
+    }
+    private class TrackTimer extends TimerTask {
+        private long elapsedMses;
+        private TrackTimer(long intervalMillisec) {
+            Timer timer = new Timer();
+            timer.scheduleAtFixedRate(this, intervalMillisec, intervalMillisec);
+        }
+
+        public void stop() {
+            this.cancel();
+        }
+
+        @Override
+        public void run() {
+            if(listener == null){
+                return;
+            }
+            try {
+                listener.OnLocationChange(serviceRemote.getLastLocation());
+            } catch (RemoteException ex) {
+                Log.e(TAG, "OnLocationChange: ", ex);
             }
         }
     }
