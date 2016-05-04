@@ -15,16 +15,16 @@ public class HistoryTracksPresenter extends Presenter<HistoryTracksActivity,Hist
         this.repository = repository;
     }
 
-    @Override
-    public void attachView(HistoryTracksActivity view) {
-        super.attachView(view);
-
-        repository.clearTracks();
-
-        for (String name : new String[]{ "Track 1","Track 2","Track 3","Track 4" }){
-            repository.insertTrack(name);
-        }
-    }
+//    @Override
+//    public void attachView(HistoryTracksActivity view) {
+//        super.attachView(view);
+//
+////        repository.clearTracks();
+////
+////        for (String name : new String[]{ "Track 1","Track 2","Track 3","Track 4" }){
+////            repository.insertTrack(name);
+////        }
+//    }
 
 
     public Cursor getCursorTracks(){

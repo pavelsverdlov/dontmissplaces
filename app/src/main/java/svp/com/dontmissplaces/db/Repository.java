@@ -64,8 +64,27 @@ public class Repository extends SQLiteOpenHelper {
 
         waypoint.id = sqldb.insert(Waypoints.TABLE, null, args);
     }
-    int deleteTrack(long trackId)
-    {
+    public int deleteTrack(Track track) {
+        SQLiteDatabase sqldb = getWritableDatabase();
+        Cursor cursor = null;
+        int affected = 0;
+        try {
+            sqldb.beginTransaction();
+
+            String[] args = new String[] { String.valueOf(track.id) };
+            affected += sqldb.delete(Tracks.TABLE,Tracks._ID + "= ?", args);
+            affected += sqldb.delete(Waypoints.TABLE,Waypoints.TRACK + "= ?", args);
+
+            sqldb.setTransactionSuccessful();
+        }finally {
+            if (cursor != null){
+                cursor.close();
+            }
+            if (sqldb.inTransaction()) {
+                sqldb.endTransaction();
+            }
+        }
+        return affected;
         /*
         SQLiteDatabase sqldb = getWritableDatabase();
         int affected = 0;
@@ -125,7 +144,6 @@ public class Repository extends SQLiteOpenHelper {
 
         return affected;
         */
-        return 1;
     }
 
     int updateTrack(long trackId, String name) {

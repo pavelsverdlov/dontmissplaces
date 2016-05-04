@@ -22,15 +22,15 @@ public abstract class Presenter<V extends IActivityView, VS extends IViewState>
         vsContainer = new ViewStateContainer();
     }
 
-    public void attachView(V view) {
+    public final void attachView(V view) {
         state = vsContainer.addView(view);
-        onAttachedView();
+        onAttachedView(view);
     }
-    public void detachView(V view) {
+    public final void detachView(V view) {
         vsContainer.removeView(view);
-        onDetachedView();
+        onDetachedView(view);
     }
 
-    protected void onAttachedView(){}
-    protected void onDetachedView(){}
+    protected void onAttachedView(V view){}
+    protected void onDetachedView(V view){}
 }

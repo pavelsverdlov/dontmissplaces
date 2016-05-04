@@ -2,9 +2,13 @@ package svp.com.dontmissplaces.db;
 
 import android.database.Cursor;
 
-public class Track {
+import java.io.Serializable;
+import java.util.UUID;
+
+public class Track implements Serializable {
+    public static final String KEY = UUID.randomUUID().toString();
     public final long id;
-    String name;
+    public final String name;
     int creationtime;
 
     public Track(long trackId, String name, long currentTime) {

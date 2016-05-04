@@ -13,8 +13,10 @@ import svp.com.dontmissplaces.db.Repository;
 import svp.com.dontmissplaces.presenters.HistoryTracksPresenter;
 import svp.com.dontmissplaces.presenters.MainMenuPresenter;
 import svp.com.dontmissplaces.presenters.MapsPresenter;
+import svp.com.dontmissplaces.presenters.SaveTrackPresenter;
 import svp.com.dontmissplaces.ui.MapView;
 import svp.com.dontmissplaces.ui.activities.HistoryTracksActivity;
+import svp.com.dontmissplaces.ui.activities.SaveTrackActivity;
 
 public class App extends Application {
     private final Repository repository;
@@ -81,6 +83,21 @@ public class App extends Application {
                         return new HistoryTracksActivity.ViewState(view);
                     }
                 });
+
+        Register(SaveTrackActivity.class,
+                new PresenterContainer.IPresenterCreator() {
+                    @Override
+                    public IPresenter create() {
+                        return new SaveTrackPresenter(repository);
+                    }
+                },
+                new ViewStateContainer.IViewStateCreator<SaveTrackActivity>() {
+                    @Override
+                    public IViewState create(SaveTrackActivity view) {
+                        return new SaveTrackActivity.ViewState(view);
+                    }
+                });
+
         super.onCreate();
     }
 

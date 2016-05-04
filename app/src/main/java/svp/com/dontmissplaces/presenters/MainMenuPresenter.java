@@ -1,7 +1,5 @@
 package svp.com.dontmissplaces.presenters;
 
-import android.location.Location;
-
 import com.svp.infrastructure.mvpvs.presenter.Presenter;
 
 import java.util.Date;
@@ -10,15 +8,17 @@ import java.util.TimerTask;
 
 import svp.com.dontmissplaces.MainMenuActivity;
 import svp.com.dontmissplaces.db.Repository;
+import svp.com.dontmissplaces.db.Track;
+import svp.com.dontmissplaces.ui.ActivityCommutator;
+import svp.com.dontmissplaces.ui.BundleProvider;
 
-
-/**
- * Created by Pasha on 4/9/2016.
- */
-public class MainMenuPresenter extends Presenter<MainMenuActivity,MainMenuActivity.ViewState> {
+public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,MainMenuActivity.ViewState> {
     private TrackTimer timer;
-    public MainMenuPresenter(Repository repository) {
+    private final Repository repository;
+    private Track recordingTrack;
 
+    public MainMenuPresenter(Repository repository) {
+        this.repository = repository;
     }
 
     public void startTrackRecording() {
@@ -30,6 +30,7 @@ public class MainMenuPresenter extends Presenter<MainMenuActivity,MainMenuActivi
         state.expandTrackRecordingToolbar();
 
         timer.start();
+        recordingTrack = repository.insertTrack(new Date().toString());
     }
     public void pauseTrackRecording() {
         timer.pause();
@@ -37,9 +38,16 @@ public class MainMenuPresenter extends Presenter<MainMenuActivity,MainMenuActivi
     public void stopTrackRecording() {
         timer.cancel();
         state.slideOutFabTrackRecordingToolbar();
+
+        BundleProvider bp = new BundleProvider().putTrack(recordingTrack);
+        commutator.goTo(ActivityCommutator.ActivityOperationResult.SaveTrack, bp);
     }
     public void resumeTrackRecording() {
         timer.resume();
+    }
+
+    public void openHistoryTracks() {
+        commutator.goTo(ActivityCommutator.ActivityOperationResult.HistoryTracks);
     }
 
     private class TrackTimer extends TimerTask{

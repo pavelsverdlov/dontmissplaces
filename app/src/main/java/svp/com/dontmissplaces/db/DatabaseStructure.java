@@ -31,6 +31,7 @@ public class DatabaseStructure {
                 "," + " " + WaypointsColumns.ALTITUDE  + " " + WaypointsColumns.ALTITUDE_TYPE +
                 "," + " " + WaypointsColumns.BEARING   + " " + WaypointsColumns.BEARING_TYPE +
                 ");";
+        public static final String DELETE_BY = "DELETE FROM " + Tracks.TABLE + " WHERE;";
     }
 
     public static class TracksColumns{

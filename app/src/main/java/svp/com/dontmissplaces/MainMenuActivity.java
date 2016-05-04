@@ -30,10 +30,16 @@ import svp.com.dontmissplaces.ui.MapView;
 import svp.com.dontmissplaces.ui.TrackRecordingToolbarView;
 
 public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
-        implements
-        NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener, ActivityCommutator.ICommutativeElement {
 
     private static final String TAG = "MainMenuActivity";
+
+    @Override
+    public ActivityCommutator.ActivityOperationResult getOperation() {
+        return ActivityCommutator.ActivityOperationResult.MainMenu;
+    }
+    @Override
+    public Activity getActivity() { return this; }
 
     public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<MainMenuActivity> {
 
@@ -47,7 +53,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         }
 
         @Override
-        protected Activity getActivity() {
+        public Activity getActivity() {
             return view;
         }
 
@@ -81,7 +87,6 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     }
 
     private final MapView mapView;
-    private final ActivityCommutator commutator;
     private final ActivityPermissions permissions;
     private TrackRecordingToolbarView recordingToolbarView;
 
@@ -92,7 +97,6 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     public MainMenuActivity(){
         permissions = new ActivityPermissions(this);
         mapView = new MapView(this,permissions);
-        commutator = new ActivityCommutator(this, ActivityCommutator.ActivityOperationResult.MainMenu);
     }
 
     @Override
@@ -180,7 +184,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         int id = item.getItemId();
 
         if (id == R.id.nav_mainmenu_history_tracks) {
-            commutator.goToActivity(ActivityCommutator.ActivityOperationResult.HistoryTracks);
+            getPresenter().openHistoryTracks();
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.mainmenu_drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -213,7 +217,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
             @Override
             public void onClick(View view) {
                 getPresenter().startTrackRecording();
-                mapView.setLocationChangeNotification(true);
+                mapView.startTrackRecording();
             }
         });
     }
@@ -224,20 +228,20 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
                     @Override
                     public void onPauseClick() {
                         getPresenter().pauseTrackRecording();
-                        mapView.setLocationChangeNotification(false);
+                        mapView.pauseTrackRecording();
                     }
 
                     @Override
                     public void onResumeClick() {
                         getPresenter().resumeTrackRecording();
-                        mapView.setLocationChangeNotification(true);
+                        mapView.resumeTrackRecording();
                     }
                 },
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         getPresenter().stopTrackRecording();
-                        mapView.setLocationChangeNotification(false);
+                        mapView.stopTrackRecording();
                     }
                 }
         );

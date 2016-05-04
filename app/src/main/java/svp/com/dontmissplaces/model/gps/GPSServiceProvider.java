@@ -25,9 +25,11 @@ public class GPSServiceProvider {
     public final Object lock;
     public boolean isRunning;
     private IGPSService serviceRemote;
+    private final Context context;
 
     public GPSServiceProvider(Context context) {
         lock = new Object();
+        this.context = context;
         context.startService(createServiceIntent(context));
     }
 
@@ -39,7 +41,7 @@ public class GPSServiceProvider {
         this.listener = listener;
     }
 
-    public void startup( Context context, final Runnable onServiceConnected ){
+    public void startup(final Runnable onServiceConnected ){
         synchronized (lock) {
             if(!isRunning){
                 serviceConnection = new ServiceConnection() {
@@ -56,10 +58,6 @@ public class GPSServiceProvider {
                     public void onServiceDisconnected( ComponentName className ) {
                         synchronized (lock) {
                             isRunning = false;
-                            if(timer != null) {
-                                timer.stop();
-                                timer = null;
-                            }
                             //context.stopService()
                         }
                     }
@@ -68,7 +66,7 @@ public class GPSServiceProvider {
             }
         }
     }
-    public void shutdown(Context context){
+    public void shutdown(){
         synchronized (lock) {
             try {
                 if(isRunning) {
@@ -104,7 +102,9 @@ public class GPSServiceProvider {
                 return;
             }
             try {
-                listener.OnLocationChange(serviceRemote.getLastLocation());
+                Location l = serviceRemote.getLastLocation();
+                Log.d(TAG, "OnLocationChange: " +  l);
+                listener.OnLocationChange(l);
             } catch (RemoteException ex) {
                 Log.e(TAG, "OnLocationChange: ", ex);
             }

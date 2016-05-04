@@ -18,17 +18,17 @@ public class AppCompatActivityView<P extends Presenter> extends AppCompatActivit
         prContainer = new PresenterContainer();
     }
 
-    protected P getPresenter(){
+    protected final P getPresenter(){
         return prContainer.get(this.getClass());
     }
 
     @Override
-    public void showError(String stringErrorWrapper) {
+    public final void showError(String stringErrorWrapper) {
 
     }
 
     @Override
-    public <V extends IActivityView> void executeAction(IViewAction<V> action) {
+    public final <V extends IActivityView> void executeAction(IViewAction<V> action) {
         action.execute((V) this);
     }
 

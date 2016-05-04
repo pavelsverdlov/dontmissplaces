@@ -67,17 +67,25 @@
 
         <service
             android:name=".model.gps.GPSService"
-            android:process=":dmp_gps_service"
             android:enabled="true"
-            >
-            <!--<intent-filter android:label="GPS service" >-->
-                <!--<action android:name="GPSLoggerService" >-->
-                <!--</action>-->
-            <!--</intent-filter>-->
+            android:process=":dmp_gps_service">
+
+            <!-- <intent-filter android:label="GPS service" > -->
+            <!-- <action android:name="GPSLoggerService" > -->
+            <!-- </action> -->
+            <!-- </intent-filter> -->
         </service>
-        <!--<service android:name="svp.com.opengpstracker.util.BreadcrumbsService" />-->
+        <!-- <service android:name="svp.com.opengpstracker.util.BreadcrumbsService" /> -->
 
-
+        <activity
+            android:name=".ui.activities.SaveTrackActivity"
+            android:label="@string/title_activity_save_track"
+            android:parentActivityName=".MainMenuActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="svp.com.dontmissplaces.MainMenuActivity" />
+        </activity>
     </application>
 
 </manifest>

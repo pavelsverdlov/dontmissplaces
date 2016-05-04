@@ -2,6 +2,7 @@ package svp.com.dontmissplaces.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -37,20 +38,31 @@ public class MapView
             super(view);
         }
 
-        public GPSServiceProvider getGPSService(){
-            return view.gpsServiceProvider;
-        }
-
         public boolean checkPermissionFineLocation(){
             return view.permissions.checkPermissionFineLocation();
         }
 
-        public void addPolyline(PolylineOptions options){
-            view.mMap.addPolyline(options);
+        public void addPolyline(final PolylineOptions options){
+            view.activity.runOnUiThread(new Runnable(){
+                @Override
+                public void run() {
+                    view.mMap.addPolyline(options);
+//                    view.mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(51.5, -0.1)));
+//                    view.mMap.addPolyline(new PolylineOptions()
+//                .add(new LatLng(51.5, -0.1), new LatLng(40.7, -74.0))
+//                .width(5)
+//                .color(Color.RED));
+                }
+            });
         }
-        public void moveCamera(LatLng latLng){
-            view.mMap.addMarker(new MarkerOptions().position(latLng).title("Marker in Sydney"));
-            view.mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        public void moveCamera(final LatLng latLng){
+            view.activity.runOnUiThread(new Runnable(){
+                @Override
+                public void run() {
+                    //view.mMap.addMarker(new MarkerOptions().position(latLng)/*.title("Marker in Sydney")*/);
+                    view.mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                }
+            });
         }
 
 
@@ -60,7 +72,7 @@ public class MapView
         }
 
         @Override
-        protected Activity getActivity() {
+        public Activity getActivity() {
             return view.activity;
         }
 
@@ -72,9 +84,8 @@ public class MapView
     }
 
     private GoogleMap mMap;
-    private final FragmentActivity activity;
+    public final FragmentActivity activity;
     private final ActivityPermissions permissions;
-    private GPSServiceProvider gpsServiceProvider;
 
     public MapView(FragmentActivity activity, ActivityPermissions permissions){
         this.activity = activity;
@@ -92,7 +103,6 @@ public class MapView
             mapFragment.setRetainInstance(true);
         }
         mapFragment.getMapAsync(this);
-        gpsServiceProvider = new GPSServiceProvider(activity);
     }
     public void onDestroy(){}
     public void onResume(){}
@@ -156,6 +166,11 @@ public class MapView
                 }*/
             }
         });
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(51.5, -0.1)));
+//        mMap.addPolyline(new PolylineOptions()
+//                .add(new LatLng(51.5, -0.1), new LatLng(40.7, -74.0))
+//                .width(5)
+//                .color(Color.RED));
     }
     @Override
     public boolean onMyLocationButtonClick() {
@@ -173,18 +188,16 @@ public class MapView
             mMap.setMyLocationEnabled(false);
         }
     }
-
-    public void setLocationChangeNotification(boolean status){
-        if(status) {
-            gpsServiceProvider.startup(activity, new Runnable() {
-                @Override
-                public void run() {
-                    Log.d(TAG,"GPS service startup");
-                }
-            });
-        }else{
-            gpsServiceProvider.shutdown(activity);
-        }
+    public void startTrackRecording() {
+        getPresenter().gpsStart();
     }
+    public void stopTrackRecording() {
+        getPresenter().gpsStop();
+    }
+    public void resumeTrackRecording() {
 
+    }
+    public void pauseTrackRecording() {
+
+    }
 }

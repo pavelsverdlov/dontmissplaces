@@ -4,6 +4,7 @@ package svp.com.dontmissplaces.presenters;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
+import android.util.Log;
 
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -20,6 +21,7 @@ import svp.com.dontmissplaces.ui.MapView;
 import svp.com.dontmissplaces.utils.LocationEx;
 
 public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implements OnLocationChangeListener {
+    private static final String TAG = "MapsPresenter";
     private Location prevLocation;
     private final Repository repository;
     GPSServiceProvider gpsService;
@@ -29,16 +31,13 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implemen
     }
 
     @Override
-    protected void onAttachedView(){
-        gpsService = state.getGPSService();
+    protected void onAttachedView(MapView view){
+        gpsService = new GPSServiceProvider(view.activity);
         if(state.checkPermissionFineLocation()) {
             gpsService.setOnLocationChangeListener(this);
         }
     }
-    @Override
-    protected void onDetachedView() {
-        //state.clearLocationManager(locationManager);.removeUpdates(this);
-    }
+
     public void permissionFineLocationReceived(){
         if(prevLocation == null) {
            // prevLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -61,13 +60,23 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implemen
         }
     }
 
-    public void test(){
-        state.stateTest();
+    public void gpsStart(){
+        gpsService.startup(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG,"GPS service startup");
+            }
+        });
+    }
+    public void gpsStop() {
+        gpsService.shutdown();
+        Log.d(TAG,"GPS service shutdown");
     }
 
     @Override
     public void OnLocationChange(Location location) {
         try {
+            Log.d(TAG,"OnLocationChange " + location);
             if(prevLocation == null){
                 return;
             }
@@ -79,19 +88,10 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implemen
             //double speed = LocationEx.getSpeed(prevLocation, location);
             double dis = location.distanceTo(prevLocation);
 
-            Traffic.CustomMovement movement = Traffic.walking.createMovement(dis, TimeUnit.MILLISECONDS.toSeconds(diff));
-            if(movement.type == Traffic.SpeedTypes.Undefined){
-                return;
-            }
-
-//            double speed2 = dis/seconds;
-//            DecimalFormat myFormatter = new DecimalFormat("%f%n");
-//            String format ="%1$,.2f";
-//            state.getSnackbar(
-//                      "loc.min: " + String.format(format,location.getSpeed())
-//                    + " calc.min: " + String.format(format,speed) + "/" + String.format(format,speed2) + "\n"
-//                    + " dis: " + String.format(format,dis) + " secs: " + seconds)
-//                    .show();
+//            Traffic.CustomMovement movement = Traffic.walking.createMovement(dis, TimeUnit.MILLISECONDS.toSeconds(diff));
+//            if(movement.type == Traffic.SpeedTypes.Undefined){
+//                return;
+//            }
 
             state.addPolyline(new PolylineOptions()
                     .add(LocationEx.getLatLng(prevLocation), LocationEx.getLatLng(location))
@@ -99,12 +99,14 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implemen
                     .color(Color.BLUE)
                     .geodesic(true));
 
+            state.moveCamera(LocationEx.getLatLng(location));
 
         }catch (Exception ex){
-            Throwable cause = ex.getCause();
-            //throw ex;
+            throw ex;
         }finally {
             prevLocation = location;
         }
     }
+
+
 }
