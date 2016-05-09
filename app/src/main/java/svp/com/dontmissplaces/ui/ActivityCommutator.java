@@ -3,6 +3,8 @@ package svp.com.dontmissplaces.ui;
 import android.app.Activity;
 import android.content.Intent;
 
+import com.svp.infrastructure.mvpvs.bundle.IBundleProvider;
+
 import java.util.HashMap;
 
 import svp.com.dontmissplaces.MainMenuActivity;
@@ -51,12 +53,12 @@ public final class ActivityCommutator {
     public void goTo(ActivityOperationResult operationTo) {
         goTo(activities.get(operationTo), null);
     }
-    public void goTo(ActivityOperationResult operationTo, BundleProvider bundleProvider) {
+    public void goTo(ActivityOperationResult operationTo, IBundleProvider bundleProvider) {
         goTo(activities.get(operationTo), bundleProvider);
     }
 
     /*catch result from onActivityResult on main activity*/
-    public void backTo(BundleProvider bundleProvider) {
+    public void backTo(IBundleProvider bundleProvider) {
         Activity activity = element.getActivity();
 
         Intent intent = new Intent();
@@ -68,7 +70,7 @@ public final class ActivityCommutator {
         activity.finish();
     }
 
-    private Activity goTo(Class<?> _class, BundleProvider bundleProvider){
+    private Activity goTo(Class<?> _class, IBundleProvider bundleProvider){
         Activity activity = element.getActivity();
 
         Intent intent = new Intent(activity.getBaseContext(), _class);

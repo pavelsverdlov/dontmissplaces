@@ -21,7 +21,7 @@ public class PresenterContainer {
         presenters = new HashMap<>();
     }
 
-    public static void Register(Class<?> viewType,IPresenterCreator cr){
+    public static void register(Class<?> viewType, IPresenterCreator cr){
         creator.put(viewType, cr);
     }
 

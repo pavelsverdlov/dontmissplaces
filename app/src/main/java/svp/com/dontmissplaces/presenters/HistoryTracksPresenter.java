@@ -1,6 +1,7 @@
 package svp.com.dontmissplaces.presenters;
 
 import android.database.Cursor;
+import android.widget.Toast;
 
 import com.svp.infrastructure.mvpvs.presenter.Presenter;
 
@@ -15,8 +16,12 @@ public class HistoryTracksPresenter extends Presenter<HistoryTracksActivity,Hist
         this.repository = repository;
     }
 
-//    @Override
-//    public void attachView(HistoryTracksActivity view) {
+    @Override
+    public void onAttachedView(HistoryTracksActivity view) {
+        CharSequence text = state.getBundle().getPreviousActionText();
+        if(text != null) {
+            state.getToast(text);
+        }
 //        super.attachView(view);
 //
 ////        repository.clearTracks();
@@ -24,7 +29,7 @@ public class HistoryTracksPresenter extends Presenter<HistoryTracksActivity,Hist
 ////        for (String name : new String[]{ "Track 1","Track 2","Track 3","Track 4" }){
 ////            repository.insertTrack(name);
 ////        }
-//    }
+    }
 
 
     public Cursor getCursorTracks(){

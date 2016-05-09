@@ -1,21 +1,25 @@
 package com.svp.infrastructure.mvpvs.view;
 
-import android.app.Activity;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.svp.infrastructure.mvpvs.bundle.BundleContainer;
+import com.svp.infrastructure.mvpvs.bundle.BundleProvider;
+import com.svp.infrastructure.mvpvs.bundle.IBundleProvider;
 import com.svp.infrastructure.mvpvs.PresenterContainer;
 import com.svp.infrastructure.mvpvs.presenter.Presenter;
-
-import java.util.UUID;
 
 public class AppCompatActivityView<P extends Presenter> extends AppCompatActivity implements IActivityView {
 
    // public static final UUID id = UUID.randomUUID();
 
-    PresenterContainer prContainer;
+    private final PresenterContainer prContainer;
+    private final BundleContainer bundleContainer;
+    private IBundleProvider bundleProvider;
 
     public AppCompatActivityView(){
         prContainer = new PresenterContainer();
+        bundleContainer = new BundleContainer();
     }
 
     protected final P getPresenter(){
@@ -25,6 +29,12 @@ public class AppCompatActivityView<P extends Presenter> extends AppCompatActivit
     @Override
     public final void showError(String stringErrorWrapper) {
 
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState){
+        bundleProvider = bundleContainer.get(this.getClass(),BundleProvider.getBundle(savedInstanceState,this));
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -41,5 +51,9 @@ public class AppCompatActivityView<P extends Presenter> extends AppCompatActivit
     protected void onStop(){
         getPresenter().detachView(this);
         super.onStop();
+    }
+
+    protected final <B extends IBundleProvider> B getBundle(){
+        return (B)bundleProvider;
     }
 }

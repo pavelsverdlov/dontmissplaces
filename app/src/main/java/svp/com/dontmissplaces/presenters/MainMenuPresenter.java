@@ -1,7 +1,5 @@
 package svp.com.dontmissplaces.presenters;
 
-import com.svp.infrastructure.mvpvs.presenter.Presenter;
-
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -10,7 +8,10 @@ import svp.com.dontmissplaces.MainMenuActivity;
 import svp.com.dontmissplaces.db.Repository;
 import svp.com.dontmissplaces.db.Track;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
-import svp.com.dontmissplaces.ui.BundleProvider;
+import svp.com.dontmissplaces.ui.BaseBundleProvider;
+
+import com.svp.infrastructure.mvpvs.bundle.BundleProvider;
+import com.svp.infrastructure.mvpvs.bundle.IBundleProvider;
 
 public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,MainMenuActivity.ViewState> {
     private TrackTimer timer;
@@ -39,7 +40,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         timer.cancel();
         state.slideOutFabTrackRecordingToolbar();
 
-        BundleProvider bp = new BundleProvider().putTrack(recordingTrack);
+        IBundleProvider bp = new BaseBundleProvider().putTrack(recordingTrack);
         commutator.goTo(ActivityCommutator.ActivityOperationResult.SaveTrack, bp);
     }
     public void resumeTrackRecording() {

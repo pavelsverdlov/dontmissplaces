@@ -2,7 +2,10 @@ package svp.com.dontmissplaces;
 
 
 import android.app.Application;
+import android.os.Bundle;
 
+import com.svp.infrastructure.mvpvs.bundle.BundleContainer;
+import com.svp.infrastructure.mvpvs.bundle.IBundleProvider;
 import com.svp.infrastructure.mvpvs.presenter.IPresenter;
 import com.svp.infrastructure.mvpvs.PresenterContainer;
 import com.svp.infrastructure.mvpvs.ViewStateContainer;
@@ -14,6 +17,7 @@ import svp.com.dontmissplaces.presenters.HistoryTracksPresenter;
 import svp.com.dontmissplaces.presenters.MainMenuPresenter;
 import svp.com.dontmissplaces.presenters.MapsPresenter;
 import svp.com.dontmissplaces.presenters.SaveTrackPresenter;
+import svp.com.dontmissplaces.ui.BaseBundleProvider;
 import svp.com.dontmissplaces.ui.MapView;
 import svp.com.dontmissplaces.ui.activities.HistoryTracksActivity;
 import svp.com.dontmissplaces.ui.activities.SaveTrackActivity;
@@ -29,7 +33,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         //map view
-        PresenterContainer.Register(MapView.class, new PresenterContainer.IPresenterCreator() {
+        PresenterContainer.register(MapView.class, new PresenterContainer.IPresenterCreator() {
             @Override
             public IPresenter create() {
                 return new MapsPresenter(repository);
@@ -43,7 +47,7 @@ public class App extends Application {
         });
 
         //Main menu
-        PresenterContainer.Register(MainMenuActivity.class, new PresenterContainer.IPresenterCreator() {
+        PresenterContainer.register(MainMenuActivity.class, new PresenterContainer.IPresenterCreator() {
             @Override
             public IPresenter create() {
                 return new MainMenuPresenter(repository);
@@ -57,7 +61,7 @@ public class App extends Application {
         });
 
         //History Tracks
-        PresenterContainer.Register(HistoryTracksActivity.class, new PresenterContainer.IPresenterCreator() {
+        PresenterContainer.register(HistoryTracksActivity.class, new PresenterContainer.IPresenterCreator() {
             @Override
             public IPresenter create() {
                 return new HistoryTracksPresenter(repository);
@@ -70,7 +74,7 @@ public class App extends Application {
             }
         });
 
-        Register(HistoryTracksActivity.class,
+        register(HistoryTracksActivity.class,
                 new PresenterContainer.IPresenterCreator() {
                     @Override
                     public IPresenter create() {
@@ -84,7 +88,7 @@ public class App extends Application {
                     }
                 });
 
-        Register(SaveTrackActivity.class,
+        register(SaveTrackActivity.class,
                 new PresenterContainer.IPresenterCreator() {
                     @Override
                     public IPresenter create() {
@@ -98,14 +102,25 @@ public class App extends Application {
                     }
                 });
 
+        registerBundleProviders();
+
         super.onCreate();
     }
 
-    private static <T extends IActivityView> void Register(Class<?> _class,
+    private static <T extends IActivityView> void register(Class<?> _class,
                                                            PresenterContainer.IPresenterCreator pcreator,
                                                            ViewStateContainer.IViewStateCreator<T> stateCreator){
-        PresenterContainer.Register(_class, pcreator);
+        PresenterContainer.register(_class, pcreator);
         ViewStateContainer.Register(_class, stateCreator);
+    }
+
+    private void registerBundleProviders(){
+        BundleContainer.register(SaveTrackActivity.class, new BundleContainer.IBundleCreator() {
+            @Override
+            public IBundleProvider create(Bundle bundle) {
+                return new BaseBundleProvider(bundle);
+            }
+        });
     }
 
     @Override

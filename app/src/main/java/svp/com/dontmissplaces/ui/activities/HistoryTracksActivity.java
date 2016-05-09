@@ -12,6 +12,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.presenters.HistoryTracksPresenter;
+import svp.com.dontmissplaces.ui.BaseBundleProvider;
 import svp.com.dontmissplaces.ui.adapters.HistoryCursorAdapter;
 import svp.com.dontmissplaces.ui.model.TrackView;
 
@@ -30,6 +31,10 @@ public class HistoryTracksActivity extends AppCompatActivityView<HistoryTracksPr
 
         public ViewState(HistoryTracksActivity view) {
             super(view);
+        }
+
+        public BaseBundleProvider getBundle(){
+            return view.getBundle();
         }
 
         @Override

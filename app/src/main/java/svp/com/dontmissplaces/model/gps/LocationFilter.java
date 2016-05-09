@@ -35,10 +35,10 @@ public class LocationFilter {
     public Location getPrevLocation(){
         return previousLocation;
     }
+//    public void addLocation(Location proposedLocation) {
+//            previousLocation = proposedLocation;
+//    }
     public void addLocation(Location proposedLocation) {
-            previousLocation = proposedLocation;
-    }
-    public void addLocation1(Location proposedLocation) {
         if(previousLocation == null){
             previousLocation = proposedLocation;
             return;
@@ -59,7 +59,7 @@ public class LocationFilter {
             }
 
             // Do not log a waypoint which might be on any side of the previous waypoint
-            if (proposedLocation != null && previousLocation != null && proposedLocation.getAccuracy() > previousLocation.distanceTo(proposedLocation)) {
+            if (proposedLocation != null && proposedLocation.getAccuracy() > previousLocation.distanceTo(proposedLocation)) {
                 Log.w(TAG, String.format("A weak location was received, not quite clear from the previous waypoint... (%f more then max %f)",
                         proposedLocation.getAccuracy(), previousLocation.distanceTo(proposedLocation)));
                 proposedLocation = addBadLocation(proposedLocation);
@@ -106,10 +106,12 @@ public class LocationFilter {
             if (proposedLocation != null) {
                 mWeakLocations.clear();
             }
+            if(proposedLocation != null) {
+                previousLocation.set(proposedLocation);
+            }
         }catch (Exception ex){
             Log.e(TAG,"addLocation",ex);
         }
-        previousLocation.set(proposedLocation);
     }
 
     private Location addBadLocation(Location location) {

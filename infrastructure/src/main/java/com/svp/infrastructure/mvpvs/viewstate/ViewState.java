@@ -48,4 +48,7 @@ public abstract class ViewState<V extends IActivityView> implements IViewState {
                  return snackbar;
     }
 
+    public CharSequence getString(int id){
+        return getActivity().getString(id);
+    }
 }

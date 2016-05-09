@@ -1,9 +1,13 @@
 package svp.com.dontmissplaces.presenters;
 
+import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.db.Repository;
 import svp.com.dontmissplaces.db.Track;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
-import svp.com.dontmissplaces.ui.BundleProvider;
+import com.svp.infrastructure.mvpvs.bundle.BundleProvider;
+import com.svp.infrastructure.mvpvs.bundle.IBundleProvider;
+
+import svp.com.dontmissplaces.ui.BaseBundleProvider;
 import svp.com.dontmissplaces.ui.activities.SaveTrackActivity;
 
 public class SaveTrackPresenter extends CommutativePresenter<SaveTrackActivity,SaveTrackActivity.ViewState> {
@@ -17,18 +21,22 @@ public class SaveTrackPresenter extends CommutativePresenter<SaveTrackActivity,S
 
     protected void onAttachedView(SaveTrackActivity view){
         super.onAttachedView(view);
-        BundleProvider bundleProvider = state.getBundle();
+        BaseBundleProvider bundleProvider = state.getBundle();
         track = bundleProvider.getTrack();
 
         state.setTrackName(track.name);
     }
 
     public void save() {
-        commutator.goTo(ActivityCommutator.ActivityOperationResult.HistoryTracks);
+        IBundleProvider bp = BundleProvider.create()
+                .putActionText(state.getString(R.string.snackbar_activity_save_track_was_saved));
+        commutator.goTo(ActivityCommutator.ActivityOperationResult.HistoryTracks, bp);
     }
 
     public void delete() {
         repository.deleteTrack(track);
-        commutator.goTo(ActivityCommutator.ActivityOperationResult.HistoryTracks);
+        IBundleProvider bp = BundleProvider.create()
+                .putActionText(state.getString(R.string.snackbar_activity_save_track_was_deleted));
+        commutator.goTo(ActivityCommutator.ActivityOperationResult.HistoryTracks, bp);
     }
 }

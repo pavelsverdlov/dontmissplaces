@@ -302,6 +302,7 @@ Enter number of feet for acres/hour or meters for use in hectares/hour.\n </stri
     <!-- or title like this: 00:00:00, Walking -->
     <string name="title_activity_save_track">New Track</string>
     <string name="snackbar_activity_save_track_was_saved">Track was saved</string>
+    <string name="snackbar_activity_save_track_was_deleted">Track was deleted</string>
     <string name="title_activity_track_save_track_of_track">Name</string>
 
 </resources>

@@ -58,7 +58,7 @@ public class StepSensorService {
     }
     public void onActivityCreated() {
         resetCounter();
-        // Register listeners again if in detector or counter states with restored delay
+        // register listeners again if in detector or counter states with restored delay
         if (mState == StepSensorTypes.DETECTOR) {
             registerEventListener(mMaxDelay, Sensor.TYPE_STEP_DETECTOR);
         } else if (mState == StepSensorTypes.COUNTER) {
@@ -74,7 +74,7 @@ public class StepSensorService {
         // END_INCLUDE(restore)
     }
     /**
-     * Register a {@link android.hardware.SensorEventListener} for the sensor and max batch delay.
+     * register a {@link android.hardware.SensorEventListener} for the sensor and max batch delay.
      * The maximum batch delay specifies the maximum duration in microseconds for which subsequent
      * sensor events can be temporarily stored by the sensor before they are delivered to the
      * registered SensorEventListener. A larger delay allows the system to handle sensor events more
@@ -115,7 +115,7 @@ public class StepSensorService {
         // sensorType is either Sensor.TYPE_STEP_COUNTER or Sensor.TYPE_STEP_DETECTOR
         Sensor sensor = sensorManager.getDefaultSensor(sensorType);
 
-        // Register the listener for this sensor in batch mode.
+        // register the listener for this sensor in batch mode.
         // If the max delay is 0, events will be delivered in continuous mode without batching.
         final boolean batchMode = sensorManager.registerListener(
                 mListener, sensor, SensorManager.SENSOR_DELAY_NORMAL, maxdelay);
