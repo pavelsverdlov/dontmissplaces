@@ -121,6 +121,12 @@ public class App extends Application {
                 return new BaseBundleProvider(bundle);
             }
         });
+        BundleContainer.register(HistoryTracksActivity.class, new BundleContainer.IBundleCreator() {
+            @Override
+            public IBundleProvider create(Bundle bundle) {
+                return new BaseBundleProvider(bundle);
+            }
+        });
     }
 
     @Override

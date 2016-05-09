@@ -14,6 +14,8 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import svp.com.dontmissplaces.db.Repository;
+import svp.com.dontmissplaces.db.Track;
+import svp.com.dontmissplaces.db.Waypoint;
 import svp.com.dontmissplaces.model.Traffic;
 import svp.com.dontmissplaces.model.gps.GPSServiceProvider;
 import svp.com.dontmissplaces.model.gps.OnLocationChangeListener;
@@ -24,7 +26,8 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implemen
     private static final String TAG = "MapsPresenter";
     private Location prevLocation;
     private final Repository repository;
-    GPSServiceProvider gpsService;
+    private GPSServiceProvider gpsService;
+    private Track track;
 
     public MapsPresenter(Repository repository) {
         this.repository = repository;
@@ -60,7 +63,8 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implemen
         }
     }
 
-    public void gpsStart(){
+    public void gpsStart(Track track){
+        this.track = track;
         gpsService.startup(new Runnable() {
             @Override
             public void run() {
@@ -92,6 +96,7 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implemen
 //            if(movement.type == Traffic.SpeedTypes.Undefined){
 //                return;
 //            }
+            repository.insertWaypoint(new Waypoint(track.id,location));
 
             state.addPolyline(new PolylineOptions()
                     .add(LocationEx.getLatLng(prevLocation), LocationEx.getLatLng(location))

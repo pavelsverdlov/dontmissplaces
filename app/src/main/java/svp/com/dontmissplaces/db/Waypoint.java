@@ -13,7 +13,7 @@ public class Waypoint {
     /** The min in meters per second */
     double speed;
     /** The segment _id to which this segment belongs */
-    int track;
+    long track;
     /** The accuracy of the fix */
     private double accuracy;
     /** The altitude */
@@ -29,7 +29,7 @@ public class Waypoint {
     double getAltitude(){return altitude; }
 
 
-    public Waypoint(int trackId, Location location){
+    public Waypoint(long trackId, Location location){
         track = trackId;
 
         time = location.getTime();

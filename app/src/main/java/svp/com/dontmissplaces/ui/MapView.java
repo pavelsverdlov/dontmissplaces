@@ -22,6 +22,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.svp.infrastructure.mvpvs.view.View;
 
 import svp.com.dontmissplaces.R;
+import svp.com.dontmissplaces.db.Track;
 import svp.com.dontmissplaces.model.Map.GoogleMapsPlaceService;
 import svp.com.dontmissplaces.model.gps.GPSServiceProvider;
 import svp.com.dontmissplaces.presenters.MapsPresenter;
@@ -76,11 +77,6 @@ public class MapView
             return view.activity;
         }
 
-        public void stateTest() {
-            Snackbar.make(view.activity.getWindow().getDecorView().getRootView(),
-                    "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-        }
     }
 
     private GoogleMap mMap;
@@ -188,8 +184,8 @@ public class MapView
             mMap.setMyLocationEnabled(false);
         }
     }
-    public void startTrackRecording() {
-        getPresenter().gpsStart();
+    public void startTrackRecording(Track track) {
+        getPresenter().gpsStart(track);
     }
     public void stopTrackRecording() {
         getPresenter().gpsStop();

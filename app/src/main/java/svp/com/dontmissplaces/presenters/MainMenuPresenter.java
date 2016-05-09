@@ -22,7 +22,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         this.repository = repository;
     }
 
-    public void startTrackRecording() {
+    public Track startTrackRecording() {
         if(timer != null){
             timer.stop();
             timer = null;
@@ -32,6 +32,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
 
         timer.start();
         recordingTrack = repository.insertTrack(new Date().toString());
+        return recordingTrack;
     }
     public void pauseTrackRecording() {
         timer.pause();

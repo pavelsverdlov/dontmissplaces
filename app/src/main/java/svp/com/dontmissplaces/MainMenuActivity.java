@@ -21,6 +21,7 @@ import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import svp.com.dontmissplaces.db.Track;
 import svp.com.dontmissplaces.model.AlarmReceiver;
 import svp.com.dontmissplaces.model.gps.GPSServiceProvider;
 import svp.com.dontmissplaces.presenters.MainMenuPresenter;
@@ -216,8 +217,8 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         fabTrackRecordingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getPresenter().startTrackRecording();
-                mapView.startTrackRecording();
+                Track track = getPresenter().startTrackRecording();
+                mapView.startTrackRecording(track);
             }
         });
     }

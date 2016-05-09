@@ -46,7 +46,7 @@ public class Repository extends SQLiteOpenHelper {
 
     }
 
-    void insertWaypoint(Waypoint waypoint) {
+    public void insertWaypoint(Waypoint waypoint) {
         if (waypoint.track < 0){
             throw new IllegalArgumentException("Track may not the less then 0.");
         }

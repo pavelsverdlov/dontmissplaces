@@ -35,10 +35,10 @@ public class LocationFilter {
     public Location getPrevLocation(){
         return previousLocation;
     }
-//    public void addLocation(Location proposedLocation) {
-//            previousLocation = proposedLocation;
-//    }
     public void addLocation(Location proposedLocation) {
+            previousLocation = proposedLocation;
+    }
+    public void addLocation1(Location proposedLocation) {
         if(previousLocation == null){
             previousLocation = proposedLocation;
             return;
