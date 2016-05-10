@@ -33,4 +33,6 @@ public abstract class Presenter<V extends IActivityView, VS extends IViewState>
 
     protected void onAttachedView(V view){}
     protected void onDetachedView(V view){}
+
+
 }

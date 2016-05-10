@@ -17,12 +17,15 @@ public class BundleProvider implements IBundleProvider {
         return new BundleProvider(bundle);
     }
     public static IBundleProvider create(){
-        return new BundleProvider(null);
+        return new BundleProvider(new Bundle());
     }
 
     private static final String previousActionKey = UUID.randomUUID().toString();
 
     protected final Bundle bundle;
+    protected BundleProvider(Intent intent) {
+        this(intent.getExtras());
+    }
     protected BundleProvider(Bundle b) {
         this.bundle = b == null ? new Bundle() : b;
     }

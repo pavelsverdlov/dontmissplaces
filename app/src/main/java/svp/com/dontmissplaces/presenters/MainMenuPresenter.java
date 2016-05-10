@@ -1,5 +1,7 @@
 package svp.com.dontmissplaces.presenters;
 
+import android.content.Intent;
+
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -50,6 +52,16 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
 
     public void openHistoryTracks() {
         commutator.goTo(ActivityCommutator.ActivityOperationResult.HistoryTracks);
+    }
+
+    public void incomingResultFrom(int resultCode, Intent data) {
+        if(ActivityCommutator.ActivityOperationResult.HistoryTracks.is(resultCode)){
+            BaseBundleProvider bp = new BaseBundleProvider(data);
+            if(ActivityCommutator.ActivityOperationResult.HistoryTracks.is(resultCode)){
+                Track track = bp.getTrack();
+                state.displayTrackOnMap(track);
+            }
+        }
     }
 
     private class TrackTimer extends TimerTask{

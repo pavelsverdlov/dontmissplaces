@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -21,6 +22,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.svp.infrastructure.mvpvs.view.View;
 
+import java.util.Vector;
+
 import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.db.Track;
 import svp.com.dontmissplaces.model.Map.GoogleMapsPlaceService;
@@ -34,9 +37,10 @@ public class MapView
     private final String TAG = "MapView";
 
     public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<MapView> {
-
+        private final Vector<LatLng> points;
         public ViewState(MapView view) {
             super(view);
+            points = new Vector<>();
         }
 
         public boolean checkPermissionFineLocation(){
@@ -44,15 +48,12 @@ public class MapView
         }
 
         public void addPolyline(final PolylineOptions options){
+            points.addAll(options.getPoints());
+            preparePolylineOptions(options);
             view.activity.runOnUiThread(new Runnable(){
                 @Override
                 public void run() {
                     view.mMap.addPolyline(options);
-//                    view.mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(51.5, -0.1)));
-//                    view.mMap.addPolyline(new PolylineOptions()
-//                .add(new LatLng(51.5, -0.1), new LatLng(40.7, -74.0))
-//                .width(5)
-//                .color(Color.RED));
                 }
             });
         }
@@ -66,10 +67,16 @@ public class MapView
             });
         }
 
+        public void startLocationListening() { points.clear(); }
+        public void stopLocationListening() {  }
 
         @Override
         protected void restore() {
-
+            if(points.size() > 0){
+                PolylineOptions options = preparePolylineOptions(new PolylineOptions()).addAll(points);
+                points.clear();
+                addPolyline(options);
+            }
         }
 
         @Override
@@ -77,6 +84,14 @@ public class MapView
             return view.activity;
         }
 
+
+        @NonNull
+        private static PolylineOptions preparePolylineOptions(PolylineOptions options){
+            return options
+                    .width(5)
+                    .color(Color.BLUE)
+                    .geodesic(true);
+        }
     }
 
     private GoogleMap mMap;
@@ -195,5 +210,8 @@ public class MapView
     }
     public void pauseTrackRecording() {
 
+    }
+    public void showTrack(Track track) {
+        getPresenter().showTrack(track);
     }
 }

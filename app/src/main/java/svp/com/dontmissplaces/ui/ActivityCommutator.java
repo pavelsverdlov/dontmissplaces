@@ -29,6 +29,9 @@ public final class ActivityCommutator {
         public int toInt() {
             return code;
         }
+        public boolean is(int key) {
+            return code == key;
+        }
     }
 
     public interface ICommutativeElement{

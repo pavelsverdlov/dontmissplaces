@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.Date;
+import java.util.Vector;
 
 import svp.com.dontmissplaces.db.DatabaseStructure.Tracks;
 import svp.com.dontmissplaces.db.DatabaseStructure.Waypoints;
@@ -179,5 +180,30 @@ public class Repository extends SQLiteOpenHelper {
     public Cursor getCursorTracks() {
         SQLiteDatabase sqldb = getReadableDatabase();
         return sqldb.rawQuery(Tracks.SELECT_ALL, null);
+    }
+
+    public Track getTrack(long id) {
+        SQLiteDatabase sqldb = getReadableDatabase();
+        Cursor cursor = sqldb.query(Tracks.TABLE, null, Tracks._ID + "= ?", new String[] { String.valueOf(id) },
+                null, null, null, null);
+        return new Track(cursor);
+    }
+
+    public Vector<Waypoint> getWaypoints(Track track) {
+        Vector<Waypoint> waypoints = new Vector<>();
+
+        SQLiteDatabase sqldb = getWritableDatabase();
+
+        Cursor cursor = sqldb.query(Waypoints.TABLE, null, Tracks._ID + "= ?", new String[] { String.valueOf(track.id) },
+                null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                waypoints.add(new Waypoint(track.id, cursor));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return waypoints;
     }
 }

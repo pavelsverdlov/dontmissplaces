@@ -7,10 +7,12 @@ import android.location.LocationManager;
 import android.util.Log;
 
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.svp.infrastructure.mvpvs.presenter.Presenter;
 
 import java.util.Date;
+import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
 import svp.com.dontmissplaces.db.Repository;
@@ -71,10 +73,12 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implemen
                 Log.d(TAG,"GPS service startup");
             }
         });
+        state.startLocationListening();
     }
     public void gpsStop() {
         gpsService.shutdown();
         Log.d(TAG,"GPS service shutdown");
+        state.stopLocationListening();
     }
 
     @Override
@@ -99,12 +103,9 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implemen
             repository.insertWaypoint(new Waypoint(track.id,location));
 
             state.addPolyline(new PolylineOptions()
-                    .add(LocationEx.getLatLng(prevLocation), LocationEx.getLatLng(location))
-                    .width(5)
-                    .color(Color.BLUE)
-                    .geodesic(true));
+                    .add(LocationEx.getLatLng(prevLocation), LocationEx.getLatLng(location)));
 
-            state.moveCamera(LocationEx.getLatLng(location));
+            //state.moveCamera(LocationEx.getLatLng(location));
 
         }catch (Exception ex){
             throw ex;
@@ -114,4 +115,14 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implemen
     }
 
 
+    public void showTrack(Track track) {
+        Vector<Waypoint> waypoints = repository.getWaypoints(track);
+
+        Vector<LatLng> points = new Vector<>();
+        for (Waypoint w : waypoints){
+            points.add(w.getLatLng());
+        }
+
+        state.addPolyline(new PolylineOptions().addAll(points));
+    }
 }

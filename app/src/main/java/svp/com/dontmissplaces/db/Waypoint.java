@@ -1,6 +1,9 @@
 package svp.com.dontmissplaces.db;
 
+import android.database.Cursor;
 import android.location.Location;
+
+import com.google.android.gms.maps.model.LatLng;
 
 public class Waypoint {
     public long id;
@@ -40,5 +43,22 @@ public class Waypoint {
         bearing = location.getBearing();
 
         speed = location.getSpeed();
+    }
+    public Waypoint(long trackId, Cursor cursor){
+        track = trackId;
+
+        time = cursor.getLong(cursor.getColumnIndex(DatabaseStructure.WaypointsColumns.TIME));
+        latitude = cursor.getDouble(cursor.getColumnIndex(DatabaseStructure.WaypointsColumns.LATITUDE));
+        longitude = cursor.getDouble(cursor.getColumnIndex(DatabaseStructure.WaypointsColumns.LONGITUDE));
+        accuracy = cursor.getDouble(cursor.getColumnIndex(DatabaseStructure.WaypointsColumns.ACCURACY));
+        altitude = cursor.getDouble(cursor.getColumnIndex(DatabaseStructure.WaypointsColumns.ALTITUDE));
+        bearing = cursor.getDouble(cursor.getColumnIndex(DatabaseStructure.WaypointsColumns.BEARING));
+
+        speed = cursor.getDouble(cursor.getColumnIndex(DatabaseStructure.WaypointsColumns.SPEED));
+    }
+
+
+    public LatLng getLatLng() {
+        return new LatLng(latitude,longitude);
     }
 }

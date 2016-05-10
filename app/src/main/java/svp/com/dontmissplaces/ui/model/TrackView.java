@@ -11,9 +11,11 @@ import svp.com.dontmissplaces.db.Track;
 
 public class TrackView {
     TextView title;
+    public long id;
 
     public void parse(Cursor cursor) {
         title.setText(Track.getName(cursor));
+        id = Track.getId(cursor);
     }
 
     public void initView(View view) {

@@ -34,7 +34,7 @@ public class DatabaseStructure {
         public static final String DELETE_BY = "DELETE FROM " + Tracks.TABLE + " WHERE;";
     }
 
-    public static class TracksColumns{
+    public static class TracksColumns implements BaseColumns{
         public static final String NAME          = "name";
         public static final String CREATION_TIME = "creationtime";
         static final String CREATION_TIME_TYPE   = "INTEGER NOT NULL";

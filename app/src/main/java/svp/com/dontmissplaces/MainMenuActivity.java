@@ -85,6 +85,10 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         public void beginRise(){
 
         }
+
+        public void displayTrackOnMap(Track track) {
+            view.mapView.showTrack(track);
+        }
     }
 
     private final MapView mapView;
@@ -196,6 +200,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         if (RESULT_CANCELED == resultCode) {
             return;
         }
+        getPresenter().incomingResultFrom(resultCode,data);
     }
 
     @Override

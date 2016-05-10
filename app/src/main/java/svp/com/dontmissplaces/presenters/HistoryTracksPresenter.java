@@ -6,9 +6,13 @@ import android.widget.Toast;
 import com.svp.infrastructure.mvpvs.presenter.Presenter;
 
 import svp.com.dontmissplaces.db.Repository;
+import svp.com.dontmissplaces.db.Track;
+import svp.com.dontmissplaces.ui.ActivityCommutator;
+import svp.com.dontmissplaces.ui.BaseBundleProvider;
 import svp.com.dontmissplaces.ui.activities.HistoryTracksActivity;
+import svp.com.dontmissplaces.ui.model.TrackView;
 
-public class HistoryTracksPresenter extends Presenter<HistoryTracksActivity,HistoryTracksActivity.ViewState> {
+public class HistoryTracksPresenter extends CommutativePresenter<HistoryTracksActivity,HistoryTracksActivity.ViewState> {
 
     private final Repository repository;
 
@@ -37,4 +41,9 @@ public class HistoryTracksPresenter extends Presenter<HistoryTracksActivity,Hist
     }
 
 
+    public void openTrack(TrackView trackview) {
+        Track track = repository.getTrack(trackview.id);
+        BaseBundleProvider bp = new BaseBundleProvider().putTrack(track);
+        commutator.backTo(bp);
+    }
 }
