@@ -60,4 +60,8 @@ public class UncaughtExceptionHandler implements Thread.UncaughtExceptionHandler
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(10);
     }
+
+//    java.lang.NullPointerException: Attempt to invoke virtual method 'void svp.com.dontmissplaces.ui.ActivityCommutator.backTo(com.svp.infrastructure.mvpvs.bundle.IBundleProvider)' on a null object reference
+//    at svp.com.dontmissplaces.presenters.HistoryTracksPresenter.openTrack(HistoryTracksPresenter.java:47)
+//    at svp.com.dontmissplaces.ui.activities.HistoryTracksActivity$2.onItemClick(HistoryTracksActivity.java:96)
 }

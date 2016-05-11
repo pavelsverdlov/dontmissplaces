@@ -200,7 +200,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         if (RESULT_CANCELED == resultCode) {
             return;
         }
-        getPresenter().incomingResultFrom(resultCode,data);
+        getPresenter().incomingResultFrom(requestCode,data);
     }
 
     @Override

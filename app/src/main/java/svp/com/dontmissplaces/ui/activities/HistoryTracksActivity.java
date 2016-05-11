@@ -32,10 +32,9 @@ public class HistoryTracksActivity extends AppCompatActivityView<HistoryTracksPr
     public ActivityCommutator.ActivityOperationResult getOperation() {
         return ActivityCommutator.ActivityOperationResult.HistoryTracks;
     }
-
     @Override
     public Activity getActivity() {
-        return null;
+        return this;
     }
 
     public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<HistoryTracksActivity> {

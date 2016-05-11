@@ -6,7 +6,6 @@ import com.svp.infrastructure.mvpvs.bundle.BundleProvider;
 import svp.com.dontmissplaces.db.Track;
 
 public class BaseBundleProvider extends BundleProvider {
-    private int requestCode;
 
     public BaseBundleProvider(Intent intent) {
         super(intent);

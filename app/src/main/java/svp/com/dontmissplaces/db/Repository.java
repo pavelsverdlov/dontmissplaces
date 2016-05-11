@@ -186,13 +186,20 @@ public class Repository extends SQLiteOpenHelper {
         SQLiteDatabase sqldb = getReadableDatabase();
         Cursor cursor = sqldb.query(Tracks.TABLE, null, Tracks._ID + "= ?", new String[] { String.valueOf(id) },
                 null, null, null, null);
-        return new Track(cursor);
+        try {
+            if (cursor.moveToFirst()) {
+                return new Track(cursor);
+            }
+        }finally {
+            cursor.close();
+        }
+        return null;
     }
 
     public Vector<Waypoint> getWaypoints(Track track) {
         Vector<Waypoint> waypoints = new Vector<>();
 
-        SQLiteDatabase sqldb = getWritableDatabase();
+        SQLiteDatabase sqldb = getReadableDatabase();
 
         Cursor cursor = sqldb.query(Waypoints.TABLE, null, Tracks._ID + "= ?", new String[] { String.valueOf(track.id) },
                 null, null, null, null);

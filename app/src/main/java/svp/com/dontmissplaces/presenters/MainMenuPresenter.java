@@ -54,10 +54,10 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         commutator.goTo(ActivityCommutator.ActivityOperationResult.HistoryTracks);
     }
 
-    public void incomingResultFrom(int resultCode, Intent data) {
-        if(ActivityCommutator.ActivityOperationResult.HistoryTracks.is(resultCode)){
+    public void incomingResultFrom(int requestCode, Intent data) {
+        if(ActivityCommutator.ActivityOperationResult.HistoryTracks.is(requestCode)){
             BaseBundleProvider bp = new BaseBundleProvider(data);
-            if(ActivityCommutator.ActivityOperationResult.HistoryTracks.is(resultCode)){
+            if(ActivityCommutator.ActivityOperationResult.HistoryTracks.is(requestCode)){
                 Track track = bp.getTrack();
                 state.displayTrackOnMap(track);
             }

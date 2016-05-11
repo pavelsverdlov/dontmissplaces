@@ -22,17 +22,11 @@ public class HistoryTracksPresenter extends CommutativePresenter<HistoryTracksAc
 
     @Override
     public void onAttachedView(HistoryTracksActivity view) {
+        super.onAttachedView(view);
         CharSequence text = state.getBundle().getPreviousActionText();
         if(text != null) {
             state.getToast(text);
         }
-//        super.attachView(view);
-//
-////        repository.clearTracks();
-////
-////        for (String name : new String[]{ "Track 1","Track 2","Track 3","Track 4" }){
-////            repository.insertTrack(name);
-////        }
     }
 
 
