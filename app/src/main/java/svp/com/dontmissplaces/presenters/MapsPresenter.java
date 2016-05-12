@@ -101,9 +101,10 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implemen
 //                return;
 //            }
             repository.insertWaypoint(new Waypoint(track.id,location));
-
-            state.addPolyline(new PolylineOptions()
-                    .add(LocationEx.getLatLng(prevLocation), LocationEx.getLatLng(location)));
+            Vector v =new Vector<LatLng>();
+            v.add(LocationEx.getLatLng(prevLocation));
+            v.add(LocationEx.getLatLng(location));
+            state.addPolyline(v);
 
             //state.moveCamera(LocationEx.getLatLng(location));
 
@@ -123,6 +124,6 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implemen
             points.add(w.getLatLng());
         }
 
-        state.addPolyline(new PolylineOptions().addAll(points));
+        state.addPolyline(points);
     }
 }

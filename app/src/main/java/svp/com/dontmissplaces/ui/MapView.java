@@ -22,6 +22,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.svp.infrastructure.mvpvs.view.View;
 
+import java.util.Collection;
 import java.util.Vector;
 
 import svp.com.dontmissplaces.R;
@@ -47,13 +48,17 @@ public class MapView
             return view.permissions.checkPermissionFineLocation();
         }
 
-        public void addPolyline(final PolylineOptions options){
-            points.addAll(options.getPoints());
-            preparePolylineOptions(options);
+        public void addPolyline(final Collection<LatLng> lls){
+            points.addAll(lls);
             view.activity.runOnUiThread(new Runnable(){
                 @Override
                 public void run() {
+                    PolylineOptions options = new PolylineOptions();
+                    options.addAll(lls);
+                    preparePolylineOptions(options);
                     view.mMap.addPolyline(options);
+
+                   // view.mMap.addCircle()
                 }
             });
         }
@@ -73,9 +78,8 @@ public class MapView
         @Override
         protected void restore() {
             if(points.size() > 0){
-                PolylineOptions options = preparePolylineOptions(new PolylineOptions()).addAll(points);
+                addPolyline(points);
                 points.clear();
-                addPolyline(options);
             }
         }
 
