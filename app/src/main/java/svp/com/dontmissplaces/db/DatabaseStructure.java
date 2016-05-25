@@ -22,6 +22,7 @@ public class DatabaseStructure {
         static final String CREATE_STATEMENT = "CREATE TABLE " + TABLE  +
                 "( " + _ID   + " " + _ID_TYPE +
                 ", " + TRACK + " " + TRACK_TYPE +
+                ", " + CREATION_TIME + " " + CREATION_TIME_TYPE +
                 ");";
     }
 
@@ -82,8 +83,10 @@ public class DatabaseStructure {
     public static class SessionTrackColumns implements Base {
         /** The segment _id to which this session belongs */
         public static final String TRACK = "session";
-
         static final String TRACK_TYPE   = "INTEGER NOT NULL";
+
+        public static final String CREATION_TIME = "creationtime";
+        static final String CREATION_TIME_TYPE   = "INTEGER NOT NULL";
     }
 
     public interface Base extends BaseColumns {

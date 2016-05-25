@@ -67,8 +67,8 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implemen
         }
     }
 
-    public void gpsStart(SessionView track){
-        this.sessionTrack = track;
+    public void gpsStart(SessionView session){
+        this.sessionTrack = session;
         gpsService.startup(new Runnable() {
             @Override
             public void run() {
@@ -85,11 +85,11 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implemen
 
     @Override
     public void OnLocationChange(Location location) {
+        Waypoint waypoint = null;
         try {
             Log.d(TAG,"OnLocationChange " + location);
-            Waypoint waypoint;
+            waypoint = createWaypoint(location);
             if(prevLocation == null){
-                prevWaypoint = createWaypoint(location);
                 return;
             }
 
@@ -104,13 +104,13 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implemen
 //            if(movement.type == Traffic.SpeedTypes.Undefined){
 //                return;
 //            }
-            waypoint = createWaypoint(location);
             state.addPolyline(PolylineView.create(prevWaypoint, waypoint));
 
             //state.moveCamera(LocationEx.getLatLng(location));
         }catch (Exception ex){
             throw ex;
         }finally {
+            prevWaypoint = waypoint;
             prevLocation = location;
         }
     }
@@ -122,11 +122,12 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implemen
     }
 
     public void showSessionsTrack(Collection<SessionView> sessions) {
-        Vector<LatLng> points = new Vector<>();
         PolylineView polyline = null;
+        LatLng first = null;
         for (SessionView s : sessions) {
             PolylineView p = PolylineView.create(s.waypoints);
             if(polyline == null) {
+                first = s.waypoints.firstElement().getLatLng();
                 polyline = p;
             }else{
                 polyline.add(p);
@@ -134,6 +135,6 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implemen
         }
 
         state.addPolyline(polyline);
-        state.moveCamera(points.firstElement());
+        state.moveCamera(first);
     }
 }

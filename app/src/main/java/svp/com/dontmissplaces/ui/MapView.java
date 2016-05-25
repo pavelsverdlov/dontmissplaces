@@ -197,8 +197,8 @@ public class MapView
             mMap.setMyLocationEnabled(false);
         }
     }
-    public void startTrackRecording(SessionView track) {
-        getPresenter().gpsStart(track);
+    public void startTrackRecording(SessionView session) {
+        getPresenter().gpsStart(session);
     }
     public void stopTrackRecording() {
         getPresenter().gpsStop();

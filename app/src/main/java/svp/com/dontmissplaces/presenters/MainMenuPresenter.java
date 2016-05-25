@@ -29,7 +29,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         this.repository = repository;
     }
 
-    public SessionView startTrackRecording() {
+    public SessionView startNewTrackSession() {
         if(timer != null){
             timer.stop();
             timer = null;
@@ -45,7 +45,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         timer.start();
 
         recordingTrack = repository.getOrInsertTrack(recordingTrack);
-        recordingSession = repository.insertSession();
+        recordingSession = repository.insertSession(recordingTrack);
 
         return new SessionView(recordingSession,new Vector<Waypoint>());
     }

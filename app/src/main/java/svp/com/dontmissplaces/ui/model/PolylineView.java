@@ -45,23 +45,15 @@ public class PolylineView {
             this.points.add(w);
         }
     }
-
-    public void addPoint(Waypoint point){
-        points.add(point);
-    }
-
     public void clear() {
         points.clear();
     }
-
     public int size() {
         return points.size();
     }
-
     public void add(PolylineView polyline) {
         lines.add(polyline);
     }
-
     public void addPolylineOptions(GoogleMap map){
         //Arrays.asList(points)
         Vector<LatLng> ll = new Vector<>();

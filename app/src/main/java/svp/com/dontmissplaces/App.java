@@ -32,6 +32,7 @@ public class App extends Application {
 
     @Override
     public void onCreate() {
+        this.deleteDatabase(Repository.dbname);
         //map view
         PresenterContainer.register(MapView.class, new PresenterContainer.IPresenterCreator() {
             @Override
@@ -114,6 +115,7 @@ public class App extends Application {
         ViewStateContainer.Register(_class, stateCreator);
     }
 
+    //refactor because this is too complicated
     private void registerBundleProviders(){
         BundleContainer.register(SaveTrackActivity.class, new BundleContainer.IBundleCreator() {
             @Override

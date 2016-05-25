@@ -18,8 +18,6 @@ import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import svp.com.dontmissplaces.db.SessionTrack;
-import svp.com.dontmissplaces.db.Track;
 import svp.com.dontmissplaces.presenters.MainMenuPresenter;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.ActivityPermissions;
@@ -222,8 +220,8 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         fabTrackRecordingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SessionView track = getPresenter().startTrackRecording();
-                mapView.startTrackRecording(track);
+                SessionView session = getPresenter().startNewTrackSession();
+                mapView.startTrackRecording(session);
             }
         });
     }

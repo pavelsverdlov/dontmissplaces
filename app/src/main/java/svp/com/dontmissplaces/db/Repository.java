@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.BaseColumns;
 
 import java.util.Date;
 import java.util.Vector;
@@ -19,17 +20,18 @@ import svp.com.dontmissplaces.db.DatabaseStructure.TracksColumns;
  * Created by Pasha on 4/2/2016.
  */
 public class Repository extends SQLiteOpenHelper {
-    private static final String dbname ="dmpdb";
-    private static final int dbversion =1;
+    public static final String dbname = "dmpdb";
+    private static final int dbversion = 1;
     private static String TAG = Repository.class.getName();
-    public Repository(Context context){
-        super(context,dbname,null,dbversion);
+
+    public Repository(Context context) {
+        super(context, dbname, null, dbversion);
     }
 
     public void vacuum() {
         new Thread() {
             @Override
-            public void run(){
+            public void run() {
                 SQLiteDatabase sqldb = getWritableDatabase();
                 sqldb.execSQL("VACUUM");
             }
@@ -38,6 +40,7 @@ public class Repository extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        //db.execSQL("DROP TABLE " + Tracks.TABLE + "," + Sessions.TABLE + "," + Waypoints.TABLE);
         db.execSQL(Tracks.CREATE_STATEMENT);
         db.execSQL(Sessions.CREATE_STATEMENT);
         db.execSQL(Waypoints.CREATE_STATEMENT);
@@ -49,7 +52,7 @@ public class Repository extends SQLiteOpenHelper {
     }
 
     public void insertWaypoint(Waypoint waypoint) {
-        if (waypoint.session < 0){
+        if (waypoint.session < 0) {
             throw new IllegalArgumentException("Track may not the less then 0.");
         }
         SQLiteDatabase sqldb = getWritableDatabase();
@@ -66,6 +69,7 @@ public class Repository extends SQLiteOpenHelper {
 
         waypoint.id = sqldb.insert(Waypoints.TABLE, null, args);
     }
+
     public int deleteTrack(Track track) {
         SQLiteDatabase sqldb = getWritableDatabase();
         Cursor cursor = null;
@@ -73,13 +77,13 @@ public class Repository extends SQLiteOpenHelper {
         try {
             sqldb.beginTransaction();
 
-            String[] args = new String[] { String.valueOf(track.id) };
-            affected += sqldb.delete(Tracks.TABLE,Tracks._ID + "= ?", args);
-            affected += sqldb.delete(Waypoints.TABLE,Waypoints.SESSION + "= ?", args);
+            String[] args = new String[]{String.valueOf(track.id)};
+            affected += sqldb.delete(Tracks.TABLE, Tracks._ID + "= ?", args);
+            affected += sqldb.delete(Waypoints.TABLE, Waypoints.SESSION + "= ?", args);
 
             sqldb.setTransactionSuccessful();
-        }finally {
-            if (cursor != null){
+        } finally {
+            if (cursor != null) {
                 cursor.close();
             }
             if (sqldb.inTransaction()) {
@@ -162,20 +166,20 @@ public class Repository extends SQLiteOpenHelper {
     }
 
 
-    public void clearTracks(){
+    public void clearTracks() {
         SQLiteDatabase sqldb = getWritableDatabase();
         sqldb.execSQL(Tracks.DELETE_ALL);
     }
 
-    public Track getOrInsertTrack(Track track){
+    public Track getOrInsertTrack(Track track) {
         Track got = getTrack(track.id);
-        if(got == null){
-           got = insertTrack(track.name);
+        if (got == null) {
+            got = insertTrack(track.name);
         }
         return got;
     }
 
-    public Track insertTrack(String name){
+    public Track insertTrack(String name) {
         long currentTime = new Date().getTime();
 
         ContentValues args = new ContentValues();
@@ -187,6 +191,7 @@ public class Repository extends SQLiteOpenHelper {
 
         return new Track(trackId, name, currentTime);
     }
+
     public Cursor getCursorTracks() {
         SQLiteDatabase sqldb = getReadableDatabase();
         return sqldb.rawQuery(Tracks.SELECT_ALL, null);
@@ -219,11 +224,42 @@ public class Repository extends SQLiteOpenHelper {
         return waypoints;
     }
 
-    public SessionTrack insertSession() {
-        return null;
+    public SessionTrack insertSession(Track track) {
+        long currentTime = new Date().getTime();
+
+        ContentValues args = new ContentValues();
+        args.put(Sessions.TRACK, track.id);
+        args.put(Sessions.CREATION_TIME, currentTime);
+
+        SQLiteDatabase sqldb = getWritableDatabase();
+        long sId = sqldb.insert(Sessions.TABLE, null, args);
+
+        return new SessionTrack(sId, track.id,currentTime);
     }
 
     public Vector<SessionTrack> getSessions(Track track) {
+        Vector<SessionTrack> sessions = new Vector<>();
+        try(Cursor cursor = getCursorById(Sessions.TABLE,track.id)){
+            if (cursor == null){
+                return sessions;
+            }
+            do{
+                sessions.add(new SessionTrack(cursor));
+            }while (cursor.moveToFirst());
+        }
+        return sessions;
+    }
+
+
+    private Cursor getCursorById(String table,long id) {
+        SQLiteDatabase sqldb = getReadableDatabase();
+        Cursor cursor = sqldb.query(
+                table, null,
+                BaseColumns._ID + "= ?", new String[]{String.valueOf(id)},
+                null, null, null, null);
+        if (cursor.moveToFirst()) {
+            return cursor;
+        }
         return null;
     }
 }
