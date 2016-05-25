@@ -1,24 +1,19 @@
 package svp.com.dontmissplaces.ui;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Color;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.svp.infrastructure.mvpvs.view.View;
 
@@ -26,10 +21,10 @@ import java.util.Collection;
 import java.util.Vector;
 
 import svp.com.dontmissplaces.R;
-import svp.com.dontmissplaces.db.Track;
 import svp.com.dontmissplaces.model.Map.GoogleMapsPlaceService;
-import svp.com.dontmissplaces.model.gps.GPSServiceProvider;
 import svp.com.dontmissplaces.presenters.MapsPresenter;
+import svp.com.dontmissplaces.ui.model.SessionView;
+import svp.com.dontmissplaces.ui.model.PolylineView;
 
 public class MapView
         extends View<MapsPresenter>
@@ -38,27 +33,24 @@ public class MapView
     private final String TAG = "MapView";
 
     public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<MapView> {
-        private final Vector<LatLng> points;
+        private final PolylineView polyline;
         public ViewState(MapView view) {
             super(view);
-            points = new Vector<>();
+            polyline = new PolylineView(Color.BLUE,5);
         }
 
         public boolean checkPermissionFineLocation(){
             return view.permissions.checkPermissionFineLocation();
         }
 
-        public void addPolyline(final Collection<LatLng> lls){
-            points.addAll(lls);
+        public void addPolyline(final PolylineView polyline){//final Collection<LatLng> lls){
+            this.polyline.add(polyline);
             view.activity.runOnUiThread(new Runnable(){
                 @Override
                 public void run() {
-                    PolylineOptions options = new PolylineOptions();
-                    options.addAll(lls);
-                    preparePolylineOptions(options);
-                    view.mMap.addPolyline(options);
+                    polyline.addPolylineOptions(view.mMap);
 
-                   // view.mMap.addCircle()
+                   // view.mMap.addCircle(new CircleOptions().center(lls.iterator().next()).radius(2).fillColor(Color.BLUE));
                 }
             });
         }
@@ -66,20 +58,22 @@ public class MapView
             view.activity.runOnUiThread(new Runnable(){
                 @Override
                 public void run() {
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+                    view.mMap.animateCamera(cameraUpdate);
                     //view.mMap.addMarker(new MarkerOptions().position(latLng)/*.title("Marker in Sydney")*/);
-                    view.mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+//                    view.mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                 }
             });
         }
 
-        public void startLocationListening() { points.clear(); }
+        public void startLocationListening() { polyline.clear(); }
         public void stopLocationListening() {  }
 
         @Override
         protected void restore() {
-            if(points.size() > 0){
-                addPolyline(points);
-                points.clear();
+            if(polyline.size() > 0){
+                addPolyline(polyline);
+                polyline.clear();
             }
         }
 
@@ -203,7 +197,7 @@ public class MapView
             mMap.setMyLocationEnabled(false);
         }
     }
-    public void startTrackRecording(Track track) {
+    public void startTrackRecording(SessionView track) {
         getPresenter().gpsStart(track);
     }
     public void stopTrackRecording() {
@@ -215,7 +209,7 @@ public class MapView
     public void pauseTrackRecording() {
 
     }
-    public void showTrack(Track track) {
-        getPresenter().showTrack(track);
+    public void showSessionsTrack(Collection<SessionView> sessions) {
+        getPresenter().showSessionsTrack(sessions);
     }
 }

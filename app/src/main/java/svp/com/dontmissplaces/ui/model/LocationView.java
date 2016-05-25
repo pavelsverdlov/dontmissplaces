@@ -9,7 +9,7 @@ import svp.com.dontmissplaces.utils.LocationEx;
 /**
  * Created by Pasha on 5/12/2016.
  */
-public class LocationView {
+public final class LocationView {
     private final Location location;
 
     public LocationView(Location location){

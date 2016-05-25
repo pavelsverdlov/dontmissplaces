@@ -5,20 +5,19 @@ import android.database.Cursor;
 import java.io.Serializable;
 import java.util.UUID;
 
-public class Track implements Serializable {
+public class Track extends dto {
     public static final String KEY = UUID.randomUUID().toString();
-    public final long id;
     public final String name;
     int creationtime;
 
     public Track(long trackId, String name, long currentTime) {
-        id = trackId;
+        super(trackId);
         this.name = name;
         this.creationtime = creationtime;
     }
 
     public Track(Cursor cursor){
-        id = getId(cursor);
+        super(getId(cursor));
         name = getName(cursor);
     }
 

@@ -3,25 +3,26 @@ package svp.com.dontmissplaces.presenters;
 
 import android.graphics.Color;
 import android.location.Location;
-import android.location.LocationManager;
 import android.util.Log;
 
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.svp.infrastructure.mvpvs.presenter.Presenter;
 
+import java.lang.reflect.Array;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Vector;
-import java.util.concurrent.TimeUnit;
 
 import svp.com.dontmissplaces.db.Repository;
+import svp.com.dontmissplaces.db.SessionTrack;
 import svp.com.dontmissplaces.db.Track;
 import svp.com.dontmissplaces.db.Waypoint;
-import svp.com.dontmissplaces.model.Traffic;
 import svp.com.dontmissplaces.model.gps.GPSServiceProvider;
 import svp.com.dontmissplaces.model.gps.OnLocationChangeListener;
 import svp.com.dontmissplaces.ui.MapView;
+import svp.com.dontmissplaces.ui.model.PolylineView;
+import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.utils.LocationEx;
 
 public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implements OnLocationChangeListener {
@@ -29,7 +30,7 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implemen
     private Location prevLocation;
     private final Repository repository;
     private GPSServiceProvider gpsService;
-    private Track track;
+    private SessionView sessionTrack;
 
     public MapsPresenter(Repository repository) {
         this.repository = repository;
@@ -65,8 +66,8 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implemen
         }
     }
 
-    public void gpsStart(Track track){
-        this.track = track;
+    public void gpsStart(SessionView track){
+        this.sessionTrack = track;
         gpsService.startup(new Runnable() {
             @Override
             public void run() {
@@ -100,7 +101,7 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implemen
 //            if(movement.type == Traffic.SpeedTypes.Undefined){
 //                return;
 //            }
-            repository.insertWaypoint(new Waypoint(track.id,location));
+            repository.insertWaypoint(new Waypoint(sessionTrack.getId(),location));
             Vector v =new Vector<LatLng>();
             v.add(LocationEx.getLatLng(prevLocation));
             v.add(LocationEx.getLatLng(location));
@@ -116,14 +117,22 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implemen
     }
 
 
-    public void showTrack(Track track) {
-        Vector<Waypoint> waypoints = repository.getWaypoints(track);
+    public void showSessionsTrack(Collection<SessionView> sessions) {
+//        Vector<SessionView> sessionViews = new Vector<>();
+//        Vector<SessionTrack> sessions = repository.getSessions(track);
 
         Vector<LatLng> points = new Vector<>();
-        for (Waypoint w : waypoints){
-            points.add(w.getLatLng());
+        PolylineView polyline;
+        for (SessionView s : sessions) {
+            polyline = new PolylineView(Color.BLUE,5, s.waypoints);
+
+//            sessionViews.add(new SessionView(s,));
+            for (Waypoint w : s.waypoints) {
+                points.add(w.getLatLng());
+            }
         }
 
-        state.addPolyline(points);
+        state.addPolyline(new PolylineView(Color.BLUE,5,));
+        state.moveCamera(points.firstElement());
     }
 }

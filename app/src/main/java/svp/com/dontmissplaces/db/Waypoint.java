@@ -16,7 +16,7 @@ public class Waypoint {
     /** The min in meters per second */
     double speed;
     /** The segment _id to which this segment belongs */
-    long track;
+    long session;
     /** The accuracy of the fix */
     private double accuracy;
     /** The altitude */
@@ -33,7 +33,7 @@ public class Waypoint {
 
 
     public Waypoint(long trackId, Location location){
-        track = trackId;
+        session = trackId;
 
         time = location.getTime();
         latitude = location.getLatitude();
@@ -45,7 +45,7 @@ public class Waypoint {
         speed = location.getSpeed();
     }
     public Waypoint(long trackId, Cursor cursor){
-        track = trackId;
+        session = trackId;
 
         time = cursor.getLong(cursor.getColumnIndex(DatabaseStructure.WaypointsColumns.TIME));
         latitude = cursor.getDouble(cursor.getColumnIndex(DatabaseStructure.WaypointsColumns.LATITUDE));

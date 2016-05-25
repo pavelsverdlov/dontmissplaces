@@ -5,26 +5,31 @@ import android.content.Intent;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Vector;
 
 import svp.com.dontmissplaces.MainMenuActivity;
 import svp.com.dontmissplaces.db.Repository;
+import svp.com.dontmissplaces.db.SessionTrack;
 import svp.com.dontmissplaces.db.Track;
+import svp.com.dontmissplaces.db.Waypoint;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.BaseBundleProvider;
+import svp.com.dontmissplaces.ui.model.SessionView;
+import svp.com.dontmissplaces.ui.model.TrackView;
 
-import com.svp.infrastructure.mvpvs.bundle.BundleProvider;
 import com.svp.infrastructure.mvpvs.bundle.IBundleProvider;
 
 public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,MainMenuActivity.ViewState> {
     private TrackTimer timer;
     private final Repository repository;
     private Track recordingTrack;
+    private SessionTrack recordingSession;
 
     public MainMenuPresenter(Repository repository) {
         this.repository = repository;
     }
 
-    public Track startTrackRecording() {
+    public SessionView startTrackRecording() {
         if(timer != null){
             timer.stop();
             timer = null;
@@ -32,9 +37,17 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         timer = new TrackTimer(1000);
         state.expandTrackRecordingToolbar();
 
+        if(recordingTrack == null){
+            Date date = new Date();
+            recordingTrack = new Track(-1,date.toString(),date.getTime());
+        }
+
         timer.start();
-        recordingTrack = repository.insertTrack(new Date().toString());
-        return recordingTrack;
+
+        recordingTrack = repository.getOrInsertTrack(recordingTrack);
+        recordingSession = repository.insertSession();
+
+        return new SessionView(recordingSession,new Vector<Waypoint>());
     }
     public void pauseTrackRecording() {
         timer.pause();
@@ -54,13 +67,17 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         commutator.goTo(ActivityCommutator.ActivityOperationResult.HistoryTracks);
     }
 
-    public void incomingResultFrom(int requestCode, Intent data) {
-        if(ActivityCommutator.ActivityOperationResult.HistoryTracks.is(requestCode)){
+    public void incomingResultFrom(ActivityCommutator.ActivityOperationResult from, Intent data) {
+        if(ActivityCommutator.ActivityOperationResult.HistoryTracks == from){
             BaseBundleProvider bp = new BaseBundleProvider(data);
-            if(ActivityCommutator.ActivityOperationResult.HistoryTracks.is(requestCode)){
-                Track track = bp.getTrack();
-                state.displayTrackOnMap(track);
+            recordingTrack = bp.getTrack();
+
+            Vector<SessionView> sessions = new Vector<>();
+            for (SessionTrack session : repository.getSessions(recordingTrack)){
+                sessions.add(new SessionView(session,repository.getWaypoints(session)));
             }
+
+            state.displayTrackOnMap(new TrackView(recordingTrack, sessions));
         }
     }
 

@@ -2,9 +2,7 @@ package svp.com.dontmissplaces;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -12,7 +10,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,14 +18,15 @@ import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import svp.com.dontmissplaces.db.SessionTrack;
 import svp.com.dontmissplaces.db.Track;
-import svp.com.dontmissplaces.model.AlarmReceiver;
-import svp.com.dontmissplaces.model.gps.GPSServiceProvider;
 import svp.com.dontmissplaces.presenters.MainMenuPresenter;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.ActivityPermissions;
 import svp.com.dontmissplaces.ui.MapView;
 import svp.com.dontmissplaces.ui.TrackRecordingToolbarView;
+import svp.com.dontmissplaces.ui.model.SessionView;
+import svp.com.dontmissplaces.ui.model.TrackView;
 
 public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         implements NavigationView.OnNavigationItemSelectedListener, ActivityCommutator.ICommutativeElement {
@@ -86,8 +84,9 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
         }
 
-        public void displayTrackOnMap(Track track) {
-            view.mapView.showTrack(track);
+        public void displayTrackOnMap(TrackView track) {
+            view.setTitle(track.getHeader());
+            view.mapView.showSessionsTrack(track.sessions);
         }
     }
 
@@ -110,9 +109,9 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         setContentView(R.layout.activity_main_menu);
 
         ButterKnife.bind(this);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.mainmenu_toolbar);
         setSupportActionBar(toolbar);
+
 
         initFabTrackRecordingBtn();
         trackRecordingFooter.setFab(fabTrackRecordingBtn);
@@ -200,7 +199,8 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         if (RESULT_CANCELED == resultCode) {
             return;
         }
-        getPresenter().incomingResultFrom(requestCode,data);
+        getPresenter().incomingResultFrom(
+                ActivityCommutator.ActivityOperationResult.get(resultCode),data);
     }
 
     @Override
@@ -222,7 +222,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         fabTrackRecordingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Track track = getPresenter().startTrackRecording();
+                SessionView track = getPresenter().startTrackRecording();
                 mapView.startTrackRecording(track);
             }
         });

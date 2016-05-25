@@ -23,7 +23,7 @@ public final class ActivityCommutator {
 
         private final int code;
 
-        private ActivityOperationResult(int code) {
+        ActivityOperationResult(int code) {
             this.code = code;
         }
         public int toInt() {
@@ -31,6 +31,16 @@ public final class ActivityCommutator {
         }
         public boolean is(int key) {
             return code == key;
+        }
+
+        public static ActivityOperationResult get(int resultCode) {
+            return ActivityOperationResult.values()[resultCode];
+//            switch (resultCode){
+//                case 2:
+//                    return HistoryTracks;
+//                default:
+//                    return Undefined;
+//            }
         }
     }
 
@@ -69,7 +79,7 @@ public final class ActivityCommutator {
             bundleProvider.putInto(intent);
         }
 
-        activity.setResult(Activity.RESULT_OK,intent);
+        activity.setResult(element.getOperation().toInt(),intent);
         activity.finish();
     }
 
