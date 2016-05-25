@@ -28,6 +28,7 @@ import svp.com.dontmissplaces.utils.LocationEx;
 public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implements OnLocationChangeListener {
     private static final String TAG = "MapsPresenter";
     private Location prevLocation;
+    private Waypoint prevWaypoint;
     private final Repository repository;
     private GPSServiceProvider gpsService;
     private SessionView sessionTrack;
@@ -86,7 +87,9 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implemen
     public void OnLocationChange(Location location) {
         try {
             Log.d(TAG,"OnLocationChange " + location);
+            Waypoint waypoint;
             if(prevLocation == null){
+                prevWaypoint = createWaypoint(location);
                 return;
             }
 
@@ -101,14 +104,10 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implemen
 //            if(movement.type == Traffic.SpeedTypes.Undefined){
 //                return;
 //            }
-            repository.insertWaypoint(new Waypoint(sessionTrack.getId(),location));
-            Vector v =new Vector<LatLng>();
-            v.add(LocationEx.getLatLng(prevLocation));
-            v.add(LocationEx.getLatLng(location));
-            state.addPolyline(v);
+            waypoint = createWaypoint(location);
+            state.addPolyline(PolylineView.create(prevWaypoint, waypoint));
 
             //state.moveCamera(LocationEx.getLatLng(location));
-
         }catch (Exception ex){
             throw ex;
         }finally {
@@ -116,23 +115,25 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implemen
         }
     }
 
+    private Waypoint createWaypoint(Location location){
+        Waypoint waypoint = new Waypoint(sessionTrack.getId(),location);
+        repository.insertWaypoint(waypoint);
+        return waypoint;
+    }
 
     public void showSessionsTrack(Collection<SessionView> sessions) {
-//        Vector<SessionView> sessionViews = new Vector<>();
-//        Vector<SessionTrack> sessions = repository.getSessions(track);
-
         Vector<LatLng> points = new Vector<>();
-        PolylineView polyline;
+        PolylineView polyline = null;
         for (SessionView s : sessions) {
-            polyline = new PolylineView(Color.BLUE,5, s.waypoints);
-
-//            sessionViews.add(new SessionView(s,));
-            for (Waypoint w : s.waypoints) {
-                points.add(w.getLatLng());
+            PolylineView p = PolylineView.create(s.waypoints);
+            if(polyline == null) {
+                polyline = p;
+            }else{
+                polyline.add(p);
             }
         }
 
-        state.addPolyline(new PolylineView(Color.BLUE,5,));
+        state.addPolyline(polyline);
         state.moveCamera(points.firstElement());
     }
 }

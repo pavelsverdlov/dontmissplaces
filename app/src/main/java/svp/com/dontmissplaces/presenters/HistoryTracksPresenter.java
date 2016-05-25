@@ -1,12 +1,14 @@
 package svp.com.dontmissplaces.presenters;
 
 import android.database.Cursor;
+import android.location.Location;
 import android.widget.Toast;
 
 import com.svp.infrastructure.mvpvs.presenter.Presenter;
 
 import svp.com.dontmissplaces.db.Repository;
 import svp.com.dontmissplaces.db.Track;
+import svp.com.dontmissplaces.db.Waypoint;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.BaseBundleProvider;
 import svp.com.dontmissplaces.ui.activities.HistoryTracksActivity;
@@ -40,4 +42,20 @@ public class HistoryTracksPresenter extends CommutativePresenter<HistoryTracksAc
         BaseBundleProvider bp = new BaseBundleProvider().putTrack(track);
         commutator.backTo(bp);
     }
+
+//    public void openTrack(TrackView trackview) {
+//        Track track = repository.getTrack(trackview.id);
+//
+//        Location l = new Location("");l.setLatitude(24.3454523d);l.setLongitude(10.123450);
+//        repository.insertWaypoint(new Waypoint(track.id,l));
+//        l = new Location("");l.setLatitude(24.3554523d);l.setLongitude(10.123450);
+//        repository.insertWaypoint(new Waypoint(track.id,l));
+//        l = new Location("");l.setLatitude(24.3654523d);l.setLongitude(10.123450);
+//        repository.insertWaypoint(new Waypoint(track.id,l));
+//        l = new Location("");l.setLatitude(24.3754523d);l.setLongitude(10.123450);
+//        repository.insertWaypoint(new Waypoint(track.id,l));
+//
+//        BaseBundleProvider bp = new BaseBundleProvider().putTrack(track);
+//        commutator.backTo(bp);
+//    }
 }
