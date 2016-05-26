@@ -2,11 +2,14 @@ package svp.com.dontmissplaces.ui.map;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.widget.Toast;
 
+import android.location.Address;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -14,10 +17,13 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.svp.infrastructure.mvpvs.view.View;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
 
 import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.model.Map.GoogleMapsPlaceService;
@@ -100,13 +106,12 @@ public class MapView
     public MapView(FragmentActivity activity, ActivityPermissions permissions){
         this.activity = activity;
         this.permissions = permissions;
-
     }
 
     public void onCreate(Bundle savedInstanceState) {
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment)activity.getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.google_map);
 
         if (savedInstanceState == null) {
             // First incarnation of this activity.
@@ -150,6 +155,49 @@ public class MapView
             }
         });
        // mMap.setOnMyLocationButtonClickListener(this);
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public android.view.View getInfoWindow(Marker marker) {
+                return null;
+            }
+
+            @Override
+            public android.view.View getInfoContents(Marker marker) {
+                return null;
+            }
+        });
+        //http://maps.googleapis.com/maps/api/geocode/json?latlng=46.402852,30.722839&sensor=true
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                String strAdd = "";
+                Geocoder geocoder = new Geocoder(activity, Locale.getDefault());
+                try {
+                    List<android.location.Address> addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+                    if (addresses != null) {
+                        Address returnedAddress = addresses.get(0);
+                        String city = addresses.get(0).getLocality();
+                        String state = addresses.get(0).getAdminArea();
+                        String country = addresses.get(0).getCountryName();
+                        String postalCode = addresses.get(0).getPostalCode();
+                        String knownName = addresses.get(0).getFeatureName();
+                        StringBuilder strReturnedAddress = new StringBuilder("");
+
+                        for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
+                            strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
+                        }
+                        strAdd = strReturnedAddress.toString();
+                        Log.w("My Current loction address", "" + strReturnedAddress.toString());
+                    } else {
+                        Log.w("My Current loction address", "No Address returned!");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.w("My Current loction address", "Canont get Address!");
+                }
+                String test = strAdd;
+            }
+        });
 
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
