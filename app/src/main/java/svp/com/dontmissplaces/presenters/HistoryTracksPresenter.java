@@ -31,11 +31,9 @@ public class HistoryTracksPresenter extends CommutativePresenter<HistoryTracksAc
         }
     }
 
-
     public Cursor getCursorTracks(){
         return repository.getCursorTracks();
     }
-
 
     public void openTrack(TrackView trackview) {
         Track track = repository.getTrack(trackview.id);

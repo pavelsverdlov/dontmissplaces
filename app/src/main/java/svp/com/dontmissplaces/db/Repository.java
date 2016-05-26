@@ -13,12 +13,7 @@ import java.util.Vector;
 import svp.com.dontmissplaces.db.DatabaseStructure.Tracks;
 import svp.com.dontmissplaces.db.DatabaseStructure.Waypoints;
 import svp.com.dontmissplaces.db.DatabaseStructure.Sessions;
-import svp.com.dontmissplaces.db.DatabaseStructure.WaypointsColumns;
-import svp.com.dontmissplaces.db.DatabaseStructure.TracksColumns;
 
-/**
- * Created by Pasha on 4/2/2016.
- */
 public class Repository extends SQLiteOpenHelper {
     public static final String dbname = "dmpdb";
     private static final int dbversion = 1;
@@ -58,14 +53,14 @@ public class Repository extends SQLiteOpenHelper {
         SQLiteDatabase sqldb = getWritableDatabase();
 
         ContentValues args = new ContentValues();
-        args.put(WaypointsColumns.SESSION, waypoint.session);
-        args.put(WaypointsColumns.TIME, waypoint.getTime());
-        args.put(WaypointsColumns.LATITUDE, waypoint.getLatitude());
-        args.put(WaypointsColumns.LONGITUDE, waypoint.getLongitude());
-        args.put(WaypointsColumns.SPEED, waypoint.speed);
-        args.put(WaypointsColumns.ACCURACY, waypoint.getAccuracy());
-        args.put(WaypointsColumns.ALTITUDE, waypoint.getAltitude());
-        args.put(WaypointsColumns.BEARING, waypoint.getBearing());
+        args.put(Waypoints.SESSION, waypoint.session);
+        args.put(Waypoints.TIME, waypoint.getTime());
+        args.put(Waypoints.LATITUDE, waypoint.getLatitude());
+        args.put(Waypoints.LONGITUDE, waypoint.getLongitude());
+        args.put(Waypoints.SPEED, waypoint.speed);
+        args.put(Waypoints.ACCURACY, waypoint.getAccuracy());
+        args.put(Waypoints.ALTITUDE, waypoint.getAltitude());
+        args.put(Waypoints.BEARING, waypoint.getBearing());
 
         waypoint.id = sqldb.insert(Waypoints.TABLE, null, args);
     }
@@ -183,8 +178,8 @@ public class Repository extends SQLiteOpenHelper {
         long currentTime = new Date().getTime();
 
         ContentValues args = new ContentValues();
-        args.put(TracksColumns.NAME, name);
-        args.put(TracksColumns.CREATION_TIME, currentTime);
+        args.put(Tracks.NAME, name);
+        args.put(Tracks.CREATION_TIME, currentTime);
 
         SQLiteDatabase sqldb = getWritableDatabase();
         long trackId = sqldb.insert(Tracks.TABLE, null, args);

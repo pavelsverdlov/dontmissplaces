@@ -47,14 +47,14 @@ public class Waypoint {
     public Waypoint(long trackId, Cursor cursor){
         session = trackId;
 
-        time = cursor.getLong(cursor.getColumnIndex(DatabaseStructure.WaypointsColumns.TIME));
-        latitude = cursor.getDouble(cursor.getColumnIndex(DatabaseStructure.WaypointsColumns.LATITUDE));
-        longitude = cursor.getDouble(cursor.getColumnIndex(DatabaseStructure.WaypointsColumns.LONGITUDE));
-        accuracy = cursor.getDouble(cursor.getColumnIndex(DatabaseStructure.WaypointsColumns.ACCURACY));
-        altitude = cursor.getDouble(cursor.getColumnIndex(DatabaseStructure.WaypointsColumns.ALTITUDE));
-        bearing = cursor.getDouble(cursor.getColumnIndex(DatabaseStructure.WaypointsColumns.BEARING));
+        time = cursor.getLong(cursor.getColumnIndex(DatabaseStructure.Waypoints.TIME));
+        latitude = cursor.getDouble(cursor.getColumnIndex(DatabaseStructure.Waypoints.LATITUDE));
+        longitude = cursor.getDouble(cursor.getColumnIndex(DatabaseStructure.Waypoints.LONGITUDE));
+        accuracy = cursor.getDouble(cursor.getColumnIndex(DatabaseStructure.Waypoints.ACCURACY));
+        altitude = cursor.getDouble(cursor.getColumnIndex(DatabaseStructure.Waypoints.ALTITUDE));
+        bearing = cursor.getDouble(cursor.getColumnIndex(DatabaseStructure.Waypoints.BEARING));
 
-        speed = cursor.getDouble(cursor.getColumnIndex(DatabaseStructure.WaypointsColumns.SPEED));
+        speed = cursor.getDouble(cursor.getColumnIndex(DatabaseStructure.Waypoints.SPEED));
     }
 
 
