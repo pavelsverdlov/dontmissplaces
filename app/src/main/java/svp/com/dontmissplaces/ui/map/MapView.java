@@ -1,4 +1,4 @@
-package svp.com.dontmissplaces.ui;
+package svp.com.dontmissplaces.ui.map;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -18,18 +18,19 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.svp.infrastructure.mvpvs.view.View;
 
 import java.util.Collection;
-import java.util.Vector;
 
 import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.model.Map.GoogleMapsPlaceService;
 import svp.com.dontmissplaces.presenters.MapsPresenter;
+import svp.com.dontmissplaces.ui.ActivityPermissions;
 import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.ui.model.PolylineView;
 
 public class MapView
         extends View<MapsPresenter>
         implements OnMapReadyCallback,
-        GoogleMap.OnMyLocationButtonClickListener {
+        GoogleMap.OnMyLocationButtonClickListener,
+        IMapView {
     private final String TAG = "MapView";
 
     public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<MapView> {

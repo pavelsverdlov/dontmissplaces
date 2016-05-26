@@ -21,8 +21,9 @@ import butterknife.ButterKnife;
 import svp.com.dontmissplaces.presenters.MainMenuPresenter;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.ActivityPermissions;
-import svp.com.dontmissplaces.ui.MapView;
+import svp.com.dontmissplaces.ui.map.MapView;
 import svp.com.dontmissplaces.ui.TrackRecordingToolbarView;
+import svp.com.dontmissplaces.ui.map.IMapView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.ui.model.TrackView;
 
@@ -88,10 +89,9 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         }
     }
 
-    private final MapView mapView;
+    private final IMapView mapView;
     private final ActivityPermissions permissions;
     private TrackRecordingToolbarView recordingToolbarView;
-
 
     @Bind(R.id.track_recording_fabtoolbar) com.bowyer.app.fabtransitionlayout.FooterLayout trackRecordingFooter;
     @Bind(R.id.track_recording_start_fab) FloatingActionButton fabTrackRecordingBtn;

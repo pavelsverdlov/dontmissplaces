@@ -18,7 +18,7 @@ import svp.com.dontmissplaces.presenters.MainMenuPresenter;
 import svp.com.dontmissplaces.presenters.MapsPresenter;
 import svp.com.dontmissplaces.presenters.SaveTrackPresenter;
 import svp.com.dontmissplaces.ui.BaseBundleProvider;
-import svp.com.dontmissplaces.ui.MapView;
+import svp.com.dontmissplaces.ui.map.MapView;
 import svp.com.dontmissplaces.ui.activities.HistoryTracksActivity;
 import svp.com.dontmissplaces.ui.activities.SaveTrackActivity;
 

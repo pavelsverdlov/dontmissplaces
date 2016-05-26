@@ -1,7 +1,6 @@
 package svp.com.dontmissplaces.presenters;
 
 
-import android.graphics.Color;
 import android.location.Location;
 import android.util.Log;
 
@@ -9,18 +8,14 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.svp.infrastructure.mvpvs.presenter.Presenter;
 
-import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Vector;
 
 import svp.com.dontmissplaces.db.Repository;
-import svp.com.dontmissplaces.db.SessionTrack;
-import svp.com.dontmissplaces.db.Track;
 import svp.com.dontmissplaces.db.Waypoint;
 import svp.com.dontmissplaces.model.gps.GPSServiceProvider;
 import svp.com.dontmissplaces.model.gps.OnLocationChangeListener;
-import svp.com.dontmissplaces.ui.MapView;
+import svp.com.dontmissplaces.ui.map.MapView;
 import svp.com.dontmissplaces.ui.model.PolylineView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.utils.LocationEx;
