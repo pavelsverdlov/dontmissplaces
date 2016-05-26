@@ -44,8 +44,8 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
 
         timer.start();
 
-        recordingTrack = repository.getOrInsertTrack(recordingTrack);
-        recordingSession = repository.insertSession(recordingTrack);
+        recordingTrack = repository.Track.getOrInsertTrack(recordingTrack);
+        recordingSession = repository.Track.insertSession(recordingTrack);
 
         return new SessionView(recordingSession,new Vector<Waypoint>());
     }
@@ -73,8 +73,8 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
             recordingTrack = bp.getTrack();
 
             Vector<SessionView> sessions = new Vector<>();
-            for (SessionTrack session : repository.getSessions(recordingTrack)){
-                sessions.add(new SessionView(session,repository.getWaypoints(session)));
+            for (SessionTrack session : repository.Track.getSessions(recordingTrack)){
+                sessions.add(new SessionView(session,repository.Track.getWaypoints(session)));
             }
 
             state.displayTrackOnMap(new TrackView(recordingTrack, sessions));

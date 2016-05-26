@@ -32,11 +32,11 @@ public class HistoryTracksPresenter extends CommutativePresenter<HistoryTracksAc
     }
 
     public Cursor getCursorTracks(){
-        return repository.getCursorTracks();
+        return repository.Track.getCursorTracks();
     }
 
     public void openTrack(TrackView trackview) {
-        Track track = repository.getTrack(trackview.id);
+        Track track = repository.Track.getTrack(trackview.id);
         BaseBundleProvider bp = new BaseBundleProvider().putTrack(track);
         commutator.backTo(bp);
     }

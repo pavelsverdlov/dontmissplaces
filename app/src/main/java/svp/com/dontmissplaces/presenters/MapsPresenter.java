@@ -117,7 +117,7 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implemen
 
     private Waypoint createWaypoint(Location location){
         Waypoint waypoint = new Waypoint(sessionTrack.getId(),location);
-        repository.insertWaypoint(waypoint);
+        repository.Track.insertWaypoint(waypoint);
         return waypoint;
     }
 

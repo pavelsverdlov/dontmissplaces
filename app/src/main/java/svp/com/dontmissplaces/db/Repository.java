@@ -10,17 +10,18 @@ import android.provider.BaseColumns;
 import java.util.Date;
 import java.util.Vector;
 
-import svp.com.dontmissplaces.db.DatabaseStructure.Tracks;
-import svp.com.dontmissplaces.db.DatabaseStructure.Waypoints;
-import svp.com.dontmissplaces.db.DatabaseStructure.Sessions;
+import svp.com.dontmissplaces.db.DatabaseStructure.*;
 
 public class Repository extends SQLiteOpenHelper {
     public static final String dbname = "dmpdb";
     private static final int dbversion = 1;
     private static String TAG = Repository.class.getName();
 
+    public final TrackRepository Track;
+
     public Repository(Context context) {
         super(context, dbname, null, dbversion);
+        Track = new TrackRepository();
     }
 
     public void vacuum() {
@@ -39,53 +40,81 @@ public class Repository extends SQLiteOpenHelper {
         db.execSQL(Tracks.CREATE_STATEMENT);
         db.execSQL(Sessions.CREATE_STATEMENT);
         db.execSQL(Waypoints.CREATE_STATEMENT);
+        db.execSQL(Places.CREATE_STATEMENT);
     }
-
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
 
-    public void insertWaypoint(Waypoint waypoint) {
-        if (waypoint.session < 0) {
-            throw new IllegalArgumentException("Track may not the less then 0.");
-        }
-        SQLiteDatabase sqldb = getWritableDatabase();
-
-        ContentValues args = new ContentValues();
-        args.put(Waypoints.SESSION, waypoint.session);
-        args.put(Waypoints.TIME, waypoint.getTime());
-        args.put(Waypoints.LATITUDE, waypoint.getLatitude());
-        args.put(Waypoints.LONGITUDE, waypoint.getLongitude());
-        args.put(Waypoints.SPEED, waypoint.speed);
-        args.put(Waypoints.ACCURACY, waypoint.getAccuracy());
-        args.put(Waypoints.ALTITUDE, waypoint.getAltitude());
-        args.put(Waypoints.BEARING, waypoint.getBearing());
-
-        waypoint.id = sqldb.insert(Waypoints.TABLE, null, args);
-    }
-
-    public int deleteTrack(Track track) {
-        SQLiteDatabase sqldb = getWritableDatabase();
-        Cursor cursor = null;
-        int affected = 0;
-        try {
-            sqldb.beginTransaction();
-
-            String[] args = new String[]{String.valueOf(track.id)};
-            affected += sqldb.delete(Tracks.TABLE, Tracks._ID + "= ?", args);
-            affected += sqldb.delete(Waypoints.TABLE, Waypoints.SESSION + "= ?", args);
-
-            sqldb.setTransactionSuccessful();
-        } finally {
-            if (cursor != null) {
-                cursor.close();
+    public class TrackRepository{
+        public Track getOrInsertTrack(Track track) {
+            Track got = getTrack(track.id);
+            if (got == null) {
+                got = insertTrack(track.name);
             }
-            if (sqldb.inTransaction()) {
-                sqldb.endTransaction();
-            }
+            return got;
         }
-        return affected;
+        public Track insertTrack(String name) {
+            long currentTime = new Date().getTime();
+
+            ContentValues args = new ContentValues();
+            args.put(Tracks.NAME, name);
+            args.put(Tracks.CREATION_TIME, currentTime);
+
+            SQLiteDatabase sqldb = getWritableDatabase();
+            long trackId = sqldb.insert(Tracks.TABLE, null, args);
+
+            return new Track(trackId, name, currentTime);
+        }
+        public Track getTrack(long id) {
+            SQLiteDatabase sqldb = getReadableDatabase();
+            try (Cursor cursor = sqldb.query(Tracks.TABLE, null, Tracks._ID + "= ?", new String[]{String.valueOf(id)},
+                    null, null, null, null)) {
+                if (cursor.moveToFirst()) {
+                    return new Track(cursor);
+                }
+            }
+            return null;
+        }
+        public Cursor getCursorTracks() {
+            SQLiteDatabase sqldb = getReadableDatabase();
+            return sqldb.rawQuery(Tracks.SELECT_ALL, null);
+        }
+        int updateTrack(long trackId, String name) {
+            int updates;
+            String whereclause = Tracks._ID + " = " + trackId;
+            ContentValues args = new ContentValues();
+            args.put(Tracks.NAME, name);
+
+            // Execute the query.
+            SQLiteDatabase mDb = getWritableDatabase();
+            updates = mDb.update(Tracks.TABLE, args, whereclause, null);
+
+            return updates;
+        }
+
+        public int deleteTrack(Track track) {
+            SQLiteDatabase sqldb = getWritableDatabase();
+            Cursor cursor = null;
+            int affected = 0;
+            try {
+                sqldb.beginTransaction();
+
+                String[] args = new String[]{String.valueOf(track.id)};
+                affected += sqldb.delete(Tracks.TABLE, Tracks._ID + "= ?", args);
+                affected += sqldb.delete(Waypoints.TABLE, Waypoints.SESSION + "= ?", args);
+
+                sqldb.setTransactionSuccessful();
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+                if (sqldb.inTransaction()) {
+                    sqldb.endTransaction();
+                }
+            }
+            return affected;
         /*
         SQLiteDatabase sqldb = getWritableDatabase();
         int affected = 0;
@@ -145,105 +174,73 @@ public class Repository extends SQLiteOpenHelper {
 
         return affected;
         */
-    }
-
-    int updateTrack(long trackId, String name) {
-        int updates;
-        String whereclause = Tracks._ID + " = " + trackId;
-        ContentValues args = new ContentValues();
-        args.put(Tracks.NAME, name);
-
-        // Execute the query.
-        SQLiteDatabase mDb = getWritableDatabase();
-        updates = mDb.update(Tracks.TABLE, args, whereclause, null);
-
-        return updates;
-    }
-
-
-    public void clearTracks() {
-        SQLiteDatabase sqldb = getWritableDatabase();
-        sqldb.execSQL(Tracks.DELETE_ALL);
-    }
-
-    public Track getOrInsertTrack(Track track) {
-        Track got = getTrack(track.id);
-        if (got == null) {
-            got = insertTrack(track.name);
         }
-        return got;
-    }
-
-    public Track insertTrack(String name) {
-        long currentTime = new Date().getTime();
-
-        ContentValues args = new ContentValues();
-        args.put(Tracks.NAME, name);
-        args.put(Tracks.CREATION_TIME, currentTime);
-
-        SQLiteDatabase sqldb = getWritableDatabase();
-        long trackId = sqldb.insert(Tracks.TABLE, null, args);
-
-        return new Track(trackId, name, currentTime);
-    }
-
-    public Cursor getCursorTracks() {
-        SQLiteDatabase sqldb = getReadableDatabase();
-        return sqldb.rawQuery(Tracks.SELECT_ALL, null);
-    }
-
-    public Track getTrack(long id) {
-        SQLiteDatabase sqldb = getReadableDatabase();
-        try (Cursor cursor = sqldb.query(Tracks.TABLE, null, Tracks._ID + "= ?", new String[]{String.valueOf(id)},
-                null, null, null, null)) {
-            if (cursor.moveToFirst()) {
-                return new Track(cursor);
+        public void clearTracks() {
+            SQLiteDatabase sqldb = getWritableDatabase();
+            sqldb.execSQL(Tracks.DELETE_ALL);
+        }
+        public void insertWaypoint(Waypoint waypoint) {
+            if (waypoint.session < 0) {
+                throw new IllegalArgumentException("Track may not the less then 0.");
             }
+            SQLiteDatabase sqldb = getWritableDatabase();
+
+            ContentValues args = new ContentValues();
+            args.put(Waypoints.SESSION, waypoint.session);
+            args.put(Waypoints.TIME, waypoint.getTime());
+            args.put(Waypoints.LATITUDE, waypoint.getLatitude());
+            args.put(Waypoints.LONGITUDE, waypoint.getLongitude());
+            args.put(Waypoints.SPEED, waypoint.speed);
+            args.put(Waypoints.ACCURACY, waypoint.getAccuracy());
+            args.put(Waypoints.ALTITUDE, waypoint.getAltitude());
+            args.put(Waypoints.BEARING, waypoint.getBearing());
+
+            waypoint.id = sqldb.insert(Waypoints.TABLE, null, args);
         }
-        return null;
-    }
+        public Vector<Waypoint> getWaypoints(SessionTrack session) {
+            Vector<Waypoint> waypoints = new Vector<>();
 
-    public Vector<Waypoint> getWaypoints(SessionTrack session) {
-        Vector<Waypoint> waypoints = new Vector<>();
+            SQLiteDatabase sqldb = getReadableDatabase();
 
-        SQLiteDatabase sqldb = getReadableDatabase();
-
-        try (Cursor cursor = sqldb.query(Waypoints.TABLE, null, Waypoints.SESSION + "= ?", new String[]{String.valueOf(session.id)},
-                null, null, null, null)) {
-            if (cursor.moveToFirst()) {
-                do {
-                    waypoints.add(new Waypoint(session.id, cursor));
-                } while (cursor.moveToNext());
+            try (Cursor cursor = sqldb.query(Waypoints.TABLE, null, Waypoints.SESSION + "= ?", new String[]{String.valueOf(session.id)},
+                    null, null, null, null)) {
+                if (cursor.moveToFirst()) {
+                    do {
+                        waypoints.add(new Waypoint(session.id, cursor));
+                    } while (cursor.moveToNext());
+                }
             }
+            return waypoints;
         }
-        return waypoints;
-    }
 
-    public SessionTrack insertSession(Track track) {
-        long currentTime = new Date().getTime();
+        public SessionTrack insertSession(Track track) {
+            long currentTime = new Date().getTime();
 
-        ContentValues args = new ContentValues();
-        args.put(Sessions.TRACK, track.id);
-        args.put(Sessions.CREATION_TIME, currentTime);
+            ContentValues args = new ContentValues();
+            args.put(Sessions.TRACK, track.id);
+            args.put(Sessions.CREATION_TIME, currentTime);
 
-        SQLiteDatabase sqldb = getWritableDatabase();
-        long sId = sqldb.insert(Sessions.TABLE, null, args);
+            SQLiteDatabase sqldb = getWritableDatabase();
+            long sId = sqldb.insert(Sessions.TABLE, null, args);
 
-        return new SessionTrack(sId, track.id,currentTime);
-    }
-
-    public Vector<SessionTrack> getSessions(Track track) {
-        Vector<SessionTrack> sessions = new Vector<>();
-        try(Cursor cursor = getCursorById(Sessions.TABLE,track.id)){
-            if (cursor == null){
-                return sessions;
+            return new SessionTrack(sId, track.id,currentTime);
+        }
+        public Vector<SessionTrack> getSessions(Track track) {
+            Vector<SessionTrack> sessions = new Vector<>();
+            try(Cursor cursor = getCursorById(Sessions.TABLE,track.id)){
+                if (cursor == null){
+                    return sessions;
+                }
+                do{
+                    sessions.add(new SessionTrack(cursor));
+                }while (cursor.moveToFirst());
             }
-            do{
-                sessions.add(new SessionTrack(cursor));
-            }while (cursor.moveToFirst());
+            return sessions;
         }
-        return sessions;
     }
+
+
+
 
 
     private Cursor getCursorById(String table,long id) {
