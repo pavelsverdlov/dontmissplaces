@@ -253,8 +253,8 @@ public final class GPStracking
         public static final String SEGMENT = "tracksegment";
         /** The accuracy of the fix */
         public static final String ACCURACY = "accuracy";
-        /** The altitude */
-        public static final String ALTITUDE = "altitude";
+        /** The latitude */
+        public static final String ALTITUDE = "latitude";
         /** the bearing of the fix */
         public static final String BEARING = "bearing";
 

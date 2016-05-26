@@ -95,10 +95,10 @@ public class LocationFilter {
                 proposedLocation.removeSpeed();
             }
 
-            // Remove altitude if not sane
+            // Remove latitude if not sane
             if (mSpeedSanityCheck && proposedLocation != null && proposedLocation.hasAltitude()) {
                 if (!addSaneAltitude(proposedLocation.getAltitude())) {
-                    Log.w(TAG, "A strange altitude, a really big difference, prob wrong...");
+                    Log.w(TAG, "A strange latitude, a really big difference, prob wrong...");
                     proposedLocation.removeAltitude();
                 }
             }
@@ -141,13 +141,13 @@ public class LocationFilter {
      * added value is deemed sane.
      *
      * @param altitude
-     * @return whether the altitude is considered sane
+     * @return whether the latitude is considered sane
      */
     private boolean addSaneAltitude(double altitude) {
         boolean sane = true;
         double avg = 0;
         int elements = 0;
-        // Even insane altitude shifts increases alter perception
+        // Even insane latitude shifts increases alter perception
         synchronized (mAltitudes) {
             mAltitudes.add(altitude);
             if (mAltitudes.size() > 3) {

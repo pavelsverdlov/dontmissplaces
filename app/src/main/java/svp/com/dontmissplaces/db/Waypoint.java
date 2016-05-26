@@ -19,7 +19,7 @@ public class Waypoint {
     long session;
     /** The accuracy of the fix */
     private double accuracy;
-    /** The altitude */
+    /** The latitude */
     private double altitude;
     /** the bearing of the fix */
     private double bearing;

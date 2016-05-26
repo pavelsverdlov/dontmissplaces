@@ -18,10 +18,12 @@ public class Repository extends SQLiteOpenHelper {
     private static String TAG = Repository.class.getName();
 
     public final TrackRepository Track;
+    public final PlaceRepository Place;
 
     public Repository(Context context) {
         super(context, dbname, null, dbversion);
         Track = new TrackRepository();
+        Place = new PlaceRepository();
     }
 
     public void vacuum() {
@@ -40,11 +42,19 @@ public class Repository extends SQLiteOpenHelper {
         db.execSQL(Tracks.CREATE_STATEMENT);
         db.execSQL(Sessions.CREATE_STATEMENT);
         db.execSQL(Waypoints.CREATE_STATEMENT);
+
         db.execSQL(Places.CREATE_STATEMENT);
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+    }
+
+    @Override
+    public SQLiteDatabase getWritableDatabase() {
+        SQLiteDatabase sqldb = super.getWritableDatabase();
+        sqldb.execSQL("PRAGMA foreign_keys = ON;");
+        return sqldb;
     }
 
     public class TrackRepository{
@@ -96,84 +106,19 @@ public class Repository extends SQLiteOpenHelper {
 
         public int deleteTrack(Track track) {
             SQLiteDatabase sqldb = getWritableDatabase();
-            Cursor cursor = null;
             int affected = 0;
             try {
                 sqldb.beginTransaction();
 
-                String[] args = new String[]{String.valueOf(track.id)};
-                affected += sqldb.delete(Tracks.TABLE, Tracks._ID + "= ?", args);
-                affected += sqldb.delete(Waypoints.TABLE, Waypoints.SESSION + "= ?", args);
+                affected += sqldb.delete(Tracks.TABLE, Tracks._ID + "= ?", new String[]{String.valueOf(track.id)});
 
                 sqldb.setTransactionSuccessful();
             } finally {
-                if (cursor != null) {
-                    cursor.close();
-                }
                 if (sqldb.inTransaction()) {
                     sqldb.endTransaction();
                 }
             }
             return affected;
-        /*
-        SQLiteDatabase sqldb = getWritableDatabase();
-        int affected = 0;
-        Cursor cursor = null;
-        long segmentId = -1;
-        long metadataId = -1;
-
-        try
-        {
-            sqldb.beginTransaction();
-            // Iterate on each segement to delete each
-            cursor = sqldb.query(Segments.TABLE, new String[] { Segments._ID }, Segments.SESSION + "= ?", new String[] { String.valueOf(trackId) }, null, null,
-                    null, null);
-            if (cursor.moveToFirst())
-            {
-                do
-                {
-                    segmentId = cursor.getLong(0);
-                    affected += deleteSegment(sqldb, trackId, segmentId);
-                }
-                while (cursor.moveToNext());
-            }
-            else
-            {
-                Log.e(TAG, "Did not find the last active segment");
-            }
-            // Delete the session
-            affected += sqldb.delete(Tracks.TABLE, Tracks._ID + "= ?", new String[] { String.valueOf(trackId) });
-            // Delete remaining meta-data
-            affected += sqldb.delete(MetaData.TABLE, MetaData.SESSION + "= ?", new String[] { String.valueOf(trackId) });
-
-            cursor = sqldb.query(MetaData.TABLE, new String[] { MetaData._ID }, MetaData.SESSION + "= ?", new String[] { String.valueOf(trackId) }, null, null,
-                    null, null);
-            if (cursor.moveToFirst())
-            {
-                do
-                {
-                    metadataId = cursor.getLong(0);
-                    affected += deleteMetaData(metadataId);
-                }
-                while (cursor.moveToNext());
-            }
-
-            sqldb.setTransactionSuccessful();
-        }
-        finally
-        {
-            if (cursor != null)
-            {
-                cursor.close();
-            }
-            if (sqldb.inTransaction())
-            {
-                sqldb.endTransaction();
-            }
-        }
-
-        return affected;
-        */
         }
         public void clearTracks() {
             SQLiteDatabase sqldb = getWritableDatabase();
@@ -239,7 +184,40 @@ public class Repository extends SQLiteOpenHelper {
         }
     }
 
+    public class PlaceRepository{
+        public Place insert(Place place){
+            place.creationTime = new Date().getTime();
 
+            ContentValues args = new ContentValues();
+            args.put(Places.ADDRESS, place.address);
+            args.put(Places.DESCRIPTION, place.description);
+            args.put(Places.GOOGLE_PLACE_ID, place.googlePlaceId);
+            args.put(Places.LATITUDE, place.latitude);
+            args.put(Places.LONGITUDE, place.longitude);
+            args.put(Places.TITLE, place.title);
+            args.put(Places.PLACETYPE, place.placeType);
+            args.put(Places.CREATION_TIME, place.creationTime);
+
+            SQLiteDatabase sqldb = getWritableDatabase();
+            place.id = sqldb.insert(Places.TABLE, null, args);
+
+            return place;
+        }
+        public int delete(Place place){
+            SQLiteDatabase sqldb = getWritableDatabase();
+            return sqldb.delete(Places.TABLE, Places._ID + "= ?", new String[]{String.valueOf(place.id)});
+        }
+        public Vector<Place> getAll() {
+            Vector<Place> places = new Vector<>();
+            SQLiteDatabase sqldb = getReadableDatabase();
+            try(Cursor cursor = sqldb.rawQuery(Tracks.SELECT_ALL, null)){
+                while (cursor.moveToNext()){
+                    places.add(new Place(cursor));
+                }
+            }
+            return places;
+        }
+    }
 
 
 

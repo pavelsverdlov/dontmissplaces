@@ -7,14 +7,13 @@ public class DatabaseStructure {
         /** The name of this table */
         public static final String TABLE = "tracks";
         public static final String CREATE_STATEMENT =
-                "CREATE TABLE " + Tracks.TABLE + "(" + " " + Tracks._ID           + " " + Tracks._ID_TYPE +
+                "CREATE TABLE " + Tracks.TABLE + "(" +
+                        " " + Tracks._ID           + " " + Tracks._ID_TYPE +
                         "," + " " + Tracks.NAME          + " " + Tracks.NAME_TYPE +
                         "," + " " + Tracks.CREATION_TIME + " " + Tracks.CREATION_TIME_TYPE +
                         ");";
         public static final String SELECT_ALL = "SELECT * FROM " + Tracks.TABLE + ";";
         public static final String DELETE_ALL = "DELETE FROM " + Tracks.TABLE + ";";
-
-
     }
 
     public static final class Sessions implements SessionTrackColumns {
@@ -23,6 +22,7 @@ public class DatabaseStructure {
                 "( " + _ID   + " " + _ID_TYPE +
                 ", " + TRACK + " " + TRACK_TYPE +
                 ", " + CREATION_TIME + " " + CREATION_TIME_TYPE +
+                ", FOREIGN KEY (" + TRACK + ") references " + Tracks.TABLE + "(" + Tracks._ID + ") ON DELETE CASCADE" +
                 ");";
     }
 
@@ -39,6 +39,7 @@ public class DatabaseStructure {
                 "," + " " + WaypointsColumns.ACCURACY  + " " + WaypointsColumns.ACCURACY_TYPE +
                 "," + " " + WaypointsColumns.ALTITUDE  + " " + WaypointsColumns.ALTITUDE_TYPE +
                 "," + " " + WaypointsColumns.BEARING   + " " + WaypointsColumns.BEARING_TYPE +
+                ", FOREIGN  KEY (" + SESSION + ") references " + Sessions.TABLE + "(" + Sessions._ID + ") ON DELETE CASCADE" +
                 ");";
         public static final String DELETE_BY = "DELETE FROM " + Tracks.TABLE + " WHERE;";
     }
@@ -64,8 +65,8 @@ public class DatabaseStructure {
         public static final String SESSION = "session";
         /** The accuracy of the fix */
         public static final String ACCURACY = "accuracy";
-        /** The altitude */
-        public static final String ALTITUDE = "altitude";
+        /** The latitude */
+        public static final String ALTITUDE = "latitude";
         /** the bearing of the fix */
         public static final String BEARING = "bearing";
 
@@ -102,7 +103,7 @@ public class DatabaseStructure {
                         "," + DESCRIPTION       + " " + DESCRIPTION_TYPE +
                         "," + PLACETYPE         + " " + PLACETYPE_TYPE +
                         "," + ADDRESS           + " " + ADDRESS_TYPE +
-                        "," + NAME              + " " + NAME_TYPE +
+                        "," + TITLE             + " " + TITLE_TYPE +
                         "," + CREATION_TIME     + " " + CREATION_TIME_TYPE +
                         "," + LATITUDE          + " " + LATITUDE_TYPE +
                         "," + LONGITUDE         + " " + LONGITUDE_TYPE +
@@ -117,8 +118,8 @@ public class DatabaseStructure {
         String GOOGLE_PLACE_ID = "googleplaceid";
         String GOOGLE_PLACE_ID_TYPE   = "TEXT";
 
-        String NAME = "name";
-        String NAME_TYPE   = "TEXT";
+        String TITLE = "title";
+        String TITLE_TYPE   = "TEXT";
 
         String DESCRIPTION = "description";
         String DESCRIPTION_TYPE   = "TEXT";
