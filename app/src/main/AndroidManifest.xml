@@ -86,6 +86,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="svp.com.dontmissplaces.MainMenuActivity" />
         </activity>
+        <activity
+            android:name=".ui.activities.SavedPlacesActivity"
+            android:label="@string/title_activity_saved_places"
+            android:parentActivityName=".MainMenuActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="svp.com.dontmissplaces.MainMenuActivity" />
+        </activity>
     </application>
 
 </manifest>

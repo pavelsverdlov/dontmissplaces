@@ -158,6 +158,12 @@ public class MapView
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
             public android.view.View getInfoWindow(Marker marker) {
+                marker.setTitle("TEST!");
+                marker.setSnippet("Snippet");
+                //marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
+                marker.showInfoWindow();
+                //mMap.addMarker().
+
                 return null;
             }
 

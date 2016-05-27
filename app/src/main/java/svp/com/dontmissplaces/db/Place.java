@@ -23,8 +23,12 @@ public class Place extends dto {
         googlePlaceId = cursor.getString(cursor.getColumnIndex(DatabaseStructure.Places.GOOGLE_PLACE_ID));
         latitude = cursor.getLong(cursor.getColumnIndex(DatabaseStructure.Places.LATITUDE));
         longitude = cursor.getLong(cursor.getColumnIndex(DatabaseStructure.Places.LONGITUDE));
-        title = cursor.getString(cursor.getColumnIndex(DatabaseStructure.Places.TITLE));
+        title = getTitle(cursor);
         placeType = cursor.getInt(cursor.getColumnIndex(DatabaseStructure.Places.PLACETYPE));
         creationTime = cursor.getLong(cursor.getColumnIndex(DatabaseStructure.Places.CREATION_TIME));
+    }
+
+    public static String getTitle(Cursor cursor) {
+        return cursor.getString(cursor.getColumnIndex(DatabaseStructure.Places.TITLE));
     }
 }

@@ -13,7 +13,7 @@ import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.db.SessionTrack;
 import svp.com.dontmissplaces.db.Track;
 
-public class TrackView {
+public class TrackView implements ICursorParcelable{
     TextView title;
 
     public long id;
