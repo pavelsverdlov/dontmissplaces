@@ -66,7 +66,7 @@ public class DatabaseStructure {
         /** The accuracy of the fix */
         public static final String ACCURACY = "accuracy";
         /** The latitude */
-        public static final String ALTITUDE = "latitude";
+        public static final String ALTITUDE = "altitude";
         /** the bearing of the fix */
         public static final String BEARING = "bearing";
 

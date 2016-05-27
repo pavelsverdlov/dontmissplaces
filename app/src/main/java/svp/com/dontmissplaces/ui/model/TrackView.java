@@ -5,15 +5,15 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.svp.infrastructure.common.ViewExtensions;
+import com.svp.infrastructure.common.view.ICursorParcelable;
 
 import java.util.Collection;
 import java.util.Vector;
 
 import svp.com.dontmissplaces.R;
-import svp.com.dontmissplaces.db.SessionTrack;
 import svp.com.dontmissplaces.db.Track;
 
-public class TrackView implements ICursorParcelable{
+public class TrackView implements ICursorParcelable {
     TextView title;
 
     public long id;

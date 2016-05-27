@@ -1,4 +1,4 @@
-package svp.com.dontmissplaces.ui.adapters;
+package com.svp.infrastructure.common.view;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import svp.com.dontmissplaces.ui.model.ICursorParcelable;
 
 public abstract class BaseCursorAdapter<T extends ICursorParcelable > extends CursorAdapter {
     private final LayoutInflater inflater;

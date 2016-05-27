@@ -83,10 +83,11 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implemen
         Waypoint waypoint = null;
         try {
             Log.d(TAG,"OnLocationChange " + location);
-            waypoint = createWaypoint(location);
+
             if(prevLocation == null){
                 return;
             }
+            waypoint = createWaypoint(location);
 
             Date currentDate = new Date(location.getTime());
             Date prevDate = new Date(prevLocation.getTime());

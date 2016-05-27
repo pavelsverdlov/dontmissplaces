@@ -16,6 +16,7 @@ import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.BaseBundleProvider;
 import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.ui.model.TrackView;
+import svp.com.dontmissplaces.ui.popups.Popups;
 
 import com.svp.infrastructure.mvpvs.bundle.IBundleProvider;
 
@@ -79,6 +80,11 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
 
             state.displayTrackOnMap(new TrackView(recordingTrack, sessions));
         }
+    }
+
+    public void savePlaceInCurrentPosition() {
+        Popups.SavePlacePopup popup = new Popups.SavePlacePopup(state.getActivity());
+        popup.show();
     }
 
     private class TrackTimer extends TimerTask{

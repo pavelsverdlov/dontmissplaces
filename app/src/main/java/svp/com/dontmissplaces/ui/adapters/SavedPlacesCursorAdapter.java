@@ -6,8 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.svp.infrastructure.common.view.BaseCursorAdapter;
+
 import svp.com.dontmissplaces.R;
-import svp.com.dontmissplaces.ui.model.ICursorParcelable;
+import com.svp.infrastructure.common.view.ICursorParcelable;
 import svp.com.dontmissplaces.ui.model.PlaceView;
 
 public class SavedPlacesCursorAdapter extends BaseCursorAdapter {

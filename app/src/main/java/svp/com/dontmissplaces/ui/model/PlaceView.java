@@ -5,11 +5,12 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.svp.infrastructure.common.ViewExtensions;
+import com.svp.infrastructure.common.view.ICursorParcelable;
 
 import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.db.Place;
 
-public class PlaceView implements ICursorParcelable{
+public class PlaceView implements ICursorParcelable {
     private TextView title;
 
     @Override

@@ -23,14 +23,29 @@
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_main_menu" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/track_recording_start_fab"
+    <LinearLayout
+        android:layout_gravity="bottom|end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_near_me_white_48dp" />
+        android:orientation="vertical" >
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/track_recording_save_place"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:backgroundTint="@color/cardview_light_background"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@drawable/common_full_open_on_phone" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/track_recording_start_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@drawable/ic_near_me_white_48dp" />
+    </LinearLayout>
+
+
 
     <com.bowyer.app.fabtransitionlayout.FooterLayout
         android:id="@+id/track_recording_fabtoolbar"
@@ -43,7 +58,6 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             >
 
             <ImageButton

@@ -13,7 +13,7 @@
     <string name="service_dataenabled">Network positioning is enabled, commencing logging.</string>
     <string name="service_gpsproblem">Receiving no location information</string>
 
-    <!-- Dialogs -->
+    <!-- Popups -->
     <string name="dialog_select_media_title">Select note</string>
     <string name="dialog_select_media_message">Multiple notes were found at this location, please select one to open</string>
     <string name="dialog_tracking_title">Tracking control</string>

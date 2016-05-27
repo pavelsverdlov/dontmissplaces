@@ -95,6 +95,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
     @Bind(R.id.track_recording_fabtoolbar) com.bowyer.app.fabtransitionlayout.FooterLayout trackRecordingFooter;
     @Bind(R.id.track_recording_start_fab) FloatingActionButton fabTrackRecordingBtn;
+    @Bind(R.id.track_recording_save_place) FloatingActionButton fabSavePlaceBtn;
 
     public MainMenuActivity(){
         permissions = new ActivityPermissions(this);
@@ -222,6 +223,12 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
             public void onClick(View view) {
                 SessionView session = getPresenter().startNewTrackSession();
                 mapView.startTrackRecording(session);
+            }
+        });
+        fabSavePlaceBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getPresenter().savePlaceInCurrentPosition();
             }
         });
     }

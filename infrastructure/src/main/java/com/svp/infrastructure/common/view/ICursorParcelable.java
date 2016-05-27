@@ -1,4 +1,4 @@
-package svp.com.dontmissplaces.ui.model;
+package com.svp.infrastructure.common.view;
 
 import android.database.Cursor;
 import android.view.View;
