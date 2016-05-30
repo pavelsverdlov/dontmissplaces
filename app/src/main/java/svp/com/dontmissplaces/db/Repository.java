@@ -189,6 +189,8 @@ public class Repository extends SQLiteOpenHelper {
             place.creationTime = new Date().getTime();
 
             ContentValues args = new ContentValues();
+            args.put(Places.COUNTRY, place.country);
+            args.put(Places.CITY, place.city);
             args.put(Places.ADDRESS, place.address);
             args.put(Places.DESCRIPTION, place.description);
             args.put(Places.GOOGLE_PLACE_ID, place.googlePlaceId);
@@ -218,8 +220,6 @@ public class Repository extends SQLiteOpenHelper {
             return places;
         }
     }
-
-
 
     private Cursor getCursorById(String table,long id) {
         SQLiteDatabase sqldb = getReadableDatabase();

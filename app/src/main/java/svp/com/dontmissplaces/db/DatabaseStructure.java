@@ -102,6 +102,8 @@ public class DatabaseStructure {
                         "," + GOOGLE_PLACE_ID   + " " + GOOGLE_PLACE_ID_TYPE +
                         "," + DESCRIPTION       + " " + DESCRIPTION_TYPE +
                         "," + PLACETYPE         + " " + PLACETYPE_TYPE +
+                        "," + COUNTRY           + " " + COUNTRY_TYPE +
+                        "," + CITY              + " " + CITY_TYPE +
                         "," + ADDRESS           + " " + ADDRESS_TYPE +
                         "," + TITLE             + " " + TITLE_TYPE +
                         "," + CREATION_TIME     + " " + CREATION_TIME_TYPE +
@@ -126,6 +128,12 @@ public class DatabaseStructure {
 
         String PLACETYPE = "placetype";
         String PLACETYPE_TYPE   = "INTEGER NOT NULL";
+
+        String CITY = "city";
+        String CITY_TYPE   = "TEXT";
+
+        String COUNTRY = "country";
+        String COUNTRY_TYPE   = "TEXT";
 
         String ADDRESS = "address";
         String ADDRESS_TYPE   = "TEXT";

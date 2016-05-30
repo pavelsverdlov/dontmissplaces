@@ -33,20 +33,16 @@ public class Popups {
         }
 
         public void setOnClickListener(OnClickListener listener) {
-            /*
-            builder// Add action buttons
-                    .setPositiveButton(android.R.string..signin, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            // sign in the user ...
-                        }
-                    })
-                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            close();
-                        }
-                    });
-                    */
+//            builder.setPositiveButton(android.R.string.signin, new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int id) {
+//                    // sign in the user ...
+//                }
+//            }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                    close();
+//                }
+//            });
         }
 
         public SavePlacePopup show() {

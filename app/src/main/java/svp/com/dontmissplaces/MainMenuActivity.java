@@ -2,17 +2,23 @@ package svp.com.dontmissplaces;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
 
@@ -96,6 +102,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     @Bind(R.id.track_recording_fabtoolbar) com.bowyer.app.fabtransitionlayout.FooterLayout trackRecordingFooter;
     @Bind(R.id.track_recording_start_fab) FloatingActionButton fabTrackRecordingBtn;
     @Bind(R.id.track_recording_save_place) FloatingActionButton fabSavePlaceBtn;
+    @Bind(R.id.floating_action_layout) LinearLayout floatingActionlayout;
 
     public MainMenuActivity(){
         permissions = new ActivityPermissions(this);
@@ -111,6 +118,22 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         Toolbar toolbar = (Toolbar) findViewById(R.id.mainmenu_toolbar);
         setSupportActionBar(toolbar);
 
+        AppBarLayout bar = (AppBarLayout)findViewById(R.id.map_app_bar_layout);
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        ViewGroup.LayoutParams params = bar.getLayoutParams();
+        params.height = (int) (size.y*0.8);
+        //params.width = 100;
+        bar.setLayoutParams(params);
+//        int width = size.x;
+//        int height = size.y;
+        floatingActionlayout.setVisibility(View.GONE);
+
+        View ddd = findViewById(R.id.select_place_scrolling_act_content_view);
+        ddd.setVisibility(View.GONE);
+        FloatingActionButton fff = (FloatingActionButton)findViewById(R.id.select_place_scrolling_act_save_fab);
+        setFabGone(fff);
 
         initFabTrackRecordingBtn();
         trackRecordingFooter.setFab(fabTrackRecordingBtn);
@@ -125,7 +148,20 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         navigationView.setNavigationItemSelectedListener(this);
 
         mapView.onCreate(savedInstanceState);
+    }
 
+    private void setFabGone(FloatingActionButton fab){
+        CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+        p.setBehavior(null); //should disable default animations
+        p.setAnchorId(View.NO_ID); //should let you set visibility
+        fab.setLayoutParams(p);
+        fab.setVisibility(View.GONE); // View.INVISIBLE might also be worth trying
+    }
+    private void setFabVisible(FloatingActionButton fab){
+        CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+        p.setBehavior(new FloatingActionButton.Behavior());
+        p.setAnchorId(R.id.map_app_bar_layout);
+        fab.setLayoutParams(p);
     }
     @Override
     protected void onStart() {

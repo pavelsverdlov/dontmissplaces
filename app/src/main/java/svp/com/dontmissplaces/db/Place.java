@@ -11,6 +11,8 @@ public class Place extends dto {
     public String title;
     public int placeType;
     public long creationTime;
+    public String country;
+    public String city;
 
     public Place(long id) {
         super(id);
@@ -18,6 +20,8 @@ public class Place extends dto {
 
     public Place(Cursor cursor) {
         super(cursor.getLong(cursor.getColumnIndex(DatabaseStructure.Places._ID)));
+        country = cursor.getString(cursor.getColumnIndex(DatabaseStructure.Places.COUNTRY));
+        city = cursor.getString(cursor.getColumnIndex(DatabaseStructure.Places.CITY));
         address = cursor.getString(cursor.getColumnIndex(DatabaseStructure.Places.ADDRESS));
         description = cursor.getString(cursor.getColumnIndex(DatabaseStructure.Places.DESCRIPTION));
         googlePlaceId = cursor.getString(cursor.getColumnIndex(DatabaseStructure.Places.GOOGLE_PLACE_ID));
