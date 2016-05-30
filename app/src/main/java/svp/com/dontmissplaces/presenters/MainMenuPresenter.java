@@ -1,6 +1,7 @@
 package svp.com.dontmissplaces.presenters;
 
 import android.content.Intent;
+import android.location.Location;
 
 import java.util.Date;
 import java.util.Timer;
@@ -8,15 +9,19 @@ import java.util.TimerTask;
 import java.util.Vector;
 
 import svp.com.dontmissplaces.MainMenuActivity;
+import svp.com.dontmissplaces.db.Place;
 import svp.com.dontmissplaces.db.Repository;
 import svp.com.dontmissplaces.db.SessionTrack;
 import svp.com.dontmissplaces.db.Track;
 import svp.com.dontmissplaces.db.Waypoint;
+import svp.com.dontmissplaces.model.PlaceProvider;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.BaseBundleProvider;
+import svp.com.dontmissplaces.ui.model.PlaceView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.ui.model.TrackView;
 import svp.com.dontmissplaces.ui.popups.Popups;
+import svp.com.dontmissplaces.utils.LocationEx;
 
 import com.svp.infrastructure.mvpvs.bundle.IBundleProvider;
 
@@ -82,9 +87,15 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         }
     }
 
-    public void savePlaceInCurrentPosition() {
-        Popups.SavePlacePopup popup = new Popups.SavePlacePopup(state.getActivity());
-        popup.show();
+    public void showPlaceInfoByLocation(Location location) {
+        PlaceProvider pp = new PlaceProvider(state.getActivity());
+        Place p = pp.getPlace(LocationEx.getLatLng(location));
+
+        state.showPlaceInfo(p);
+    }
+
+    public void savePlace() {
+
     }
 
     private class TrackTimer extends TimerTask{

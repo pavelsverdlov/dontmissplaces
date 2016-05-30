@@ -1,5 +1,6 @@
 package svp.com.dontmissplaces.ui.map;
 
+import android.location.Location;
 import android.os.Bundle;
 
 import java.util.Collection;
@@ -27,4 +28,6 @@ public interface IMapView {
     void resumeTrackRecording();
 
     void stopTrackRecording();
+
+    Location getMyLocation();
 }

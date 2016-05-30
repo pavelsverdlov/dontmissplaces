@@ -19,17 +19,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import svp.com.dontmissplaces.db.Place;
 import svp.com.dontmissplaces.presenters.MainMenuPresenter;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.ActivityPermissions;
 import svp.com.dontmissplaces.ui.map.MapView;
 import svp.com.dontmissplaces.ui.TrackRecordingToolbarView;
 import svp.com.dontmissplaces.ui.map.IMapView;
+import svp.com.dontmissplaces.ui.model.PlaceView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.ui.model.TrackView;
 
@@ -93,6 +96,18 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
             view.setTitle(track.getHeader());
             view.mapView.showSessionsTrack(track.sessions);
         }
+
+        public void showPlaceInfo(Place place){
+            view.showPlaceInfoLayout();
+            ((TextView)view.findViewById(R.id.test_place_text))
+                    .setText(
+                            place.title
+                            + "\n" +place.country
+                            + "\n" +place.city
+                          //  + "\n" +place.address
+                            + "\n" + place.description);
+
+        }
     }
 
     private final IMapView mapView;
@@ -101,8 +116,14 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
     @Bind(R.id.track_recording_fabtoolbar) com.bowyer.app.fabtransitionlayout.FooterLayout trackRecordingFooter;
     @Bind(R.id.track_recording_start_fab) FloatingActionButton fabTrackRecordingBtn;
-    @Bind(R.id.track_recording_save_place) FloatingActionButton fabSavePlaceBtn;
+    @Bind(R.id.track_recording_show_place_info) FloatingActionButton fabShowPlaceByCurrentLocationBtn;
     @Bind(R.id.floating_action_layout) LinearLayout floatingActionlayout;
+
+    @Bind(R.id.map_app_bar_layout) AppBarLayout mapLayout;
+    @Bind(R.id.select_place_scrolling_act_content_view) View mapContentLayout;
+    @Bind(R.id.select_place_scrolling_act_save_fab) FloatingActionButton fabSavePlaceLocationBtn;
+
+    Toolbar toolbar;
 
     public MainMenuActivity(){
         permissions = new ActivityPermissions(this);
@@ -115,25 +136,8 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         setContentView(R.layout.activity_main_menu);
 
         ButterKnife.bind(this);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.mainmenu_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.mainmenu_toolbar);
         setSupportActionBar(toolbar);
-
-        AppBarLayout bar = (AppBarLayout)findViewById(R.id.map_app_bar_layout);
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        ViewGroup.LayoutParams params = bar.getLayoutParams();
-        params.height = (int) (size.y*0.8);
-        //params.width = 100;
-        bar.setLayoutParams(params);
-//        int width = size.x;
-//        int height = size.y;
-        floatingActionlayout.setVisibility(View.GONE);
-
-        View ddd = findViewById(R.id.select_place_scrolling_act_content_view);
-        ddd.setVisibility(View.GONE);
-        FloatingActionButton fff = (FloatingActionButton)findViewById(R.id.select_place_scrolling_act_save_fab);
-        setFabGone(fff);
 
         initFabTrackRecordingBtn();
         trackRecordingFooter.setFab(fabTrackRecordingBtn);
@@ -147,21 +151,9 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         NavigationView navigationView = (NavigationView) findViewById(R.id.mainmenu_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        mapView.onCreate(savedInstanceState);
-    }
+        hidePlaceInfoLayout();
 
-    private void setFabGone(FloatingActionButton fab){
-        CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
-        p.setBehavior(null); //should disable default animations
-        p.setAnchorId(View.NO_ID); //should let you set visibility
-        fab.setLayoutParams(p);
-        fab.setVisibility(View.GONE); // View.INVISIBLE might also be worth trying
-    }
-    private void setFabVisible(FloatingActionButton fab){
-        CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
-        p.setBehavior(new FloatingActionButton.Behavior());
-        p.setAnchorId(R.id.map_app_bar_layout);
-        fab.setLayoutParams(p);
+        mapView.onCreate(savedInstanceState);
     }
     @Override
     protected void onStart() {
@@ -261,10 +253,16 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
                 mapView.startTrackRecording(session);
             }
         });
-        fabSavePlaceBtn.setOnClickListener(new View.OnClickListener() {
+        fabShowPlaceByCurrentLocationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getPresenter().savePlaceInCurrentPosition();
+                getPresenter().showPlaceInfoByLocation(mapView.getMyLocation());
+            }
+        });
+        fabSavePlaceLocationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getPresenter().savePlace();
             }
         });
     }
@@ -292,6 +290,55 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
                     }
                 }
         );
+    }
+
+    /**
+     * Place show/save
+     */
+    private void showPlaceInfoLayout() {
+        //toolbar.setVisibility(View.GONE);
+        //hide action btns
+        floatingActionlayout.setVisibility(View.GONE);
+        //reduce map layout to 80% for displaying place info
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        ViewGroup.LayoutParams params = mapLayout.getLayoutParams();
+        params.height = (int) (size.y*0.85);
+        mapLayout.setLayoutParams(params);
+        // show content view layout
+        mapContentLayout.setVisibility(View.VISIBLE);
+        //show save btn
+        setFabVisible(fabSavePlaceLocationBtn);
+    }
+    private void hidePlaceInfoLayout() {
+        floatingActionlayout.setVisibility(View.VISIBLE);
+
+//        Display display = getWindowManager().getDefaultDisplay();
+//        Point size = new Point();
+//        display.getSize(size);
+//        ViewGroup.LayoutParams params = mapLayout.getLayoutParams();
+//        params.height = size.y;
+//        mapLayout.setLayoutParams(params);
+
+        mapContentLayout.setVisibility(View.GONE);
+
+        setFabGone(fabSavePlaceLocationBtn);
+    }
+
+
+    private void setFabGone(FloatingActionButton fab){
+        CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+        p.setBehavior(null); //should disable default animations
+        p.setAnchorId(View.NO_ID); //should let you set visibility
+        fab.setLayoutParams(p);
+        fab.setVisibility(View.GONE); // View.INVISIBLE might also be worth trying
+    }
+    private void setFabVisible(FloatingActionButton fab){
+        CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+        p.setBehavior(new FloatingActionButton.Behavior());
+        p.setAnchorId(R.id.map_app_bar_layout);
+        fab.setLayoutParams(p);
     }
 }
 

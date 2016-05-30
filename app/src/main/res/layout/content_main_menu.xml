@@ -14,36 +14,28 @@
         android:layout_height="match_parent"
         android:id="@+id/google_map"
         android:name="com.google.android.gms.maps.SupportMapFragment" />
-
-    <LinearLayout
-        android:gravity="bottom"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/android_standard_list_item"
-        android:background="@color/colorPrimary"
-        android:orientation="vertical" >
-        <android.support.v7.widget.AppCompatTextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="fdasfadsf dfs safds fdas df dsf dsf sadfdfasdfdas"/>
-    </LinearLayout>
-
 </RelativeLayout>
+
+
+         android:layout_marginTop="56dp"
 -->
+
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginTop="?attr/actionBarSize"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:showIn="@layout/app_bar_main_menu"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    tools:context="svp.com.dontmissplaces.MainMenuActivity"
+    tools:showIn="@layout/app_bar_main_menu">
 
     <android.support.design.widget.AppBarLayout
+
         android:id="@+id/map_app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_heightPercent="50%"
         android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay">
 
@@ -55,13 +47,6 @@
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <fragment
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/google_map"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
-                android:layout_marginBottom="@dimen/tb_button_margin"
-                />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -71,6 +56,15 @@
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
+
+    <fragment
+        android:fitsSystemWindows="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/google_map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_marginBottom="@dimen/tb_button_margin"
+        />
 
     <include
         android:id="@+id/select_place_scrolling_act_content_view"

@@ -3,6 +3,7 @@ package svp.com.dontmissplaces.ui.map;
 import android.app.Activity;
 import android.graphics.Color;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
@@ -173,7 +174,7 @@ public class MapView
             }
         });
         //http://maps.googleapis.com/maps/api/geocode/json?latlng=46.402852,30.722839&sensor=true
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+        /*mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
                 String strAdd = "";
@@ -204,7 +205,7 @@ public class MapView
                 String test = strAdd;
             }
         });
-
+*/
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
@@ -266,5 +267,8 @@ public class MapView
     }
     public void showSessionsTrack(Collection<SessionView> sessions) {
         getPresenter().showSessionsTrack(sessions);
+    }
+    public Location getMyLocation(){
+        return mMap.getMyLocation();
     }
 }
