@@ -102,10 +102,8 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
         public void showPlaceInfo(Place place){
             view.showPlaceInfoLayout();
-            TextView tv = (TextView)view.findViewById(R.id.select_place_show_title);
-  //          place.title
-            tv.setText(place.address);//place.country + " " + place.city + " " +place.address + " " + place.description);
-
+            ((TextView)view.findViewById(R.id.select_place_show_title)).setText(place.address);//place.country + " " + place.city + " " +place.address + " " + place.description);
+            ((TextView)view.findViewById(R.id.select_place_show_latlng)).setText(place.latitude + ", "+place.longitude);
         }
     }
 
@@ -120,7 +118,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
    // @Bind(R.id.map_app_bar_layout) AppBarLayout mapLayout;
 //    @Bind(R.id.select_place_scrolling_act_content_view) View mapContentLayout;
-//    @Bind(R.id.select_place_scrolling_act_save_fab) FloatingActionButton fabSavePlaceLocationBtn;
+    @Bind(R.id.select_place_scrolling_act_save_fab) FloatingActionButton fabSavePlaceLocationBtn;
 
     public MainMenuActivity(){
         permissions = new ActivityPermissions(this);
@@ -150,6 +148,8 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
         fabShowPlaceByCurrentLocationBtn.setOnClickListener(this);
         fabTrackRecordingBtn.setOnClickListener(this);
+        fabSavePlaceLocationBtn.setOnClickListener(this);
+        fabSavePlaceLocationBtn.setVisibility(View.GONE);
 
         CoordinatorLayout coordinatorLayout = (CoordinatorLayout)MainMenuActivity.this.findViewById(R.id.content_main_menu_coordinator_layout);
         behavior = BottomSheetBehavior.from(coordinatorLayout.findViewById(R.id.select_place_scrolling_act_content_view));
@@ -176,6 +176,9 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
                 }else{
                     behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 }
+                break;
+            case R.id.select_place_scrolling_act_save_fab:
+
                 break;
         }
     }
@@ -318,6 +321,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 //        });
     }
     private void showPlaceInfoLayout() {
+        fabSavePlaceLocationBtn.setVisibility(View.VISIBLE);
         behavior.setPeekHeight(225);
         behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }

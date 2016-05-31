@@ -32,6 +32,8 @@ public class PlaceProvider {
             e.printStackTrace();
         }
         Place place = new Place(-1);
+        place.longitude = latLng.longitude;
+        place.latitude = latLng.latitude;
         if (addresses != null) {
             Address returnedAddress = addresses.get(0);
             place.city = addresses.get(0).getLocality();
