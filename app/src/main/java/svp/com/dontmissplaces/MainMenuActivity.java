@@ -103,11 +103,8 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         public void showPlaceInfo(Place place){
             view.showPlaceInfoLayout();
             TextView tv = (TextView)view.findViewById(R.id.select_place_show_title);
-            tv.setText( place.title
-                            + "\n" +place.country
-                            + "\n" +place.city
-                          //  + "\n" +place.address
-                            + "\n" + place.description);
+  //          place.title
+            tv.setText(place.address);//place.country + " " + place.city + " " +place.address + " " + place.description);
 
         }
     }

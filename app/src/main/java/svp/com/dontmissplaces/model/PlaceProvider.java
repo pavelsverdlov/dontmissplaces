@@ -35,10 +35,11 @@ public class PlaceProvider {
         if (addresses != null) {
             Address returnedAddress = addresses.get(0);
             place.city = addresses.get(0).getLocality();
-//                String state = addresses.get(0).getAdminArea();
+            String state = addresses.get(0).getAdminArea();
             place.country = addresses.get(0).getCountryName();
-//                String postalCode = addresses.get(0).getPostalCode();
+            String postalCode = addresses.get(0).getPostalCode();
             place.title = addresses.get(0).getFeatureName();
+            place.address = addresses.get(0).getAddressLine(0);
             StringBuilder strReturnedAddress = new StringBuilder("");
 
             for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
