@@ -23,6 +23,7 @@ import svp.com.dontmissplaces.ui.model.TrackView;
 import svp.com.dontmissplaces.ui.popups.Popups;
 import svp.com.dontmissplaces.utils.LocationEx;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.svp.infrastructure.mvpvs.bundle.IBundleProvider;
 
 public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,MainMenuActivity.ViewState> {
@@ -89,7 +90,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
 
     public void showPlaceInfoByLocation(Location location) {
         PlaceProvider pp = new PlaceProvider(state.getActivity());
-        Place p = pp.getPlace(LocationEx.getLatLng(location));
+        Place p = pp.getPlace(new LatLng(46.4708294,30.7043384));//LocationEx.getLatLng(location));
 
         state.showPlaceInfo(p);
     }

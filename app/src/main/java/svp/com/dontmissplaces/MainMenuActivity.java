@@ -6,6 +6,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -37,7 +38,9 @@ import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.ui.model.TrackView;
 
 public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
-        implements NavigationView.OnNavigationItemSelectedListener, ActivityCommutator.ICommutativeElement {
+        implements  NavigationView.OnNavigationItemSelectedListener,
+                    ActivityCommutator.ICommutativeElement,
+                    View.OnClickListener {
 
     private static final String TAG = "MainMenuActivity";
 
@@ -99,9 +102,8 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
         public void showPlaceInfo(Place place){
             view.showPlaceInfoLayout();
-            ((TextView)view.findViewById(R.id.test_place_text))
-                    .setText(
-                            place.title
+            TextView tv = (TextView)view.findViewById(R.id.select_place_show_title);
+            tv.setText( place.title
                             + "\n" +place.country
                             + "\n" +place.city
                           //  + "\n" +place.address
@@ -119,16 +121,15 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     @Bind(R.id.track_recording_show_place_info) FloatingActionButton fabShowPlaceByCurrentLocationBtn;
     @Bind(R.id.floating_action_layout) LinearLayout floatingActionlayout;
 
-    @Bind(R.id.map_app_bar_layout) AppBarLayout mapLayout;
-    @Bind(R.id.select_place_scrolling_act_content_view) View mapContentLayout;
-    @Bind(R.id.select_place_scrolling_act_save_fab) FloatingActionButton fabSavePlaceLocationBtn;
-
-    Toolbar toolbar;
+   // @Bind(R.id.map_app_bar_layout) AppBarLayout mapLayout;
+//    @Bind(R.id.select_place_scrolling_act_content_view) View mapContentLayout;
+//    @Bind(R.id.select_place_scrolling_act_save_fab) FloatingActionButton fabSavePlaceLocationBtn;
 
     public MainMenuActivity(){
         permissions = new ActivityPermissions(this);
         mapView = new MapView(this,permissions);
     }
+     BottomSheetBehavior behavior;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,10 +137,9 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         setContentView(R.layout.activity_main_menu);
 
         ButterKnife.bind(this);
-        toolbar = (Toolbar) findViewById(R.id.mainmenu_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.mainmenu_toolbar);
         setSupportActionBar(toolbar);
 
-        initFabTrackRecordingBtn();
         trackRecordingFooter.setFab(fabTrackRecordingBtn);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.mainmenu_drawer_layout);
@@ -151,15 +151,42 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         NavigationView navigationView = (NavigationView) findViewById(R.id.mainmenu_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        hidePlaceInfoLayout();
+        fabShowPlaceByCurrentLocationBtn.setOnClickListener(this);
+        fabTrackRecordingBtn.setOnClickListener(this);
+
+        CoordinatorLayout coordinatorLayout = (CoordinatorLayout)MainMenuActivity.this.findViewById(R.id.content_main_menu_coordinator_layout);
+        behavior = BottomSheetBehavior.from(coordinatorLayout.findViewById(R.id.select_place_scrolling_act_content_view));
+        behavior.setPeekHeight(0);
+
+        coordinatorLayout.findViewById(R.id.select_place_scrolling_header_layout)
+                .setOnClickListener(this);
 
         mapView.onCreate(savedInstanceState);
     }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.track_recording_show_place_info:
+                showPlaceByCurrentLocation(v);
+                break;
+            case R.id.track_recording_start_fab:
+                startNewTrackSession();
+                break;
+            case R.id.select_place_scrolling_header_layout:
+                if(behavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
+                    behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }else{
+                    behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                }
+                break;
+        }
+    }
+
     @Override
     protected void onStart() {
         mapView.onStart();
         super.onStart();
-        //mLoggerServiceManager.startup(this, null);
     }
     @Override
     protected void onStop(){
@@ -245,26 +272,9 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     /**
     * Start recording track btn
     */
-    private void initFabTrackRecordingBtn(){
-        fabTrackRecordingBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SessionView session = getPresenter().startNewTrackSession();
-                mapView.startTrackRecording(session);
-            }
-        });
-        fabShowPlaceByCurrentLocationBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getPresenter().showPlaceInfoByLocation(mapView.getMyLocation());
-            }
-        });
-        fabSavePlaceLocationBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getPresenter().savePlace();
-            }
-        });
+    private void startNewTrackSession(){
+        SessionView session = getPresenter().startNewTrackSession();
+        mapView.startTrackRecording(session);
     }
     private void createTrackRecordingToolbarView(){
         recordingToolbarView = new TrackRecordingToolbarView(this);
@@ -295,21 +305,24 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     /**
      * Place show/save
      */
+    private void showPlaceByCurrentLocation(View v){
+        getPresenter().showPlaceInfoByLocation(mapView.getMyLocation());
+
+//        behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+//            @Override
+//            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+//                // React to state change
+//            }
+//
+//            @Override
+//            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+//                // React to dragging events
+//            }
+//        });
+    }
     private void showPlaceInfoLayout() {
-        //toolbar.setVisibility(View.GONE);
-        //hide action btns
-        floatingActionlayout.setVisibility(View.GONE);
-        //reduce map layout to 80% for displaying place info
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        ViewGroup.LayoutParams params = mapLayout.getLayoutParams();
-        params.height = (int) (size.y*0.85);
-        mapLayout.setLayoutParams(params);
-        // show content view layout
-        mapContentLayout.setVisibility(View.VISIBLE);
-        //show save btn
-        setFabVisible(fabSavePlaceLocationBtn);
+        behavior.setPeekHeight(225);
+        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
     private void hidePlaceInfoLayout() {
         floatingActionlayout.setVisibility(View.VISIBLE);
@@ -321,9 +334,9 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 //        params.height = size.y;
 //        mapLayout.setLayoutParams(params);
 
-        mapContentLayout.setVisibility(View.GONE);
+//        mapContentLayout.setVisibility(View.GONE);
 
-        setFabGone(fabSavePlaceLocationBtn);
+//        setFabGone(fabSavePlaceLocationBtn);
     }
 
 
@@ -337,7 +350,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     private void setFabVisible(FloatingActionButton fab){
         CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
         p.setBehavior(new FloatingActionButton.Behavior());
-        p.setAnchorId(R.id.map_app_bar_layout);
+//        p.setAnchorId(R.id.map_app_bar_layout);
         fab.setLayoutParams(p);
     }
 }
