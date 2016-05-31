@@ -19,6 +19,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.svp.infrastructure.mvpvs.view.View;
 
@@ -37,8 +38,10 @@ public class MapView
         extends View<MapsPresenter>
         implements OnMapReadyCallback,
         GoogleMap.OnMyLocationButtonClickListener,
+        GoogleMap.OnMapClickListener,
         IMapView {
     private final String TAG = "MapView";
+    private OnMapClickListener listener;
 
     public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<MapView> {
         private final PolylineView polyline;
@@ -138,6 +141,7 @@ public class MapView
 
         mMap.setBuildingsEnabled(true);
         mMap.setIndoorEnabled(true);
+      //  mMap.set//setMapType();
         //mMap.setMyLocationEnabled(true);
         //mMap.setTrafficEnabled(false);
 
@@ -156,56 +160,25 @@ public class MapView
             }
         });
        // mMap.setOnMyLocationButtonClickListener(this);
-        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-            @Override
-            public android.view.View getInfoWindow(Marker marker) {
-                marker.setTitle("TEST!");
-                marker.setSnippet("Snippet");
-                //marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
-                marker.showInfoWindow();
-                //mMap.addMarker().
-
-                return null;
-            }
-
-            @Override
-            public android.view.View getInfoContents(Marker marker) {
-                return null;
-            }
-        });
+//        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+//            @Override
+//            public android.view.View getInfoWindow(Marker marker) {
+//                marker.setTitle("TEST!");
+//                marker.setSnippet("Snippet");
+//                //marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
+//                marker.showInfoWindow();
+//                //mMap.addMarker().
+//
+//                return null;
+//            }
+//
+//            @Override
+//            public android.view.View getInfoContents(Marker marker) {
+//                return null;
+//            }
+//        });
         //http://maps.googleapis.com/maps/api/geocode/json?latlng=46.402852,30.722839&sensor=true
-        /*mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                String strAdd = "";
-                Geocoder geocoder = new Geocoder(activity, Locale.getDefault());
-                try {
-                    List<android.location.Address> addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
-                    if (addresses != null) {
-                        Address returnedAddress = addresses.get(0);
-                        String city = addresses.get(0).getLocality();
-                        String state = addresses.get(0).getAdminArea();
-                        String country = addresses.get(0).getCountryName();
-                        String postalCode = addresses.get(0).getPostalCode();
-                        String knownName = addresses.get(0).getFeatureName();
-                        StringBuilder strReturnedAddress = new StringBuilder("");
-
-                        for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
-                            strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
-                        }
-                        strAdd = strReturnedAddress.toString();
-                        Log.w("My Current loction address", "" + strReturnedAddress.toString());
-                    } else {
-                        Log.w("My Current loction address", "No Address returned!");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.w("My Current loction address", "Canont get Address!");
-                }
-                String test = strAdd;
-            }
-        });
-*/
+        mMap.setOnMapClickListener(this);
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
@@ -245,6 +218,19 @@ public class MapView
         return false;
     }
 
+    Marker marker;
+    @Override
+    public void onMapClick(LatLng latLng) {
+        if(marker != null){
+            marker.remove();
+        }
+        marker = mMap.addMarker(new MarkerOptions().position(latLng));
+        listener.onMapClick(latLng);
+    }
+
+    public void setOnMapClickListener(OnMapClickListener listener){
+        this.listener = listener;
+    }
     public void enableMyLocation() {
         if(permissions.isFineLocationGranted()) {
             mMap.setMyLocationEnabled(true);

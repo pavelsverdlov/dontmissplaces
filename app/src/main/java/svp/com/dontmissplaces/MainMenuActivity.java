@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
 
 import butterknife.Bind;
@@ -33,14 +34,17 @@ import svp.com.dontmissplaces.ui.ActivityPermissions;
 import svp.com.dontmissplaces.ui.map.MapView;
 import svp.com.dontmissplaces.ui.TrackRecordingToolbarView;
 import svp.com.dontmissplaces.ui.map.IMapView;
+import svp.com.dontmissplaces.ui.map.OnMapClickListener;
 import svp.com.dontmissplaces.ui.model.PlaceView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.ui.model.TrackView;
+import svp.com.dontmissplaces.utils.LocationEx;
 
 public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         implements  NavigationView.OnNavigationItemSelectedListener,
                     ActivityCommutator.ICommutativeElement,
-                    View.OnClickListener {
+                    View.OnClickListener,
+                    OnMapClickListener {
 
     private static final String TAG = "MainMenuActivity";
 
@@ -159,6 +163,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
                 .setOnClickListener(this);
 
         mapView.onCreate(savedInstanceState);
+        mapView.setOnMapClickListener(this);
     }
 
     @Override
@@ -305,8 +310,12 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     /**
      * Place show/save
      */
+    @Override
+    public void onMapClick(LatLng latLng) {
+        getPresenter().showPlaceInfoByLocation(latLng);
+    }
     private void showPlaceByCurrentLocation(View v){
-        getPresenter().showPlaceInfoByLocation(mapView.getMyLocation());
+        getPresenter().showPlaceInfoByLocation(LocationEx.getLatLng(mapView.getMyLocation()));
 
 //        behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
 //            @Override

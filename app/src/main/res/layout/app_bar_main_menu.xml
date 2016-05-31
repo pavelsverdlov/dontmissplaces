@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             app:backgroundTint="@color/textColorWhite"
             android:layout_margin="@dimen/fab_margin"
-            android:src="@drawable/ic_menu_send" />
+             />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/track_recording_start_fab"

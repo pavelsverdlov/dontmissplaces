@@ -30,4 +30,6 @@ public interface IMapView {
     void stopTrackRecording();
 
     Location getMyLocation();
+
+    void setOnMapClickListener(OnMapClickListener listener);
 }

@@ -36,6 +36,8 @@ public class PlaceProvider {
         place.latitude = latLng.latitude;
         if (addresses != null) {
             Address returnedAddress = addresses.get(0);
+
+
             place.city = addresses.get(0).getLocality();
             String state = addresses.get(0).getAdminArea();
             place.country = addresses.get(0).getCountryName();

@@ -88,9 +88,10 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         }
     }
 
-    public void showPlaceInfoByLocation(Location location) {
+    public void showPlaceInfoByLocation(LatLng latLng) {
         PlaceProvider pp = new PlaceProvider(state.getActivity());
-        Place p = pp.getPlace(new LatLng(46.4708294,30.7043384));//LocationEx.getLatLng(location));
+        Place p = pp.getPlace(latLng);
+//        Place p = pp.getPlace(new LatLng(46.4708294,30.7043384));
 
         state.showPlaceInfo(p);
     }
