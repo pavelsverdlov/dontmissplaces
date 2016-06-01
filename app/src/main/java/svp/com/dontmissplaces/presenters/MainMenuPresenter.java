@@ -17,6 +17,8 @@ import svp.com.dontmissplaces.db.Waypoint;
 import svp.com.dontmissplaces.model.PlaceProvider;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.BaseBundleProvider;
+import svp.com.dontmissplaces.ui.map.GoogleMapView;
+import svp.com.dontmissplaces.ui.map.MapViewTypes;
 import svp.com.dontmissplaces.ui.model.PlaceView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.ui.model.TrackView;
@@ -31,9 +33,11 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     private final Repository repository;
     private Track recordingTrack;
     private SessionTrack recordingSession;
+    private MapViewTypes mapViewType;
 
     public MainMenuPresenter(Repository repository) {
         this.repository = repository;
+        mapViewType = MapViewTypes.Osmdroid;
     }
 
     public SessionView startNewTrackSession() {
@@ -98,6 +102,10 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
 
     public void savePlace() {
 
+    }
+
+    public MapViewTypes getMapViewType() {
+        return mapViewType;
     }
 
     private class TrackTimer extends TimerTask{

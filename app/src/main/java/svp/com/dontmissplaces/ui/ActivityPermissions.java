@@ -39,7 +39,9 @@ public class ActivityPermissions {
         isFineLocationGranted = checkPermissionFineLocation(activity,Manifest.permission.ACCESS_FINE_LOCATION);
         return isFineLocationGranted;
     }
-
+    public void checkPermissionExternalStorage() {
+        checkPermissionFineLocation(activity,Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    }
     /**
      * Displays a dialog with error message explaining that the location permission is missing.
      */
@@ -59,4 +61,6 @@ public class ActivityPermissions {
     private static boolean isPermissionGranted(String[] permissions, int[] grantResults, String manifestPermission){
         return PermissionUtils.isPermissionGranted(permissions, grantResults, manifestPermission);
     }
+
+
 }

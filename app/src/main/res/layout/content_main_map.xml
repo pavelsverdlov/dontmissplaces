@@ -6,15 +6,21 @@
     android:layout_height="match_parent"
     tools:context="svp.com.dontmissplaces.MainMenuActivity"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:id="@+id/google_map"
     tools:showIn="@layout/app_bar_main_menu">
-
+<!--
     <fragment
+        android:visibility="gone"
+        android:id="@+id/google_map"
         android:fitsSystemWindows="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/google_map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        />
+        android:name="com.google.android.gms.maps.SupportMapFragment"/>
+-->
+    <org.osmdroid.views.MapView
+        android:id="@+id/osmdroid_map"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
 
 </RelativeLayout>
 

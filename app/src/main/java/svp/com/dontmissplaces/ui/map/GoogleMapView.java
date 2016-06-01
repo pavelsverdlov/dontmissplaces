@@ -2,15 +2,12 @@ package svp.com.dontmissplaces.ui.map;
 
 import android.app.Activity;
 import android.graphics.Color;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.widget.Toast;
 
-import android.location.Address;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,8 +21,6 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.svp.infrastructure.mvpvs.view.View;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
 
 import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.model.Map.GoogleMapsPlaceService;
@@ -34,18 +29,18 @@ import svp.com.dontmissplaces.ui.ActivityPermissions;
 import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.ui.model.PolylineView;
 
-public class MapView
+public class GoogleMapView
         extends View<MapsPresenter>
         implements OnMapReadyCallback,
         GoogleMap.OnMyLocationButtonClickListener,
         GoogleMap.OnMapClickListener,
         IMapView {
-    private final String TAG = "MapView";
+    private final String TAG = "GoogleMapView";
     private OnMapClickListener listener;
 
-    public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<MapView> {
+    public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<GoogleMapView> {
         private final PolylineView polyline;
-        public ViewState(MapView view) {
+        public ViewState(GoogleMapView view) {
             super(view);
             polyline = new PolylineView(Color.BLUE,5);
         }
@@ -107,7 +102,7 @@ public class MapView
     public final FragmentActivity activity;
     private final ActivityPermissions permissions;
 
-    public MapView(FragmentActivity activity, ActivityPermissions permissions){
+    public GoogleMapView(FragmentActivity activity, ActivityPermissions permissions){
         this.activity = activity;
         this.permissions = permissions;
     }
@@ -198,9 +193,9 @@ public class MapView
                     if (building.isUnderground()) {
                         s.append("is underground");
                     }
-                    Toast.makeText(MapView.this, s.toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GoogleMapView.this, s.toString(), Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(MapView.this, "No visible building", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GoogleMapView.this, "No visible building", Toast.LENGTH_SHORT).show();
                 }*/
             }
         });

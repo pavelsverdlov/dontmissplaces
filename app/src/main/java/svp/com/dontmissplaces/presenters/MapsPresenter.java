@@ -15,12 +15,12 @@ import svp.com.dontmissplaces.db.Repository;
 import svp.com.dontmissplaces.db.Waypoint;
 import svp.com.dontmissplaces.model.gps.GPSServiceProvider;
 import svp.com.dontmissplaces.model.gps.OnLocationChangeListener;
-import svp.com.dontmissplaces.ui.map.MapView;
+import svp.com.dontmissplaces.ui.map.GoogleMapView;
 import svp.com.dontmissplaces.ui.model.PolylineView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.utils.LocationEx;
 
-public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implements OnLocationChangeListener {
+public class MapsPresenter extends Presenter<GoogleMapView,GoogleMapView.ViewState> implements OnLocationChangeListener {
     private static final String TAG = "MapsPresenter";
     private Location prevLocation;
     private Waypoint prevWaypoint;
@@ -33,7 +33,7 @@ public class MapsPresenter extends Presenter<MapView,MapView.ViewState> implemen
     }
 
     @Override
-    protected void onAttachedView(MapView view){
+    protected void onAttachedView(GoogleMapView view){
         gpsService = new GPSServiceProvider(view.activity);
         if(state.checkPermissionFineLocation()) {
             gpsService.setOnLocationChangeListener(this);

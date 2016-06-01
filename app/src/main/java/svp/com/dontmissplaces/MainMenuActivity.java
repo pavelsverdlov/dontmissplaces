@@ -1,29 +1,33 @@
 package svp.com.dontmissplaces;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Point;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
+
+import org.osmdroid.api.IMapController;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -31,11 +35,11 @@ import svp.com.dontmissplaces.db.Place;
 import svp.com.dontmissplaces.presenters.MainMenuPresenter;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.ActivityPermissions;
-import svp.com.dontmissplaces.ui.map.MapView;
+import svp.com.dontmissplaces.ui.map.*;
 import svp.com.dontmissplaces.ui.TrackRecordingToolbarView;
 import svp.com.dontmissplaces.ui.map.IMapView;
+import svp.com.dontmissplaces.ui.map.MapViewTypes;
 import svp.com.dontmissplaces.ui.map.OnMapClickListener;
-import svp.com.dontmissplaces.ui.model.PlaceView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.ui.model.TrackView;
 import svp.com.dontmissplaces.utils.LocationEx;
@@ -111,7 +115,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         }
     }
 
-    private final IMapView mapView;
+    private IMapView mapView;
     private final ActivityPermissions permissions;
     private TrackRecordingToolbarView recordingToolbarView;
 
@@ -126,7 +130,6 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
     public MainMenuActivity(){
         permissions = new ActivityPermissions(this);
-        mapView = new MapView(this,permissions);
     }
      BottomSheetBehavior behavior;
 
@@ -141,7 +144,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
         trackRecordingFooter.setFab(fabTrackRecordingBtn);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.mainmenu_drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.content_main_map_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -161,9 +164,6 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
         coordinatorLayout.findViewById(R.id.select_place_scrolling_header_layout)
                 .setOnClickListener(this);
-
-        mapView.onCreate(savedInstanceState);
-        mapView.setOnMapClickListener(this);
     }
 
     @Override
@@ -190,6 +190,18 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
     @Override
     protected void onStart() {
+        switch (getPresenter().getMapViewType()){
+            case Google:
+                mapView = new GoogleMapView(this, permissions);
+                break;
+            case Osmdroid:
+                mapView = new OsmdroidMapView(this, permissions);
+                break;
+        }
+
+        mapView.onCreate(null);
+        mapView.setOnMapClickListener(this);
+
         mapView.onStart();
         super.onStart();
     }
@@ -213,7 +225,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.mainmenu_drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.content_main_map_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -249,7 +261,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         if (id == R.id.nav_mainmenu_history_tracks) {
             getPresenter().openHistoryTracks();
         }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.mainmenu_drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.content_main_map_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
