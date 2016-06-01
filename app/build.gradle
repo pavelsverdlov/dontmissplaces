@@ -43,7 +43,7 @@ dependencies {
     compile 'com.bowyer.app:fabtransitionlayout:0.3.0@aar'
 
     compile 'org.osmdroid:osmdroid-android:5.1@aar'
-    compile 'org.osmdroid:osmdroid-third-party:5.0.1@aar'
+    compile 'com.github.MKergall:osmbonuspack:v5.8.1'
 
     compile project(':infrastructure')
 }

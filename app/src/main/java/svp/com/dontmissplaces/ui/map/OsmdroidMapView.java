@@ -10,14 +10,14 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 
-import org.osmdroid.DefaultResourceProxyImpl;
-import org.osmdroid.ResourceProxy;
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
+import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
+import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -30,28 +30,30 @@ import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.ui.ActivityPermissions;
 import svp.com.dontmissplaces.ui.model.SessionView;
 
-public class OsmdroidMapView implements IMapView {
+public class OsmdroidMapView implements IMapView, MapEventsReceiver {
     private final Activity activity;
     private final ActivityPermissions permissions;
     private final MapView mapView;
     private final IMapController mapController;
-    private MyLocationNewOverlay locationOverlay;
-    private final ArrayList<OverlayItem> overlayItemArray;
+ //   private MyLocationNewOverlay locationOverlay;
+ //   private final ArrayList<OverlayItem> overlayItemArray;
 
     public OsmdroidMapView(Activity activity, ActivityPermissions permissions) {
         this.activity = activity;
         this.permissions = permissions;
-        overlayItemArray = new ArrayList<OverlayItem>();
+       // overlayItemArray = new ArrayList<OverlayItem>();
         mapView = (MapView)activity.findViewById(R.id.osmdroid_map);
         mapView.setTileSource(TileSourceFactory.MAPNIK);
 
         mapController = mapView.getController();
 
-        DefaultResourceProxyImpl defaultResourceProxyImpl = new DefaultResourceProxyImpl(activity);
-        MyItemizedIconOverlay myItemizedIconOverlay = new MyItemizedIconOverlay(overlayItemArray, null, defaultResourceProxyImpl);
+       // DefaultResourceProxyImpl defaultResourceProxyImpl = new DefaultResourceProxyImpl(activity);
+        //MyItemizedIconOverlay myItemizedIconOverlay = new MyItemizedIconOverlay(overlayItemArray, null, defaultResourceProxyImpl);
 
-        mapView.getOverlays().add(myItemizedIconOverlay);
+        //mapView.getOverlays().add(myItemizedIconOverlay);
 
+        MapEventsOverlay mapEventsOverlay = new MapEventsOverlay(activity, this);
+        mapView.getOverlays().add(0, mapEventsOverlay);
 
     }
 
@@ -67,7 +69,7 @@ public class OsmdroidMapView implements IMapView {
 
         mapView.setBuiltInZoomControls(true);
         mapView.setMultiTouchControls(true);
-
+/*
         GpsMyLocationProvider gpsLocationProvider = new GpsMyLocationProvider(activity);
         gpsLocationProvider.setLocationUpdateMinDistance(5);
         gpsLocationProvider.setLocationUpdateMinTime(20);
@@ -87,6 +89,7 @@ public class OsmdroidMapView implements IMapView {
         LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, gpsLocationProvider );
         //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, myLocationListener);
+        */
     }
 
     @Override
@@ -94,8 +97,9 @@ public class OsmdroidMapView implements IMapView {
 
         mapController.setZoom(9);
         GeoPoint startPoint = new GeoPoint(48.8583, 2.2944);//locationOverlay.getMyLocation();//
+
         mapController.setCenter(startPoint);
-        locationOverlay.setDrawAccuracyEnabled(true);
+      //  locationOverlay.setDrawAccuracyEnabled(true);
     }
 
     @Override
@@ -142,6 +146,19 @@ public class OsmdroidMapView implements IMapView {
     public void setOnMapClickListener(OnMapClickListener listener) {
 
     }
+
+
+    @Override
+    public boolean singleTapConfirmedHelper(GeoPoint p) {
+        return false;
+    }
+    @Override
+    public boolean longPressHelper(GeoPoint p) {
+        return false;
+    }
+
+
+/*
     private class MyItemizedIconOverlay extends ItemizedIconOverlay<OverlayItem> {
         public MyItemizedIconOverlay(
                 List<OverlayItem> pList,
@@ -172,4 +189,5 @@ public class OsmdroidMapView implements IMapView {
             }
         }
     }
+    */
 }
