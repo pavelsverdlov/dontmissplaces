@@ -6,6 +6,7 @@ public class Place extends dto {
     public String address;
     public String description;
     public String googlePlaceId;
+    public int osmNodeId;
     public double latitude;
     public double longitude;
     public String title;
@@ -25,6 +26,7 @@ public class Place extends dto {
         address = cursor.getString(cursor.getColumnIndex(DatabaseStructure.Places.ADDRESS));
         description = cursor.getString(cursor.getColumnIndex(DatabaseStructure.Places.DESCRIPTION));
         googlePlaceId = cursor.getString(cursor.getColumnIndex(DatabaseStructure.Places.GOOGLE_PLACE_ID));
+        osmNodeId = cursor.getInt(cursor.getColumnIndex(DatabaseStructure.Places.OSM_NODE_ID));
         latitude = cursor.getLong(cursor.getColumnIndex(DatabaseStructure.Places.LATITUDE));
         longitude = cursor.getLong(cursor.getColumnIndex(DatabaseStructure.Places.LONGITUDE));
         title = getTitle(cursor);

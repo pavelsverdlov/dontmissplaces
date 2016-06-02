@@ -42,6 +42,9 @@ public class ActivityPermissions {
     public void checkPermissionExternalStorage() {
         checkPermissionFineLocation(activity,Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
+    public void checkPermissionNetwork() {
+        checkPermissionFineLocation(activity,Manifest.permission.ACCESS_NETWORK_STATE);
+    }
     /**
      * Displays a dialog with error message explaining that the location permission is missing.
      */

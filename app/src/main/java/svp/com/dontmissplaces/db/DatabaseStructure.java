@@ -100,6 +100,7 @@ public class DatabaseStructure {
                 "CREATE TABLE " + TABLE + "(" +
                         " " + _ID               + " " + _ID_TYPE +
                         "," + GOOGLE_PLACE_ID   + " " + GOOGLE_PLACE_ID_TYPE +
+                        "," + OSM_NODE_ID       + " " + OSM_NODE_ID_TYPE +
                         "," + DESCRIPTION       + " " + DESCRIPTION_TYPE +
                         "," + PLACETYPE         + " " + PLACETYPE_TYPE +
                         "," + COUNTRY           + " " + COUNTRY_TYPE +
@@ -119,6 +120,9 @@ public class DatabaseStructure {
          * */
         String GOOGLE_PLACE_ID = "googleplaceid";
         String GOOGLE_PLACE_ID_TYPE   = "TEXT";
+
+        String OSM_NODE_ID = "googleplaceid";
+        String OSM_NODE_ID_TYPE   = "INTEGER NOT NULL";
 
         String TITLE = "title";
         String TITLE_TYPE   = "TEXT";

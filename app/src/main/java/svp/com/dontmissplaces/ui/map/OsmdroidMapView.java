@@ -1,30 +1,31 @@
 package svp.com.dontmissplaces.ui.map;
 
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
-import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
+import org.osmdroid.bonuspack.location.NominatimPOIProvider;
+import org.osmdroid.bonuspack.location.POI;
+import org.osmdroid.bonuspack.routing.OSRMRoadManager;
+import org.osmdroid.bonuspack.routing.Road;
+import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.util.TileSystem;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.ItemizedIconOverlay;
+import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.MapEventsOverlay;
-import org.osmdroid.views.overlay.OverlayItem;
-import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Overlay;
+import org.osmdroid.views.overlay.Polyline;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.ui.ActivityPermissions;
@@ -35,15 +36,21 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver {
     private final ActivityPermissions permissions;
     private final MapView mapView;
     private final IMapController mapController;
- //   private MyLocationNewOverlay locationOverlay;
+    FolderOverlay poiMarkers;
+    //   private MyLocationNewOverlay locationOverlay;
  //   private final ArrayList<OverlayItem> overlayItemArray;
 
     public OsmdroidMapView(Activity activity, ActivityPermissions permissions) {
         this.activity = activity;
         this.permissions = permissions;
+
+        TileSystem.setTileSize(2000);
+
        // overlayItemArray = new ArrayList<OverlayItem>();
         mapView = (MapView)activity.findViewById(R.id.osmdroid_map);
         mapView.setTileSource(TileSourceFactory.MAPNIK);
+        //set auto resize text titles on map
+        mapView.setTilesScaledToDpi(true);
 
         mapController = mapView.getController();
 
@@ -55,6 +62,8 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver {
         MapEventsOverlay mapEventsOverlay = new MapEventsOverlay(activity, this);
         mapView.getOverlays().add(0, mapEventsOverlay);
 
+        poiMarkers = new FolderOverlay(activity);
+        mapView.getOverlays().add(poiMarkers);
     }
 
     @Override
@@ -95,7 +104,7 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver {
     @Override
     public void onStart() {
 
-        mapController.setZoom(9);
+        mapController.setZoom(12);
         GeoPoint startPoint = new GeoPoint(48.8583, 2.2944);//locationOverlay.getMyLocation();//
 
         mapController.setCenter(startPoint);
@@ -147,14 +156,83 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver {
 
     }
 
-
+    Marker startMarker;
     @Override
     public boolean singleTapConfirmedHelper(GeoPoint p) {
+        if(startMarker != null){
+            startMarker.remove(mapView);
+           // RoadManager roadManager = new OSRMRoadManager(activity);
+/* draw line
+            ArrayList<GeoPoint> pp = new ArrayList<GeoPoint>();
+            pp.add(startMarker.getPosition());
+            pp.add(p);
+           // Road road = roadManager.getRoad(pp);
+
+            Polyline roadOverlay = new Polyline(activity);
+//            Polyline roadOverlay = RoadManager.buildRoadOverlay(road, activity);
+            roadOverlay.setColor(0x800000FF);
+            roadOverlay.setWidth(10);
+            roadOverlay.setPoints(pp);
+
+            mapView.getOverlays().add(roadOverlay);
+            */
+        }
+        startMarker = new Marker(mapView);
+        startMarker.setIcon(activity.getResources().getDrawable(R.drawable.map_marker));
+        //setTitle is displayed when clicking on marker
+        //startMarker.setTitle("Start point");
+        startMarker.setPosition(p);
+        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        mapView.getOverlays().add(startMarker);
+
+        mapView.invalidate();
+
+        getPOIs(p);
+
         return false;
     }
     @Override
     public boolean longPressHelper(GeoPoint p) {
         return false;
+    }
+
+    private void getPOIs(GeoPoint startPoint){
+        permissions.checkPermissionNetwork();
+        new RetrieveFeedTask().execute(startPoint);
+    }
+
+    class RetrieveFeedTask extends AsyncTask<GeoPoint,Void,Void> {
+        @Override
+        protected Void doInBackground(GeoPoint... params) {
+            try {
+                NominatimPOIProvider poiProvider = new NominatimPOIProvider(NominatimPOIProvider.NOMINATIM_POI_SERVICE);
+                ArrayList<POI> pois = poiProvider.getPOICloseTo(params[0], "cinema", 50, 0.1);
+                for (Overlay item :poiMarkers.getItems()){
+                    poiMarkers.remove(item);
+                }
+                Drawable poiIcon = activity.getResources().getDrawable(R.drawable.map_marker);
+                for (POI poi:pois){
+                    Marker poiMarker = new Marker(mapView);
+                    poiMarker.setTitle(poi.mType);
+                    poiMarker.setSnippet(poi.mDescription);
+                    poiMarker.setPosition(poi.mLocation);
+                    poiMarker.setIcon(poiIcon);
+                    if (poi.mThumbnail != null){
+                        poiMarker.setImage(new BitmapDrawable(poi.mThumbnail));
+                    }
+                    poiMarkers.add(poiMarker);
+                }
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mapView.invalidate();
+                    }
+                });
+            }catch (Exception ex){
+                ex.toString();
+            }
+            return null;
+        }
     }
 
 
