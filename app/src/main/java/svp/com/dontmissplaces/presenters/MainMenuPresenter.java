@@ -1,7 +1,9 @@
 package svp.com.dontmissplaces.presenters;
 
 import android.content.Intent;
-import android.location.Location;
+
+import com.google.android.gms.maps.model.LatLng;
+import com.svp.infrastructure.mvpvs.bundle.IBundleProvider;
 
 import java.util.Date;
 import java.util.Timer;
@@ -17,16 +19,9 @@ import svp.com.dontmissplaces.db.Waypoint;
 import svp.com.dontmissplaces.model.PlaceProvider;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.BaseBundleProvider;
-import svp.com.dontmissplaces.ui.map.GoogleMapView;
 import svp.com.dontmissplaces.ui.map.MapViewTypes;
-import svp.com.dontmissplaces.ui.model.PlaceView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.ui.model.TrackView;
-import svp.com.dontmissplaces.ui.popups.Popups;
-import svp.com.dontmissplaces.utils.LocationEx;
-
-import com.google.android.gms.maps.model.LatLng;
-import com.svp.infrastructure.mvpvs.bundle.IBundleProvider;
 
 public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,MainMenuActivity.ViewState> {
     private TrackTimer timer;

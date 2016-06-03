@@ -118,20 +118,19 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     private IMapView mapView;
     private final ActivityPermissions permissions;
     private TrackRecordingToolbarView recordingToolbarView;
+    private BottomSheetBehavior behavior;
 
     @Bind(R.id.track_recording_fabtoolbar) com.bowyer.app.fabtransitionlayout.FooterLayout trackRecordingFooter;
     @Bind(R.id.track_recording_start_fab) FloatingActionButton fabTrackRecordingBtn;
     @Bind(R.id.track_recording_show_place_info) FloatingActionButton fabShowPlaceByCurrentLocationBtn;
     @Bind(R.id.floating_action_layout) LinearLayout floatingActionlayout;
 
-   // @Bind(R.id.map_app_bar_layout) AppBarLayout mapLayout;
-//    @Bind(R.id.select_place_scrolling_act_content_view) View mapContentLayout;
     @Bind(R.id.select_place_scrolling_act_save_fab) FloatingActionButton fabSavePlaceLocationBtn;
 
     public MainMenuActivity(){
         permissions = new ActivityPermissions(this);
     }
-     BottomSheetBehavior behavior;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,7 +164,9 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         coordinatorLayout.findViewById(R.id.select_place_scrolling_header_layout)
                 .setOnClickListener(this);
     }
-
+    /**
+     * Base click handler of activity
+     * */
     @Override
     public void onClick(View v) {
         switch (v.getId()){

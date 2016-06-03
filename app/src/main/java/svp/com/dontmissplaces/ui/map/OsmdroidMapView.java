@@ -10,9 +10,6 @@ import android.os.Bundle;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.location.NominatimPOIProvider;
 import org.osmdroid.bonuspack.location.POI;
-import org.osmdroid.bonuspack.routing.OSRMRoadManager;
-import org.osmdroid.bonuspack.routing.Road;
-import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
@@ -38,7 +35,7 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver {
     private final IMapController mapController;
     FolderOverlay poiMarkers;
     //   private MyLocationNewOverlay locationOverlay;
- //   private final ArrayList<OverlayItem> overlayItemArray;
+    //   private final ArrayList<OverlayItem> overlayItemArray;
 
     public OsmdroidMapView(Activity activity, ActivityPermissions permissions) {
         this.activity = activity;
@@ -46,15 +43,15 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver {
 
         TileSystem.setTileSize(2000);
 
-       // overlayItemArray = new ArrayList<OverlayItem>();
-        mapView = (MapView)activity.findViewById(R.id.osmdroid_map);
+        // overlayItemArray = new ArrayList<OverlayItem>();
+        mapView = (MapView) activity.findViewById(R.id.osmdroid_map);
         mapView.setTileSource(TileSourceFactory.MAPNIK);
         //set auto resize text titles on map
         mapView.setTilesScaledToDpi(true);
 
         mapController = mapView.getController();
 
-       // DefaultResourceProxyImpl defaultResourceProxyImpl = new DefaultResourceProxyImpl(activity);
+        // DefaultResourceProxyImpl defaultResourceProxyImpl = new DefaultResourceProxyImpl(activity);
         //MyItemizedIconOverlay myItemizedIconOverlay = new MyItemizedIconOverlay(overlayItemArray, null, defaultResourceProxyImpl);
 
         //mapView.getOverlays().add(myItemizedIconOverlay);
@@ -108,7 +105,7 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver {
         GeoPoint startPoint = new GeoPoint(48.8583, 2.2944);//locationOverlay.getMyLocation();//
 
         mapController.setCenter(startPoint);
-      //  locationOverlay.setDrawAccuracyEnabled(true);
+        //  locationOverlay.setDrawAccuracyEnabled(true);
     }
 
     @Override
@@ -156,26 +153,23 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver {
 
     }
 
-    Marker startMarker;
+
+
     @Override
     public boolean singleTapConfirmedHelper(GeoPoint p) {
-        if(startMarker != null){
+        drawMarker(p);
+        getPOIs(p);
+        return false;
+    }
+
+    @Override
+    public boolean longPressHelper(GeoPoint p) {
+        return false;
+    }
+    Marker startMarker;
+    private void drawMarker(GeoPoint p){
+        if (startMarker != null) {
             startMarker.remove(mapView);
-           // RoadManager roadManager = new OSRMRoadManager(activity);
-/* draw line
-            ArrayList<GeoPoint> pp = new ArrayList<GeoPoint>();
-            pp.add(startMarker.getPosition());
-            pp.add(p);
-           // Road road = roadManager.getRoad(pp);
-
-            Polyline roadOverlay = new Polyline(activity);
-//            Polyline roadOverlay = RoadManager.buildRoadOverlay(road, activity);
-            roadOverlay.setColor(0x800000FF);
-            roadOverlay.setWidth(10);
-            roadOverlay.setPoints(pp);
-
-            mapView.getOverlays().add(roadOverlay);
-            */
         }
         startMarker = new Marker(mapView);
         startMarker.setIcon(activity.getResources().getDrawable(R.drawable.map_marker));
@@ -186,39 +180,68 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver {
         mapView.getOverlays().add(startMarker);
 
         mapView.invalidate();
-
-        getPOIs(p);
-
-        return false;
     }
-    @Override
-    public boolean longPressHelper(GeoPoint p) {
-        return false;
+    private void drawLine(GeoPoint s, GeoPoint e) {
+        ArrayList<GeoPoint> pp = new ArrayList<GeoPoint>();
+        pp.add(s);
+        pp.add(e);
+        Polyline roadOverlay = new Polyline(activity);
+        roadOverlay.setColor(0x800000FF);
+        roadOverlay.setWidth(10);
+        roadOverlay.setPoints(pp);
+
+        mapView.getOverlays().add(roadOverlay);
+        mapView.invalidate();
     }
 
-    private void getPOIs(GeoPoint startPoint){
+    private void getPOIs(GeoPoint startPoint) {
         permissions.checkPermissionNetwork();
-        new RetrieveFeedTask().execute(startPoint);
+        InputData input = new InputData(startPoint, "cinema", 50, 0.1);
+        new PointsOfInterestTask().execute(input);
     }
 
-    class RetrieveFeedTask extends AsyncTask<GeoPoint,Void,Void> {
+    public final class InputData{
+        public final GeoPoint point;
+        public final String keyword;
+        public final int maxResults;
+        public final double maxDistance;
+        /**
+         * @param maxDistance to the position, in degrees.
+         * Note that it is used to build a bounding box around the position, not a circle.
+         * */
+        public InputData(GeoPoint point, String keyword, int maxResults, double maxDistance) {
+            this.point = point;
+            this.keyword = keyword;
+            this.maxResults = maxResults;
+            this.maxDistance = maxDistance;
+        }
+    }
+
+    private class PointsOfInterestTask extends AsyncTask<InputData, Void, Void> {
         @Override
-        protected Void doInBackground(GeoPoint... params) {
+        protected Void doInBackground(InputData... params) {
             try {
+                InputData data = params[0];
                 NominatimPOIProvider poiProvider = new NominatimPOIProvider(NominatimPOIProvider.NOMINATIM_POI_SERVICE);
-                ArrayList<POI> pois = poiProvider.getPOICloseTo(params[0], "cinema", 50, 0.1);
-                for (Overlay item :poiMarkers.getItems()){
+                ArrayList<POI> pois = poiProvider.getPOICloseTo(data.point,data.keyword, data.maxResults, data.maxDistance);
+                for (Overlay item : poiMarkers.getItems()) {
                     poiMarkers.remove(item);
                 }
                 Drawable poiIcon = activity.getResources().getDrawable(R.drawable.map_marker);
-                for (POI poi:pois){
+                for (POI poi : pois) {
                     Marker poiMarker = new Marker(mapView);
                     poiMarker.setTitle(poi.mType);
                     poiMarker.setSnippet(poi.mDescription);
                     poiMarker.setPosition(poi.mLocation);
-                    poiMarker.setIcon(poiIcon);
-                    if (poi.mThumbnail != null){
-                        poiMarker.setImage(new BitmapDrawable(poi.mThumbnail));
+
+                    //TODO: popularity of this POI, from 1 (lowest) to 100 (highest). 0 if not defined.
+                    //filter by this value
+                    //poi.mRank
+
+                    if (poi.mThumbnail != null) {
+                        poiMarker.setIcon(new BitmapDrawable(poi.mThumbnail));
+                    }else{
+                        poiMarker.setIcon(poiIcon);
                     }
                     poiMarkers.add(poiMarker);
                 }
@@ -228,13 +251,12 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver {
                         mapView.invalidate();
                     }
                 });
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 ex.toString();
             }
             return null;
         }
     }
-
 
 /*
     private class MyItemizedIconOverlay extends ItemizedIconOverlay<OverlayItem> {
