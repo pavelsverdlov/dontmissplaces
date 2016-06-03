@@ -307,9 +307,25 @@ Enter number of feet for acres/hour or meters for use in hectares/hour.\n </stri
     <string name="title_activity_track_save_track_of_track">Name</string>
     <string name="title_activity_settings">Settings</string>
 
-    <!-- Strings related to Settings -->
+    <!--
+    ***************************
+    Settings
+    ***************************
+    -->
+    <!-- Map settings -->
+    <string name="pref_header_map">Map</string>
 
-    <!-- Example General settings -->
+    <string name="pref_settings_title_map_provider">Map provider</string>
+    <string-array name="pref_settings_titles_map_provider">
+        <item>Open Street Map</item>
+        <item>Google</item>
+    </string-array>
+    <string-array name="pref_settings_values_map_provider">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+
+    <!-- General settings -->
     <string name="pref_header_general">General</string>
 
     <string name="pref_title_social_recommendations">Enable social recommendations</string>
