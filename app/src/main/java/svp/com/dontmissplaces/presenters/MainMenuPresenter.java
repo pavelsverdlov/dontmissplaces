@@ -72,6 +72,9 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     public void openHistoryTracks() {
         commutator.goTo(ActivityCommutator.ActivityOperationResult.HistoryTracks);
     }
+    public void openSettings() {
+        commutator.goTo(ActivityCommutator.ActivityOperationResult.Settings);
+    }
 
     public void incomingResultFrom(ActivityCommutator.ActivityOperationResult from, Intent data) {
         if(ActivityCommutator.ActivityOperationResult.HistoryTracks == from){
@@ -102,6 +105,8 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     public MapViewTypes getMapViewType() {
         return mapViewType;
     }
+
+
 
     private class TrackTimer extends TimerTask{
         private long elapsedMses;

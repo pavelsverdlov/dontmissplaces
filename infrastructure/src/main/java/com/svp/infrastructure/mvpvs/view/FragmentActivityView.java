@@ -1,13 +1,10 @@
 package com.svp.infrastructure.mvpvs.view;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
 import com.svp.infrastructure.mvpvs.presenter.Presenter;
 import com.svp.infrastructure.mvpvs.PresenterContainer;
-
-import java.util.UUID;
 
 /**
  * Created by Pasha on 3/19/2016.
@@ -43,5 +40,4 @@ public class FragmentActivityView<P extends Presenter> extends FragmentActivity 
         getPresenter().detachView(this);
         super.onStop();
     }
-
 }

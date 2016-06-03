@@ -13,14 +13,11 @@ import com.svp.infrastructure.mvpvs.view.IActivityView;
 import com.svp.infrastructure.mvpvs.viewstate.IViewState;
 
 import svp.com.dontmissplaces.db.Repository;
-import svp.com.dontmissplaces.presenters.HistoryTracksPresenter;
-import svp.com.dontmissplaces.presenters.MainMenuPresenter;
-import svp.com.dontmissplaces.presenters.MapsPresenter;
-import svp.com.dontmissplaces.presenters.SaveTrackPresenter;
+import svp.com.dontmissplaces.presenters.*;
 import svp.com.dontmissplaces.ui.BaseBundleProvider;
 import svp.com.dontmissplaces.ui.map.GoogleMapView;
-import svp.com.dontmissplaces.ui.activities.HistoryTracksActivity;
-import svp.com.dontmissplaces.ui.activities.SaveTrackActivity;
+
+import svp.com.dontmissplaces.ui.activities.*;
 
 public class App extends Application {
     private final Repository repository;
@@ -100,6 +97,20 @@ public class App extends Application {
                     @Override
                     public IViewState create(SaveTrackActivity view) {
                         return new SaveTrackActivity.ViewState(view);
+                    }
+                });
+
+        register(SettingsActivity.class,
+                new PresenterContainer.IPresenterCreator() {
+                    @Override
+                    public IPresenter create() {
+                        return new SettingsPresenter();
+                    }
+                },
+                new ViewStateContainer.IViewStateCreator<SettingsActivity>() {
+                    @Override
+                    public IViewState create(SettingsActivity view) {
+                        return new SettingsActivity.ViewState(view);
                     }
                 });
 

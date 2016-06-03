@@ -248,6 +248,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            getPresenter().openSettings();
             return true;
         }
 

@@ -10,16 +10,15 @@ import java.util.HashMap;
 import svp.com.dontmissplaces.MainMenuActivity;
 import svp.com.dontmissplaces.ui.activities.HistoryTracksActivity;
 import svp.com.dontmissplaces.ui.activities.SaveTrackActivity;
+import svp.com.dontmissplaces.ui.activities.SettingsActivity;
 
-/**
- * Created by Pasha on 4/10/2016.
- */
 public final class ActivityCommutator {
     public enum ActivityOperationResult {
         Undefined(0),
         MainMenu(1),
         HistoryTracks(2),
-        SaveTrack(3);
+        SaveTrack(3),
+        Settings(4);
 
         private final int code;
 
@@ -56,6 +55,7 @@ public final class ActivityCommutator {
         activities.put(ActivityOperationResult.MainMenu, MainMenuActivity.class);
         activities.put(ActivityOperationResult.HistoryTracks, HistoryTracksActivity.class);
         activities.put(ActivityOperationResult.SaveTrack, SaveTrackActivity.class);
+        activities.put(ActivityOperationResult.Settings, SettingsActivity.class);
     }
 
     private final ICommutativeElement element;
