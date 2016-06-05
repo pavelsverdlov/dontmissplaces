@@ -121,7 +121,7 @@ public class DatabaseStructure {
         String GOOGLE_PLACE_ID = "googleplaceid";
         String GOOGLE_PLACE_ID_TYPE   = "TEXT";
 
-        String OSM_NODE_ID = "googleplaceid";
+        String OSM_NODE_ID = "osmnodeid";
         String OSM_NODE_ID_TYPE   = "INTEGER NOT NULL";
 
         String TITLE = "title";

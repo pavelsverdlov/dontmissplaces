@@ -191,6 +191,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
     @Override
     protected void onStart() {
+        super.onStart();
         switch (getPresenter().getMapViewType()){
             case Google:
                 mapView = new GoogleMapView(this, permissions);
@@ -204,7 +205,6 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         mapView.setOnMapClickListener(this);
 
         mapView.onStart();
-        super.onStart();
     }
     @Override
     protected void onStop(){

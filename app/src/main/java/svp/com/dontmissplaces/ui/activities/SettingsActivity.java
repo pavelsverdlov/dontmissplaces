@@ -23,6 +23,7 @@ import android.support.v4.app.NavUtils;
 
 import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.presenters.SettingsPresenter;
+import svp.com.dontmissplaces.ui.UserPreferenceSettings;
 
 import java.util.List;
 
@@ -33,9 +34,9 @@ import java.util.List;
  * the list of settings.
  * <p/>
  * See <a href="http://developer.android.com/design/patterns/settings.html">
- * Android Design: Settings</a> for design guidelines and the <a
- * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
- * API Guide</a> for more information on developing a Settings UI.
+ * Android Design: PreferenceSettings</a> for design guidelines and the <a
+ * href="http://developer.android.com/guide/topics/ui/settings.html">PreferenceSettings
+ * API Guide</a> for more information on developing a PreferenceSettings UI.
  */
 public class SettingsActivity extends AppCompatPreferenceActivity<SettingsPresenter> {
     /**
@@ -120,6 +121,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity<SettingsPresen
                         .getString(preference.getKey(), ""));
     }
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -192,7 +196,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity<SettingsPresen
             // updated to reflect the new value, per the Android Design
             // guidelines.
             //bindPreferenceSummaryToValue(findPreference("example_text"));
-            //bindPreferenceSummaryToValue(findPreference("example_list"));
+            String key = this.getString(R.string.pref_settings_title_map_provider_key);
+            bindPreferenceSummaryToValue(findPreference(key));
         }
 
         @Override
