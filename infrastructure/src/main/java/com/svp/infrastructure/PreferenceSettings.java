@@ -3,27 +3,21 @@ package com.svp.infrastructure;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
 
 public class PreferenceSettings {
+    private final static String KEY_PREFERENCES_VERSION = "key_preferences_version";
+    private final static int PREFERENCES_VERSION = 1;
+
+    private static PreferenceManager sInstance;
+    private final SharedPreferences preferences;
     private final Activity activity;
 
     public PreferenceSettings(Activity activity) {
         this.activity = activity;
-        /*
-        //http://stackoverflow.com/questions/8855069/android-sharedpreferences-best-practices
-        SharedPreferences preferences = activity.getSharedPreferences("com.example.app", Context.MODE_PRIVATE);
-        // get values from Map
-        preferences.getBoolean("key", defaultValue)
-        preferences.get..("key", defaultValue)
-
-        // you can get all Map but be careful you must not modify the collection returned by this
-        // method, or alter any of its contents.
-        Map<String, ?> all = preferences.getAll();
-
-        // get Editor object
-        SharedPreferences.Editor editor = preferences.edit();
-        */
+        preferences = activity.getSharedPreferences(activity.getPackageName(), Context.MODE_PRIVATE);
+        checkPreferences(preferences);
     }
 
     public void putString(String key, String value){
@@ -31,18 +25,48 @@ public class PreferenceSettings {
         editor.putString(key, value);
         editor.commit();
     }
+    public void putInt(String key, int value){
+        SharedPreferences.Editor editor = setter();
+        editor.putInt(key, value);
+        editor.commit();
+    }
     public <T> T get(String key, T def){
         SharedPreferences getter = getter();
         if(getter.contains(key)){
             return def;
         }
-        return (T)getter.getAll().get(key);
+        Object val = getter.getAll().get(key);
+        return val == null ? def : (T)val;
     }
 
     private SharedPreferences getter(){
-        return PreferenceManager.getDefaultSharedPreferences(activity,);
+        return preferences;//PreferenceManager.getDefaultSharedPreferences(activity,);
     }
     private SharedPreferences.Editor setter() {
-        return getter().edit();
+        return preferences.edit();
+    }
+
+    /**
+     *  Migration
+     */
+
+    private synchronized void checkPreferences(SharedPreferences thePreferences) {
+        final double oldVersion = thePreferences.getInt(KEY_PREFERENCES_VERSION, 0);
+
+        if(oldVersion == 0){//first application start
+            SharedPreferences.Editor editor = setter();
+            editor.putInt(KEY_PREFERENCES_VERSION, PREFERENCES_VERSION);
+            editor.apply();
+            return;
+        }
+
+        if (oldVersion < PREFERENCES_VERSION) {
+            final SharedPreferences.Editor edit = thePreferences.edit();
+            //save same data from old preferences
+            edit.clear();
+            edit.putInt(KEY_PREFERENCES_VERSION, PREFERENCES_VERSION);
+            //resave data to new preferences
+            edit.apply();
+        }
     }
 }

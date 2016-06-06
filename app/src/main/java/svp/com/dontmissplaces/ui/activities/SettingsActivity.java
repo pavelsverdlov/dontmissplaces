@@ -186,18 +186,20 @@ public class SettingsActivity extends AppCompatPreferenceActivity<SettingsPresen
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class MapPreferenceFragment extends PreferenceFragment {
+
+        private final UserPreferenceSettings settings;
+
+        public MapPreferenceFragment(){
+            settings = new UserPreferenceSettings(this.getActivity());
+        }
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_settings_map);
             setHasOptionsMenu(true);
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            //bindPreferenceSummaryToValue(findPreference("example_text"));
-            String key = this.getString(R.string.pref_settings_title_map_provider_key);
-            bindPreferenceSummaryToValue(findPreference(key));
+
+            bindPreferenceSummaryToValue(settings.getMapProviderPreference(this));
         }
 
         @Override

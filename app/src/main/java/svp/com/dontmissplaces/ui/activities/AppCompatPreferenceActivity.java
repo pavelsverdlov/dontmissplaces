@@ -30,7 +30,7 @@ public abstract class AppCompatPreferenceActivity<P extends Presenter> extends P
         @Override
         protected void restore() {}
         @Override
-        protected Activity getActivity() {
+        public Activity getActivity() {
             return view;
         }
     }

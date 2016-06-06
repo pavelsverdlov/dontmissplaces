@@ -53,7 +53,7 @@ public class HistoryTracksActivity extends AppCompatActivityView<HistoryTracksPr
         }
 
         @Override
-        protected Activity getActivity() {
+        public Activity getActivity() {
             return view;
         }
     }

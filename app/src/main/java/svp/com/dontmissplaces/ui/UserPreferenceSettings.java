@@ -1,6 +1,8 @@
 package svp.com.dontmissplaces.ui;
 
 import android.app.Activity;
+import android.preference.Preference;
+import android.preference.PreferenceFragment;
 
 import com.svp.infrastructure.PreferenceSettings;
 
@@ -17,7 +19,21 @@ public class UserPreferenceSettings extends PreferenceSettings {
     }
 
     public MapViewTypes getMapProvider() {
-        String val = get(mapProviderKey,null);
-        return val == null ? MapViewTypes.Osmdroid : MapViewTypes.Google;
+        int val = get(mapProviderKey,-1);
+        MapViewTypes t = MapViewTypes.get(val);
+        return t == MapViewTypes.None ? MapViewTypes.Osmdroid : t;
+    }
+
+    public void setMapProvider(MapViewTypes val) {
+        putInt(mapProviderKey,val.toInt());
+    }
+
+    public Preference getMapProviderPreference(PreferenceFragment fragment) {
+        return getPreference(fragment, mapProviderKey);
+    }
+
+
+    private Preference getPreference(PreferenceFragment fragment, String key) {
+        return fragment.findPreference(key);
     }
 }

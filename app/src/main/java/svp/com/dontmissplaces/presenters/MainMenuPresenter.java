@@ -19,7 +19,6 @@ import svp.com.dontmissplaces.db.Waypoint;
 import svp.com.dontmissplaces.model.PlaceProvider;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.BaseBundleProvider;
-import svp.com.dontmissplaces.ui.UserPreferenceSettings;
 import svp.com.dontmissplaces.ui.map.MapViewTypes;
 import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.ui.model.TrackView;
@@ -104,8 +103,8 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     }
 
     public MapViewTypes getMapViewType() {
-        mapViewType = new UserPreferenceSettings(state.getActivity()).getMapProvider();
-
+        mapViewType = userSettings.getMapProvider();
+        state.getActivity();
         return mapViewType;
     }
 

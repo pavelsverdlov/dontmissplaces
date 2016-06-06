@@ -27,7 +27,7 @@ public abstract class ViewState<V extends IActivityView> implements IViewState {
 
     protected abstract void restore();
 
-    protected abstract Activity getActivity();
+    public abstract Activity getActivity();
 
     public Toast getToast(CharSequence text){
         return Toast.makeText(getActivity(),text,Toast.LENGTH_SHORT);
