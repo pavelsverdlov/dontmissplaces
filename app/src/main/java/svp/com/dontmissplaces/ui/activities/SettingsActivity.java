@@ -4,6 +4,7 @@ package svp.com.dontmissplaces.ui.activities;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -115,10 +116,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity<SettingsPresen
 
         // Trigger the listener immediately with the preference's
         // current value.
-        sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
-                PreferenceManager
-                        .getDefaultSharedPreferences(preference.getContext())
-                        .getString(preference.getKey(), ""));
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(preference.getContext());
+        String s = sharedPreferences.getString(preference.getKey(), "");
+
+        sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,s);
     }
 
 
@@ -186,20 +187,30 @@ public class SettingsActivity extends AppCompatPreferenceActivity<SettingsPresen
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class MapPreferenceFragment extends PreferenceFragment {
-
-        private final UserPreferenceSettings settings;
-
-        public MapPreferenceFragment(){
-            settings = new UserPreferenceSettings(this.getActivity());
-        }
+        private UserPreferenceSettings settings;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+            settings = new UserPreferenceSettings(this.getActivity());
             addPreferencesFromResource(R.xml.pref_settings_map);
             setHasOptionsMenu(true);
 
-            bindPreferenceSummaryToValue(settings.getMapProviderPreference(this));
+            settings.getMapProviderPreference(this)
+                    .setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                        @Override
+                        public boolean onPreferenceChange(Preference preference, Object newValue) {
+                            ListPreference listPreference = (ListPreference) preference;
+//                            int index = listPreference.findIndexOfValue(stringValue);
+//
+//                            // Set the summary to reflect the new value.
+//                            preference.setSummary(
+//                                    index >= 0
+//                                            ? listPreference.getEntries()[index]
+//                                            : null);
+                            return true;
+                        }
+                    });
         }
 
         @Override
