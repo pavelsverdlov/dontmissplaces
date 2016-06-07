@@ -139,6 +139,8 @@ public class DatabaseStructure {
         String COUNTRY = "country";
         String COUNTRY_TYPE   = "TEXT";
 
+        //state, region
+
         String ADDRESS = "address";
         String ADDRESS_TYPE   = "TEXT";
 
@@ -148,6 +150,8 @@ public class DatabaseStructure {
 
     public interface Base extends BaseColumns {
         String _ID_TYPE       = "INTEGER PRIMARY KEY AUTOINCREMENT";
+        String _INTEGER_TYPE = "INTEGER NOT NULL";
+        String _TEXT_TYPE = "TEXT";
     }
 
     public interface LocationColumns{

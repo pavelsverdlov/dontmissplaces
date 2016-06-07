@@ -25,6 +25,7 @@ import android.support.v4.app.NavUtils;
 import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.presenters.SettingsPresenter;
 import svp.com.dontmissplaces.ui.UserPreferenceSettings;
+import svp.com.dontmissplaces.ui.map.MapViewTypes;
 
 import java.util.List;
 
@@ -196,21 +197,28 @@ public class SettingsActivity extends AppCompatPreferenceActivity<SettingsPresen
             addPreferencesFromResource(R.xml.pref_settings_map);
             setHasOptionsMenu(true);
 
-            settings.getMapProviderPreference(this)
-                    .setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            ListPreference preference =  (ListPreference)settings.getMapProviderPreference(this);
+            CharSequence currentValue = getPreferenceValue(preference,Integer.toString(settings.getMapProvider().toInt()));
+            preference.setSummary(currentValue);
+            preference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                         @Override
                         public boolean onPreferenceChange(Preference preference, Object newValue) {
+                            String stringValue = newValue.toString();
                             ListPreference listPreference = (ListPreference) preference;
-//                            int index = listPreference.findIndexOfValue(stringValue);
-//
-//                            // Set the summary to reflect the new value.
-//                            preference.setSummary(
-//                                    index >= 0
-//                                            ? listPreference.getEntries()[index]
-//                                            : null);
+
+                            MapViewTypes t = MapViewTypes.get(Integer.parseInt(stringValue));
+                            settings.setMapProvider(t);
+
+                            listPreference.setSummary(getPreferenceValue(listPreference,stringValue));
+
                             return true;
                         }
                     });
+        }
+
+        private CharSequence getPreferenceValue(ListPreference preference, String key){
+            int index = preference.findIndexOfValue(key);
+            return preference.getEntries()[index];
         }
 
         @Override

@@ -5,8 +5,8 @@ package svp.com.dontmissplaces.ui.map;
  */
 public enum MapViewTypes {
     None(0),
-    Google(1),
-    Osmdroid(2);
+    Osmdroid(1),
+    Google(2);
 
     private final int code;
 

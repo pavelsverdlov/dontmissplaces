@@ -10,7 +10,6 @@ public class PreferenceSettings {
     private final static String KEY_PREFERENCES_VERSION = "key_preferences_version";
     private final static int PREFERENCES_VERSION = 1;
 
-    private static PreferenceManager sInstance;
     private final SharedPreferences preferences;
     private final Activity activity;
 
@@ -31,11 +30,11 @@ public class PreferenceSettings {
         editor.commit();
     }
     public <T> T get(String key, T def){
-        SharedPreferences getter = getter();
-        if(getter.contains(key)){
+        SharedPreferences pref = getter();
+        if(!pref.contains(key)){
             return def;
         }
-        Object val = getter.getAll().get(key);
+        Object val = pref.getAll().get(key);
         return val == null ? def : (T)val;
     }
 

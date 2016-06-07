@@ -19,9 +19,10 @@ public class UserPreferenceSettings extends PreferenceSettings {
     }
 
     public MapViewTypes getMapProvider() {
-        int val = get(mapProviderKey,-1);
-        MapViewTypes t = MapViewTypes.get(val);
-        return t == MapViewTypes.None ? MapViewTypes.Osmdroid : t;
+        return MapViewTypes.Osmdroid;
+//        int val = get(mapProviderKey,-1);
+//        MapViewTypes t = MapViewTypes.get(val);
+//        return t == MapViewTypes.None ? MapViewTypes.Osmdroid : t;
     }
 
     public void setMapProvider(MapViewTypes val) {

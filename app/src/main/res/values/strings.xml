@@ -322,8 +322,8 @@ Enter number of feet for acres/hour or meters for use in hectares/hour.\n </stri
         <item>Google</item>
     </string-array>
     <string-array name="pref_settings_values_map_provider">
-        <item>0</item>
         <item>1</item>
+        <item>2</item>
     </string-array>
 
     <!-- General settings -->

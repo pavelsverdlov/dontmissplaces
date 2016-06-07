@@ -9,9 +9,14 @@ import android.os.Bundle;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.location.*;
+import org.osmdroid.events.DelayedMapListener;
 import org.osmdroid.events.MapEventsReceiver;
+import org.osmdroid.events.MapListener;
+import org.osmdroid.events.ScrollEvent;
+import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.*;
@@ -25,7 +30,7 @@ import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.ui.ActivityPermissions;
 import svp.com.dontmissplaces.ui.model.SessionView;
 
-public class OsmdroidMapView implements IMapView, MapEventsReceiver {
+public class OsmdroidMapView implements IMapView, MapEventsReceiver,MapListener {
     private final Activity activity;
     private final ActivityPermissions permissions;
     private final MapView mapView;
@@ -40,6 +45,7 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver {
         this.permissions = permissions;
 
         mapView = (MapView) activity.findViewById(R.id.osmdroid_map);
+        mapView.setMapListener(new DelayedMapListener(this, 100));
         setMapViewSettings();
 
         compassOverlay = new CompassOverlay(activity, new InternalCompassOrientationProvider(activity),
@@ -61,7 +67,7 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver {
         mapView.getOverlays().add(compassOverlay);
         mapView.getOverlays().add(poiMarkers);
         mapView.getOverlays().add(myLocationOverlay);
-        mapView.postInvalidate();
+        mapView.invalidate();
     }
 
     /**
@@ -155,7 +161,17 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver {
     @Override
     public boolean singleTapConfirmedHelper(GeoPoint p) {
         drawMarker(p);
-        getPOIs(p);
+
+        final BoundingBoxE6 box = mapView.getBoundingBox();
+        //http://wiki.openstreetmap.org/wiki/Nominatim/Special_Phrases/EN
+        getPOIs(new PointsOfInterestTask() {
+            @Override
+            protected ArrayList<POI> getPOI(InputData data) {
+                NominatimPOIProvider poiProvider = new NominatimPOIProvider(NominatimPOIProvider.NOMINATIM_POI_SERVICE);
+                return poiProvider.getPOIInside(box,data.keyword ,50);
+            }//bar, pub, cafe, fast_food
+        },new InputData(null, "restaurant", 50, 0.1));
+
         return false;
     }
 
@@ -194,14 +210,35 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver {
         mapView.invalidate();
     }
 
+    /**
+    * Map listeners
+    * */
+    @Override
+    public boolean onScroll(ScrollEvent event) {
+
+
+        return true;
+    }
+
+    @Override
+    public boolean onZoom(ZoomEvent event) {
+        int zoom = event.getZoomLevel();
+
+
+        return true;
+    }
 
     /**
      * Points of interest
      */
     private void getPOIs(GeoPoint startPoint) {
+//        permissions.checkPermissionNetwork();
+//        InputData input = new InputData(startPoint, "cinema", 50, 0.1);
+//        new PointsOfInterestTask().execute(input);
+    }
+    private void getPOIs(PointsOfInterestTask task,InputData data) {
         permissions.checkPermissionNetwork();
-        InputData input = new InputData(startPoint, "cinema", 50, 0.1);
-        new PointsOfInterestTask().execute(input);
+        task.execute(data);
     }
 
     public final class InputData {
@@ -222,13 +259,16 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver {
         }
     }
 
-    private class PointsOfInterestTask extends AsyncTask<InputData, Void, Void> {
+    private abstract class PointsOfInterestTask extends AsyncTask<InputData, Void, Void> {
+
+        protected abstract ArrayList<POI> getPOI(InputData data);
+
         @Override
         protected Void doInBackground(InputData... params) {
             try {
                 InputData data = params[0];
-                NominatimPOIProvider poiProvider = new NominatimPOIProvider(NominatimPOIProvider.NOMINATIM_POI_SERVICE);
-                ArrayList<POI> pois = poiProvider.getPOICloseTo(data.point, data.keyword, data.maxResults, data.maxDistance);
+                ArrayList<POI> pois = getPOI(data);
+                //poiProvider.getPOICloseTo(data.point, data.keyword, data.maxResults, data.maxDistance);
                 for (Overlay item : poiMarkers.getItems()) {
                     poiMarkers.remove(item);
                 }
@@ -242,20 +282,14 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver {
                     //TODO: popularity of this POI, from 1 (lowest) to 100 (highest). 0 if not defined.
                     //filter by this value
                     //poi.mRank
+//                    if (poi.mThumbnail != null) {
+//                        poiMarker.setIcon(new BitmapDrawable(poi.mThumbnail));
+//                    }
 
-                    if (poi.mThumbnail != null) {
-                        poiMarker.setIcon(new BitmapDrawable(poi.mThumbnail));
-                    } else {
-                        poiMarker.setIcon(poiIcon);
-                    }
+                    poiMarker.setIcon(poiIcon);
                     poiMarkers.add(poiMarker);
                 }
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mapView.invalidate();
-                    }
-                });
+                mapView.postInvalidate();
             } catch (Exception ex) {
                 ex.toString();
             }
