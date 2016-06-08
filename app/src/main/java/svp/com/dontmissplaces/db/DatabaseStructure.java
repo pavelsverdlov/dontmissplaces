@@ -96,11 +96,17 @@ public class DatabaseStructure {
      */
     public static final class Places implements PlaceColumns{
         public static final String TABLE = "Places";
-        public static final String CREATE_STATEMENT =
-                "CREATE TABLE " + TABLE + "(" +
+        public static final String CREATE_COLUMNS =
                         " " + _ID               + " " + _ID_TYPE +
+                        "," + NOMINATIM_PLACE_ID+ " " + NOMINATIM_PLACE_ID_TYPE +
                         "," + GOOGLE_PLACE_ID   + " " + GOOGLE_PLACE_ID_TYPE +
                         "," + OSM_NODE_ID       + " " + OSM_NODE_ID_TYPE +
+                        "," + OSM_TYPE          + " " + OSM_TYPE_TYPE +
+                        "," + NOMINATIM_CLASS   + " " + NOMINATIM_CLASS_TYPE +
+                        "," + NOMINATIM_TYPE    + " " + NOMINATIM_TYPE_TYPE +
+                        "," + NOMINATIM_IMPORTANCE+ " " + NOMINATIM_IMPORTANCE_TYPE +
+                        "," + OSM_PLACE_RANK    + " " + OSM_PLACE_RANK_TYPE +
+
                         "," + DESCRIPTION       + " " + DESCRIPTION_TYPE +
                         "," + PLACETYPE         + " " + PLACETYPE_TYPE +
                         "," + COUNTRY           + " " + COUNTRY_TYPE +
@@ -109,27 +115,68 @@ public class DatabaseStructure {
                         "," + TITLE             + " " + TITLE_TYPE +
                         "," + CREATION_TIME     + " " + CREATION_TIME_TYPE +
                         "," + LATITUDE          + " " + LATITUDE_TYPE +
-                        "," + LONGITUDE         + " " + LONGITUDE_TYPE +
-                        ");";
+                        "," + LONGITUDE         + " " + LONGITUDE_TYPE;
+        public static final String CREATE_STATEMENT ="CREATE TABLE " + TABLE + "(" + CREATE_COLUMNS + ");";
+
         public static final String SELECT_ALL = "SELECT * FROM " + TABLE + ";";
         public static final String DELETE_ALL = "DELETE FROM " + TABLE + ";";
     }
     public interface PlaceColumns extends Base, LocationColumns{
+        /*
+        *   "osm_type":"way",
+        * */
+        String OSM_TYPE = "osm_type";
+        String OSM_TYPE_TYPE  = _TEXT_TYPE;
+        /**
+         *  "place_id":"75413380"
+         */
+        String NOMINATIM_PLACE_ID = "nominatim_place_id";
+        String NOMINATIM_PLACE_ID_TYPE = _INTEGER_TYPE;
+        /*
+        * "class":"historic"
+        * */
+        String NOMINATIM_CLASS = "nominatim_class";
+        String NOMINATIM_CLASS_TYPE  = _TEXT_TYPE;
+        /*
+        * "type":"monument"
+        * */
+        String NOMINATIM_TYPE = "nominatim_type";
+        String NOMINATIM_TYPE_TYPE  = _TEXT_TYPE;
+        /**
+         * "importance":0.29244504582027
+         * The importance is used for ordering search results according to their relevance.
+         * The importance value is calculated/estimated using various attributes
+         * including the place's popularity on Wikipedia and its rank.
+         * */
+        String NOMINATIM_IMPORTANCE = "nominatim_importance";
+        String NOMINATIM_IMPORTANCE_TYPE  = _REAL_TYPE;
+        /**
+         * The rank is based on a rather complex algorithm taking the place
+         * type and various other attributes into account.
+         * For example it seems checks whether this object is a
+         * village, a city, a country, a continent, a highway,
+         * a lake and similar other properties.
+         * */
+        String OSM_PLACE_RANK = "osm_place_rank";
+        String OSM_PLACE_RANK_TYPE   = _INTEGER_TYPE;
+
+        String OSM_NODE_ID = "osmnodeid";
+        String OSM_NODE_ID_TYPE   = "INTEGER NOT NULL";
+
         /**
          * example - "place_id" : "ChIJrTLr-GyuEmsRBfy61i59si0",
          * */
         String GOOGLE_PLACE_ID = "googleplaceid";
         String GOOGLE_PLACE_ID_TYPE   = "TEXT";
 
-        String OSM_NODE_ID = "osmnodeid";
-        String OSM_NODE_ID_TYPE   = "INTEGER NOT NULL";
-
         String TITLE = "title";
         String TITLE_TYPE   = "TEXT";
 
         String DESCRIPTION = "description";
         String DESCRIPTION_TYPE   = "TEXT";
-
+        /**
+         * Internal type for application for selecting user
+         * */
         String PLACETYPE = "placetype";
         String PLACETYPE_TYPE   = "INTEGER NOT NULL";
 
@@ -152,6 +199,7 @@ public class DatabaseStructure {
         String _ID_TYPE       = "INTEGER PRIMARY KEY AUTOINCREMENT";
         String _INTEGER_TYPE = "INTEGER NOT NULL";
         String _TEXT_TYPE = "TEXT";
+        String _REAL_TYPE = "REAL NOT NULL";
     }
 
     public interface LocationColumns{

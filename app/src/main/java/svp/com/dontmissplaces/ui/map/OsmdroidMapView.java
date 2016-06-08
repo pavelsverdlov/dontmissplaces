@@ -162,13 +162,15 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver,MapListener 
     public boolean singleTapConfirmedHelper(GeoPoint p) {
         drawMarker(p);
 
+       // new GeocoderNominatim()
+
         final BoundingBoxE6 box = mapView.getBoundingBox();
         //http://wiki.openstreetmap.org/wiki/Nominatim/Special_Phrases/EN
         getPOIs(new PointsOfInterestTask() {
             @Override
             protected ArrayList<POI> getPOI(InputData data) {
                 NominatimPOIProvider poiProvider = new NominatimPOIProvider(NominatimPOIProvider.NOMINATIM_POI_SERVICE);
-                return poiProvider.getPOIInside(box,data.keyword ,50);
+                return poiProvider.getPOIInside(box,data.keyword ,data.maxResults);
             }//bar, pub, cafe, fast_food
         },new InputData(null, "restaurant", 50, 0.1));
 
@@ -339,6 +341,7 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver,MapListener 
         mapView.setTilesScaledToDpi(true);
         mapView.setBuiltInZoomControls(true);
         mapView.setMultiTouchControls(true);
+
         mapView.setMinZoomLevel(3);
         mapView.setMaxZoomLevel(19); // Latest OSM can go to 21!
         mapView.getTileProvider().createTileCache();
