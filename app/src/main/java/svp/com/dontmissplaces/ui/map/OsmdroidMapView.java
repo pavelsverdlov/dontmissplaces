@@ -394,7 +394,7 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver,MapListener 
         mapView.setBuiltInZoomControls(true);
 
         mapView.setMinZoomLevel(3);
-        mapView.setMaxZoomLevel(19); // Latest OSM can go to 21!
+        mapView.setMaxZoomLevel(18); // Latest OSM can go to 21!
         mapView.getTileProvider().createTileCache();
     }
 

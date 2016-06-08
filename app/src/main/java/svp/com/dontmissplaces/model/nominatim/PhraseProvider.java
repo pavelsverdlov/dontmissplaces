@@ -5,7 +5,13 @@ public class PhraseProvider {
 
     public String[] getPhrases(int zoomLevel) {
         //3 -> 19
+
+        if(zoomLevel > 12 && zoomLevel < 16) {
+            //metro station
+        }
+
         if(zoomLevel == 16){
+            //bus station
             return monuments;
         }
         if(zoomLevel > 16){
