@@ -25,8 +25,11 @@ import org.osmdroid.views.overlay.mylocation.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import svp.com.dontmissplaces.R;
+import svp.com.dontmissplaces.model.nominatim.PhraseProvider;
 import svp.com.dontmissplaces.ui.ActivityPermissions;
 import svp.com.dontmissplaces.ui.model.SessionView;
 
@@ -82,8 +85,7 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver,MapListener 
         permissions.checkPermissionExternalStorage();
         permissions.checkPermissionFineLocation();
 
-        mapView.setBuiltInZoomControls(true);
-        mapView.setMultiTouchControls(true);
+
 /*
         GpsMyLocationProvider gpsLocationProvider = new GpsMyLocationProvider(activity);
         gpsLocationProvider.setLocationUpdateMinDistance(5);
@@ -160,19 +162,27 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver,MapListener 
 
     @Override
     public boolean singleTapConfirmedHelper(GeoPoint p) {
-        drawMarker(p);
-
+        int maxD = 100;
+        BoundingBoxE6 bb = new BoundingBoxE6(p.getLatitudeE6()+maxD,
+                p.getLongitudeE6()+maxD,
+                p.getLatitudeE6()-maxD,
+                p.getLongitudeE6()-maxD);
+        //drawMarker(p);
+        ArrayList<GeoPoint> found =new ArrayList<>();
+        for (GeoPoint pp :poiLocationLoaded.keySet()){
+            if(bb.contains(pp)){
+                found.add(pp);
+            }
+        }
+        for (GeoPoint pp : found){
+            Marker m = poiLocationLoaded.get(pp);
+            m.setEnabled(true);
+            poiMarkers.add(m);
+        }
+        mapView.invalidate();
        // new GeocoderNominatim()
 
-        final BoundingBoxE6 box = mapView.getBoundingBox();
-        //http://wiki.openstreetmap.org/wiki/Nominatim/Special_Phrases/EN
-        getPOIs(new PointsOfInterestTask() {
-            @Override
-            protected ArrayList<POI> getPOI(InputData data) {
-                NominatimPOIProvider poiProvider = new NominatimPOIProvider(NominatimPOIProvider.NOMINATIM_POI_SERVICE);
-                return poiProvider.getPOIInside(box,data.keyword ,data.maxResults);
-            }//bar, pub, cafe, fast_food
-        },new InputData(null, "restaurant", 50, 0.1));
+
 
         return false;
     }
@@ -226,6 +236,26 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver,MapListener 
     public boolean onZoom(ZoomEvent event) {
         int zoom = event.getZoomLevel();
 
+        final BoundingBoxE6 box = mapView.getBoundingBox();
+
+        PhraseProvider pp = new PhraseProvider();
+
+        ArrayList<InputData> datas = new ArrayList<>();
+        for (String phrase : pp.getPhrases(zoom)){
+            datas.add(new InputData(box,phrase,50));
+        }
+
+        if(datas.size() == 0){
+            return true;
+        }
+
+        getPOIs(new PointsOfInterestTask() {
+            @Override
+            protected ArrayList<POI> getPOI(InputData data) {
+                NominatimPOIProvider poiProvider = new NominatimPOIProvider(NominatimPOIProvider.NOMINATIM_POI_SERVICE);
+                return poiProvider.getPOIInside(box, data.keyword ,data.maxResults);
+            }
+        },datas);
 
         return true;
     }
@@ -238,60 +268,80 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver,MapListener 
 //        InputData input = new InputData(startPoint, "cinema", 50, 0.1);
 //        new PointsOfInterestTask().execute(input);
     }
-    private void getPOIs(PointsOfInterestTask task,InputData data) {
+    private void getPOIs(PointsOfInterestTask task, ArrayList<InputData> data) {
         permissions.checkPermissionNetwork();
         task.execute(data);
     }
+
+    private final HashSet<Long> poiLoaded = new HashSet<>();
+    private final HashMap<GeoPoint,Marker> poiLocationLoaded = new HashMap<>();
 
     public final class InputData {
         public final GeoPoint point;
         public final String keyword;
         public final int maxResults;
         public final double maxDistance;
+        public final BoundingBoxE6 box;
 
         /**
          * @param maxDistance to the position, in degrees.
          *                    Note that it is used to build a bounding box around the position, not a circle.
          */
         public InputData(GeoPoint point, String keyword, int maxResults, double maxDistance) {
+            this.box = null;
             this.point = point;
             this.keyword = keyword;
             this.maxResults = maxResults;
             this.maxDistance = maxDistance;
         }
+        public InputData(BoundingBoxE6 box, String keyword, int maxResults) {
+            this.point = null;
+            this.box = box;
+            this.keyword = keyword;
+            this.maxResults = maxResults;
+            this.maxDistance = 0;
+        }
     }
 
-    private abstract class PointsOfInterestTask extends AsyncTask<InputData, Void, Void> {
+    private abstract class PointsOfInterestTask extends AsyncTask<ArrayList<InputData>, Void, Void> {
 
         protected abstract ArrayList<POI> getPOI(InputData data);
 
         @Override
-        protected Void doInBackground(InputData... params) {
+        protected Void doInBackground(ArrayList<InputData>... params) {
             try {
-                InputData data = params[0];
-                ArrayList<POI> pois = getPOI(data);
-                //poiProvider.getPOICloseTo(data.point, data.keyword, data.maxResults, data.maxDistance);
-                for (Overlay item : poiMarkers.getItems()) {
-                    poiMarkers.remove(item);
-                }
-                Drawable poiIcon = activity.getResources().getDrawable(R.drawable.map_marker);
-                for (POI poi : pois) {
-                    Marker poiMarker = new Marker(mapView);
-                    poiMarker.setTitle(poi.mType);
-                    poiMarker.setSnippet(poi.mDescription);
-                    poiMarker.setPosition(poi.mLocation);
+                ArrayList<InputData> datas = params[0];
+                for (InputData data : datas) {
+                    ArrayList<POI> pois = getPOI(data);
+                    //poiProvider.getPOICloseTo(data.point, data.keyword, data.maxResults, data.maxDistance);
+//                    for (Overlay item : poiMarkers.getItems()) {
+//                        poiMarkers.remove(item);
+//                    }
+                    Drawable poiIcon = activity.getResources().getDrawable(R.drawable.map_marker);
+                    for (POI poi : pois) {
+                        if(!poiLoaded.add(poi.mId)){
+                            continue;
+                        }
+                        Marker poiMarker = new Marker(mapView);
+                        poiLocationLoaded.put(poi.mLocation,poiMarker);
+                        poiMarker.setTitle(poi.mType);
+                        poiMarker.setSnippet(poi.mDescription);
+                        poiMarker.setPosition(poi.mLocation);
+                        poiMarker.setEnabled(false);
 
-                    //TODO: popularity of this POI, from 1 (lowest) to 100 (highest). 0 if not defined.
-                    //filter by this value
-                    //poi.mRank
+                        //TODO: popularity of this POI, from 1 (lowest) to 100 (highest). 0 if not defined.
+                        //filter by this value
+//                    poi.mRank
+
 //                    if (poi.mThumbnail != null) {
 //                        poiMarker.setIcon(new BitmapDrawable(poi.mThumbnail));
 //                    }
 
-                    poiMarker.setIcon(poiIcon);
-                    poiMarkers.add(poiMarker);
+                        poiMarker.setIcon(poiIcon);
+                        //poiMarkers.add(poiMarker);
+                    }
+//                    mapView.postInvalidate();
                 }
-                mapView.postInvalidate();
             } catch (Exception ex) {
                 ex.toString();
             }
@@ -341,6 +391,7 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver,MapListener 
         mapView.setTilesScaledToDpi(true);
         mapView.setBuiltInZoomControls(true);
         mapView.setMultiTouchControls(true);
+        mapView.setBuiltInZoomControls(true);
 
         mapView.setMinZoomLevel(3);
         mapView.setMaxZoomLevel(19); // Latest OSM can go to 21!

@@ -58,13 +58,10 @@ public class DatabasePOIStructure {
         "icon":"http:\/\/nominatim.openstreetmap.org\/images\/mapicons\/tourist_monument.p.20.png"}
     */
 
-    public interface POI extends POIColumns{
+    public interface POI{
         String TABLE = "poi";
         String CREATE_STATEMENT ="CREATE TABLE " + TABLE + "(" +
                 DatabaseStructure.Places.CREATE_COLUMNS +
                 ");";
-    }
-    public interface POIColumns extends DatabaseStructure.PlaceColumns{
-
     }
 }
