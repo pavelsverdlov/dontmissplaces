@@ -9,6 +9,7 @@ import android.provider.BaseColumns;
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.util.BoundingBoxE6;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Vector;
 
@@ -225,6 +226,39 @@ public class Repository extends SQLiteOpenHelper {
             SQLiteDatabase sqldb = getWritableDatabase();
             place.id = sqldb.insert(POI.TABLE, null, args);
             return place;
+        }
+        public void insertMany(ArrayList<org.osmdroid.bonuspack.location.POI> places){
+            SQLiteDatabase sqldb = getWritableDatabase();
+            sqldb.beginTransaction();
+            try {
+                for (org.osmdroid.bonuspack.location.POI place : places) {
+
+                    ContentValues args = new ContentValues();
+                    //args.put(Places.COUNTRY, place);
+                 //   args.put(Places.CITY, place.city);
+                //    args.put(Places.ADDRESS, place.address);
+
+                    //args.put(Places.GOOGLE_PLACE_ID, place.googlePlaceId);
+                    args.put(Places.OSM_NODE_ID, place.mId);
+                    args.put(Places.OSM_TYPE, place.mType);
+                    args.put(Places.OSM_PLACE_RANK, place.mRank);
+
+                    args.put(Places.NOMINATIM_PLACE_ID, place.mServiceId);
+                    args.put(Places.NOMINATIM_TYPE, place.mCategory);
+                  //  args.put(Places.NOMINATIM_IMPORTANCE, place.googlePlaceId);
+
+                    args.put(Places.DESCRIPTION, place.mDescription);
+                    //args.put(Places.TITLE, place.mCategory);
+                    //args.put(Places.PLACETYPE, place.placeType);
+                    args.put(Places.CREATION_TIME, new Date().getTime());
+
+                    args.put(Places.LATITUDE, place.mLocation.getLatitude());
+                    args.put(Places.LONGITUDE, place.mLocation.getLongitude());
+                    place.id = sqldb.insert(POI.TABLE, null, args);
+                }
+            }finally {
+                sqldb.endTransaction();
+            }
         }
         public Vector<Place> get(BoundingBoxE6 box){
             StringBuilder query = new StringBuilder();

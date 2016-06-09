@@ -8,6 +8,10 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.svp.infrastructure.mvpvs.presenter.Presenter;
 
+import org.osmdroid.bonuspack.location.POI;
+import org.osmdroid.util.BoundingBoxE6;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -15,6 +19,8 @@ import svp.com.dontmissplaces.db.Repository;
 import svp.com.dontmissplaces.db.Waypoint;
 import svp.com.dontmissplaces.model.gps.GPSServiceProvider;
 import svp.com.dontmissplaces.model.gps.OnLocationChangeListener;
+import svp.com.dontmissplaces.model.nominatim.PhraseProvider;
+import svp.com.dontmissplaces.model.nominatim.PointsOfInterestInsiteBoxTask;
 import svp.com.dontmissplaces.ui.map.GoogleMapView;
 import svp.com.dontmissplaces.ui.map.IMapView;
 import svp.com.dontmissplaces.ui.map.IMapViewState;
@@ -48,6 +54,7 @@ public class MapsPresenter extends Presenter<IMapView,IMapViewState> implements 
         }
     }
 
+    //TODO: move to google map view
     public void onMapReady(UiSettings mUiSettings) {
         //mUiSettings.setZoomControlsEnabled(true);
         mUiSettings.setCompassEnabled(true);
@@ -134,5 +141,25 @@ public class MapsPresenter extends Presenter<IMapView,IMapViewState> implements 
 
         state.addPolyline(polyline);
         state.moveCamera(first);
+    }
+
+    public void onZoom(int zoom, BoundingBoxE6 box) {
+        PhraseProvider pp = new PhraseProvider();
+
+        ArrayList<PointsOfInterestInsiteBoxTask.InputData> datas = new ArrayList<>();
+        for (String phrase : pp.getPhrases(zoom)){
+            datas.add(new PointsOfInterestInsiteBoxTask.InputData(box,phrase,50));
+        }
+
+        if(datas.size() == 0){
+            return;
+        }
+
+        new PointsOfInterestInsiteBoxTask(){
+            @Override
+            protected void processing(ArrayList<POI> poi, InputData data){
+                repository.poi.insertMany(poi);
+            }
+        }.execute(datas);
     }
 }

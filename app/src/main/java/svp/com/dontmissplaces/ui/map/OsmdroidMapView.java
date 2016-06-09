@@ -282,24 +282,13 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
 
         final BoundingBoxE6 box = mapView.getBoundingBox();
 
-        PhraseProvider pp = new PhraseProvider();
 
-        ArrayList<PointsOfInterestInsiteBoxTask.InputData> datas = new ArrayList<>();
-        for (String phrase : pp.getPhrases(zoom)){
-            datas.add(new PointsOfInterestInsiteBoxTask.InputData(box,phrase,50));
-        }
-
-        if(datas.size() == 0){
-            return true;
-        }
 
         permissions.checkPermissionNetwork();
-        new PointsOfInterestInsiteBoxTask(){
-            @Override
-            protected void processing(ArrayList<POI> poi, InputData data){
 
-            }
-        }.execute(datas);
+        getPresenter().onZoom(zoom, box);
+
+
 
 /*
         getPOIs(new PointsOfInterestTask() {
