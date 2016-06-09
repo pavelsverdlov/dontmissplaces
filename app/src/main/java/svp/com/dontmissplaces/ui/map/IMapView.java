@@ -3,11 +3,13 @@ package svp.com.dontmissplaces.ui.map;
 import android.location.Location;
 import android.os.Bundle;
 
+import com.svp.infrastructure.mvpvs.view.IActivityView;
+
 import java.util.Collection;
 
 import svp.com.dontmissplaces.ui.model.SessionView;
 
-public interface IMapView {
+public interface IMapView extends IActivityView {
 
     void showSessionsTrack(Collection<SessionView> sessions);
 

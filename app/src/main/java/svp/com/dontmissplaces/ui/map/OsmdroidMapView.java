@@ -51,7 +51,7 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
     private final FolderOverlay poiMarkers;
     private final CompassOverlay compassOverlay;
 
-    public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<OsmdroidMapView> {
+    public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<OsmdroidMapView> implements IMapViewState {
         private final PolylineView polyline;
         public ViewState(OsmdroidMapView view) {
             super(view);
@@ -154,6 +154,7 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
     }
     @Override
     public void onStart() {
+        super.onStart();
         GeoPoint startPoint = new GeoPoint(48.8583, 2.2944);
         //setCenter
         mapController.animateTo(startPoint);
