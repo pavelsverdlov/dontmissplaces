@@ -1,15 +1,9 @@
 package svp.com.dontmissplaces.presenters;
 
 import android.database.Cursor;
-import android.location.Location;
-import android.widget.Toast;
-
-import com.svp.infrastructure.mvpvs.presenter.Presenter;
 
 import svp.com.dontmissplaces.db.Repository;
 import svp.com.dontmissplaces.db.Track;
-import svp.com.dontmissplaces.db.Waypoint;
-import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.BaseBundleProvider;
 import svp.com.dontmissplaces.ui.activities.HistoryTracksActivity;
 import svp.com.dontmissplaces.ui.model.TrackView;
@@ -32,17 +26,17 @@ public class HistoryTracksPresenter extends CommutativePresenter<HistoryTracksAc
     }
 
     public Cursor getCursorTracks(){
-        return repository.Track.getCursorTracks();
+        return repository.track.getCursorTracks();
     }
 
     public void openTrack(TrackView trackview) {
-        Track track = repository.Track.getTrack(trackview.id);
+        Track track = repository.track.getTrack(trackview.id);
         BaseBundleProvider bp = new BaseBundleProvider().putTrack(track);
         commutator.backTo(bp);
     }
 
 //    public void openTrack(TrackView trackview) {
-//        Track track = repository.getTrack(trackview.id);
+//        track track = repository.getTrack(trackview.id);
 //
 //        Location l = new Location("");l.setLatitude(24.3454523d);l.setLongitude(10.123450);
 //        repository.insertWaypoint(new Waypoint(track.id,l));

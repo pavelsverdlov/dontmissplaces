@@ -34,7 +34,7 @@ public class SaveTrackPresenter extends CommutativePresenter<SaveTrackActivity,S
     }
 
     public void delete() {
-        repository.Track.deleteTrack(track);
+        repository.track.deleteTrack(track);
         IBundleProvider bp = BundleProvider.create()
                 .putActionText(state.getString(R.string.snackbar_activity_save_track_was_deleted));
         commutator.goTo(ActivityCommutator.ActivityOperationResult.HistoryTracks, bp);

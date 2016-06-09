@@ -50,8 +50,8 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
 
         timer.start();
 
-        recordingTrack = repository.Track.getOrInsertTrack(recordingTrack);
-        recordingSession = repository.Track.insertSession(recordingTrack);
+        recordingTrack = repository.track.getOrInsertTrack(recordingTrack);
+        recordingSession = repository.track.insertSession(recordingTrack);
 
         return new SessionView(recordingSession,new Vector<Waypoint>());
     }
@@ -82,8 +82,8 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
             recordingTrack = bp.getTrack();
 
             Vector<SessionView> sessions = new Vector<>();
-            for (SessionTrack session : repository.Track.getSessions(recordingTrack)){
-                sessions.add(new SessionView(session,repository.Track.getWaypoints(session)));
+            for (SessionTrack session : repository.track.getSessions(recordingTrack)){
+                sessions.add(new SessionView(session,repository.track.getWaypoints(session)));
             }
 
             state.displayTrackOnMap(new TrackView(recordingTrack, sessions));
@@ -93,7 +93,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     public void showPlaceInfoByLocation(LatLng latLng) {
         PlaceProvider pp = new PlaceProvider(state.getActivity());
         Place p = pp.getPlace(latLng);
-//        Place p = pp.getPlace(new LatLng(46.4708294,30.7043384));
+//        place p = pp.getPlace(new LatLng(46.4708294,30.7043384));
 
         state.showPlaceInfo(p);
     }

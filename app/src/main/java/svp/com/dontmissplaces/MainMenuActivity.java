@@ -322,7 +322,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     }
 
     /**
-     * Place show/save
+     * place show/save
      */
     @Override
     public void onMapClick(LatLng latLng) {

@@ -38,7 +38,7 @@ public class GoogleMapView
     private final String TAG = "GoogleMapView";
     private OnMapClickListener listener;
 
-    public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<GoogleMapView> {
+    public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<GoogleMapView> implements IMapViewState {
         private final PolylineView polyline;
         public ViewState(GoogleMapView view) {
             super(view);

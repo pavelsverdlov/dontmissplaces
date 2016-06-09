@@ -1,11 +1,16 @@
 package svp.com.dontmissplaces.ui.map;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
+import com.google.android.gms.maps.model.LatLng;
+import com.svp.infrastructure.mvpvs.view.IActivityView;
+import com.svp.infrastructure.mvpvs.view.View;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.location.*;
@@ -30,10 +35,13 @@ import java.util.HashSet;
 
 import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.model.nominatim.PhraseProvider;
+import svp.com.dontmissplaces.model.nominatim.PointsOfInterestInsiteBoxTask;
+import svp.com.dontmissplaces.presenters.MapsPresenter;
 import svp.com.dontmissplaces.ui.ActivityPermissions;
+import svp.com.dontmissplaces.ui.model.PolylineView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 
-public class OsmdroidMapView implements IMapView, MapEventsReceiver,MapListener {
+public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, MapEventsReceiver,MapListener {
     private final Activity activity;
     private final ActivityPermissions permissions;
     private final MapView mapView;
@@ -42,6 +50,40 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver,MapListener 
     private final GpsMyLocationProvider gpsMyLocationProvider;
     private final FolderOverlay poiMarkers;
     private final CompassOverlay compassOverlay;
+
+    public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<OsmdroidMapView> {
+        private final PolylineView polyline;
+        public ViewState(OsmdroidMapView view) {
+            super(view);
+            polyline = new PolylineView(Color.BLUE,5);
+        }
+
+        public boolean checkPermissionFineLocation(){
+            return true;
+        }
+
+        public void addPolyline(final PolylineView polyline){//final Collection<LatLng> lls){
+        }
+        public void moveCamera(final LatLng latLng){
+        }
+
+        public void startLocationListening() { polyline.clear(); }
+        public void stopLocationListening() {  }
+
+        @Override
+        protected void restore() {
+            if(polyline.size() > 0){
+                addPolyline(polyline);
+                polyline.clear();
+            }
+        }
+
+        @Override
+        public Activity getActivity() {
+            return view.activity;
+        }
+
+    }
 
     public OsmdroidMapView(Activity activity, ActivityPermissions permissions) {
         this.activity = activity;
@@ -86,6 +128,8 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver,MapListener 
         permissions.checkPermissionFineLocation();
 
 
+
+
 /*
         GpsMyLocationProvider gpsLocationProvider = new GpsMyLocationProvider(activity);
         gpsLocationProvider.setLocationUpdateMinDistance(5);
@@ -111,7 +155,8 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver,MapListener 
     @Override
     public void onStart() {
         GeoPoint startPoint = new GeoPoint(48.8583, 2.2944);
-        mapController.setCenter(startPoint);
+        //setCenter
+        mapController.animateTo(startPoint);
     }
 
     @Override
@@ -182,8 +227,6 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver,MapListener 
         mapView.invalidate();
        // new GeocoderNominatim()
 
-
-
         return false;
     }
 
@@ -240,23 +283,36 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver,MapListener 
 
         PhraseProvider pp = new PhraseProvider();
 
-        ArrayList<InputData> datas = new ArrayList<>();
+        ArrayList<PointsOfInterestInsiteBoxTask.InputData> datas = new ArrayList<>();
         for (String phrase : pp.getPhrases(zoom)){
-            datas.add(new InputData(box,phrase,50));
+            datas.add(new PointsOfInterestInsiteBoxTask.InputData(box,phrase,50));
         }
 
         if(datas.size() == 0){
             return true;
         }
 
+        permissions.checkPermissionNetwork();
+        new PointsOfInterestInsiteBoxTask(){
+            @Override
+            protected void processing(ArrayList<POI> poi, InputData data){
+
+            }
+        }.execute(datas);
+
+/*
         getPOIs(new PointsOfInterestTask() {
             @Override
             protected ArrayList<POI> getPOI(InputData data) {
+//                OverpassAPIProvider overpass = new OverpassAPIProvider();
+//                String url  =overpass.urlForPOISearch(data.keyword,data.box,500,5);
+//                ArrayList<POI> poi = overpass.getPOIsFromUrl(url);
+
                 NominatimPOIProvider poiProvider = new NominatimPOIProvider(NominatimPOIProvider.NOMINATIM_POI_SERVICE);
-                return poiProvider.getPOIInside(box, data.keyword ,data.maxResults);
+                return poiProvider.getPOIInside(data.box, data.keyword ,data.maxResults);
             }
         },datas);
-
+*/
         return true;
     }
 
@@ -266,7 +322,7 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver,MapListener 
     private void getPOIs(GeoPoint startPoint) {
 //        permissions.checkPermissionNetwork();
 //        InputData input = new InputData(startPoint, "cinema", 50, 0.1);
-//        new PointsOfInterestTask().execute(input);
+//        new PointsOfInterestInsiteBoxTask().execute(input);
     }
     private void getPOIs(PointsOfInterestTask task, ArrayList<InputData> data) {
         permissions.checkPermissionNetwork();
@@ -364,7 +420,7 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver,MapListener 
 
     private void setMapViewSettings() {
         //get value from settings
-        String titleSourceType = "mapnik";
+        String titleSourceType = "1";
         OnlineTileSourceBase tileSource;
         //TODO: refactor to enum
         switch (titleSourceType) {
@@ -375,9 +431,11 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver,MapListener 
                 tileSource = TileSourceFactory.CYCLEMAP;
                 break;
             case "osmpublictransport":
+                //show all rouds on top
                 tileSource = TileSourceFactory.PUBLIC_TRANSPORT;
                 break;
             case "mapquestosm":
+                //mentro station on top most
                 tileSource = TileSourceFactory.MAPQUESTOSM;
                 break;
             default:
@@ -386,7 +444,6 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver,MapListener 
         }
 
         mapView.setTileSource(tileSource);
-        mapView.setTileSource(TileSourceFactory.MAPNIK);
         //set auto resize text titles on map
         mapView.setTilesScaledToDpi(true);
         mapView.setBuiltInZoomControls(true);

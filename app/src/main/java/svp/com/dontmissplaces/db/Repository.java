@@ -3,27 +3,33 @@ package svp.com.dontmissplaces.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.*;
 import android.provider.BaseColumns;
+
+import org.osmdroid.api.IGeoPoint;
+import org.osmdroid.util.BoundingBoxE6;
 
 import java.util.Date;
 import java.util.Vector;
 
 import svp.com.dontmissplaces.db.DatabaseStructure.*;
+import svp.com.dontmissplaces.db.DatabasePOIStructure.*;
+import svp.com.dontmissplaces.model.BoundingBox;
 
 public class Repository extends SQLiteOpenHelper {
     public static final String dbname = "dmpdb";
     private static final int dbversion = 1;
     private static String TAG = Repository.class.getName();
 
-    public final TrackRepository Track;
-    public final PlaceRepository Place;
+    public final TrackRepository track;
+    public final PlaceRepository place;
+    public final POIRepository poi;
 
     public Repository(Context context) {
         super(context, dbname, null, dbversion);
-        Track = new TrackRepository();
-        Place = new PlaceRepository();
+        track = new TrackRepository();
+        place = new PlaceRepository();
+        poi = new POIRepository();
     }
 
     public void vacuum() {
@@ -38,12 +44,14 @@ public class Repository extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        //db.execSQL("DROP TABLE " + Tracks.TABLE + "," + Sessions.TABLE + "," + Waypoints.TABLE);
+       // db.execSQL("DROP TABLE " + Tracks.TABLE + "," + Sessions.TABLE + "," + Waypoints.TABLE);
         db.execSQL(Tracks.CREATE_STATEMENT);
         db.execSQL(Sessions.CREATE_STATEMENT);
         db.execSQL(Waypoints.CREATE_STATEMENT);
 
         db.execSQL(Places.CREATE_STATEMENT);
+
+        db.execSQL(POI.CREATE_STATEMENT);
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -126,7 +134,7 @@ public class Repository extends SQLiteOpenHelper {
         }
         public void insertWaypoint(Waypoint waypoint) {
             if (waypoint.session < 0) {
-                throw new IllegalArgumentException("Track may not the less then 0.");
+                throw new IllegalArgumentException("track may not the less then 0.");
             }
             SQLiteDatabase sqldb = getWritableDatabase();
 
@@ -186,25 +194,14 @@ public class Repository extends SQLiteOpenHelper {
 
     public class PlaceRepository{
         public Place insert(Place place){
-            place.creationTime = new Date().getTime();
-
-            ContentValues args = new ContentValues();
-            args.put(Places.COUNTRY, place.country);
-            args.put(Places.CITY, place.city);
-            args.put(Places.ADDRESS, place.address);
-            args.put(Places.DESCRIPTION, place.description);
-            args.put(Places.GOOGLE_PLACE_ID, place.googlePlaceId);
-            args.put(Places.LATITUDE, place.latitude);
-            args.put(Places.LONGITUDE, place.longitude);
-            args.put(Places.TITLE, place.title);
-            args.put(Places.PLACETYPE, place.placeType);
-            args.put(Places.CREATION_TIME, place.creationTime);
+            ContentValues args = createPlaceValues(place);
 
             SQLiteDatabase sqldb = getWritableDatabase();
             place.id = sqldb.insert(Places.TABLE, null, args);
 
             return place;
         }
+
         public int delete(Place place){
             SQLiteDatabase sqldb = getWritableDatabase();
             return sqldb.delete(Places.TABLE, Places._ID + "= ?", new String[]{String.valueOf(place.id)});
@@ -221,6 +218,47 @@ public class Repository extends SQLiteOpenHelper {
         }
     }
 
+    public class POIRepository {
+        public Place insert(Place place){
+            ContentValues args = createPlaceValues(place);
+
+            SQLiteDatabase sqldb = getWritableDatabase();
+            place.id = sqldb.insert(POI.TABLE, null, args);
+            return place;
+        }
+        public Vector<Place> get(BoundingBoxE6 box){
+            StringBuilder query = new StringBuilder();
+            query
+                    .append("SELECT * FROM ").append(POI.TABLE).append(" WHERE ")
+                    .append(Places.COUNTRY).append("=").append(" AND ")
+                    .append(Places.CITY).append("=").append(" AND ")
+
+                    .append(Places.LATITUDE).append("<").append(box.getLatNorthE6()/1E6).append(" AND ")
+                    .append(Places.LATITUDE).append(">").append(box.getLatSouthE6()/1E6).append(" AND ")
+            ;
+            if (box.getLonWestE6() < box.getLonEastE6()) {
+                query
+                        .append(Places.LONGITUDE).append("<").append(box.getLonEastE6()/1E6).append(" AND ")
+                        .append(Places.LONGITUDE).append(">").append(box.getLonWestE6()/1E6);
+            }else{
+                // boundingbox spans 180th meridian
+                query
+                        .append(Places.LONGITUDE).append("<").append(box.getLonEastE6()/1E6).append(" OR ")
+                        .append(Places.LONGITUDE).append(">").append(box.getLonWestE6()/1E6);
+            }
+            SQLiteDatabase sqldb = getReadableDatabase();
+            Vector<Place> places = new Vector<>();
+            try (Cursor cursor = sqldb.rawQuery(query.toString(),null)){
+                if (cursor.moveToFirst()) {
+                    do {
+                        places.add(new Place(cursor));
+                    } while (cursor.moveToNext());
+                }
+            }
+            return places;
+        }
+    }
+
     private Cursor getCursorById(String table,long id) {
         SQLiteDatabase sqldb = getReadableDatabase();
         Cursor cursor = sqldb.query(
@@ -231,6 +269,32 @@ public class Repository extends SQLiteOpenHelper {
             return cursor;
         }
         return null;
+    }
+    private ContentValues createPlaceValues(Place place){
+        place.creationTime = new Date().getTime();
+
+        ContentValues args = new ContentValues();
+        args.put(Places.COUNTRY, place.country);
+        args.put(Places.CITY, place.city);
+        args.put(Places.ADDRESS, place.address);
+
+        args.put(Places.GOOGLE_PLACE_ID, place.googlePlaceId);
+        args.put(Places.OSM_NODE_ID, place.googlePlaceId);
+        args.put(Places.OSM_TYPE, place.googlePlaceId);
+        args.put(Places.OSM_PLACE_RANK, place.googlePlaceId);
+
+        args.put(Places.NOMINATIM_PLACE_ID, place.googlePlaceId);
+        args.put(Places.NOMINATIM_TYPE, place.googlePlaceId);
+        args.put(Places.NOMINATIM_IMPORTANCE, place.googlePlaceId);
+
+        args.put(Places.DESCRIPTION, place.description);
+        args.put(Places.TITLE, place.title);
+        args.put(Places.PLACETYPE, place.placeType);
+        args.put(Places.CREATION_TIME, place.creationTime);
+
+        args.put(Places.LATITUDE, place.latitude);
+        args.put(Places.LONGITUDE, place.longitude);
+        return args;
     }
 }
 

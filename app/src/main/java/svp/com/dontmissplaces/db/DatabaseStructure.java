@@ -94,9 +94,9 @@ public class DatabaseStructure {
     /**
      * Save my places
      */
-    public static final class Places implements PlaceColumns{
-        public static final String TABLE = "Places";
-        public static final String CREATE_COLUMNS =
+    interface Places extends PlaceColumns{
+        String TABLE = "Places";
+        String CREATE_COLUMNS =
                         " " + _ID               + " " + _ID_TYPE +
                         "," + NOMINATIM_PLACE_ID+ " " + NOMINATIM_PLACE_ID_TYPE +
                         "," + GOOGLE_PLACE_ID   + " " + GOOGLE_PLACE_ID_TYPE +
@@ -116,10 +116,10 @@ public class DatabaseStructure {
                         "," + CREATION_TIME     + " " + CREATION_TIME_TYPE +
                         "," + LATITUDE          + " " + LATITUDE_TYPE +
                         "," + LONGITUDE         + " " + LONGITUDE_TYPE;
-        public static final String CREATE_STATEMENT ="CREATE TABLE " + TABLE + "(" + CREATE_COLUMNS + ");";
+        String CREATE_STATEMENT ="CREATE TABLE " + TABLE + "(" + CREATE_COLUMNS + ");";
 
-        public static final String SELECT_ALL = "SELECT * FROM " + TABLE + ";";
-        public static final String DELETE_ALL = "DELETE FROM " + TABLE + ";";
+        String SELECT_ALL = "SELECT * FROM " + TABLE + ";";
+        String DELETE_ALL = "DELETE FROM " + TABLE + ";";
     }
     public interface PlaceColumns extends Base, LocationColumns{
         /*

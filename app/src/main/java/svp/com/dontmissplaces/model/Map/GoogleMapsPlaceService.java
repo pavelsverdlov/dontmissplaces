@@ -88,7 +88,7 @@ public class GoogleMapsPlaceService {
                 //TODO Handle problems..
             }
             Gson gson = new Gson();
-            //Place student = gson.fromJson(responseString, Place.class);
+            //place student = gson.fromJson(responseString, place.class);
 
             return responseString;
         }

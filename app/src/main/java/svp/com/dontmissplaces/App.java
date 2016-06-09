@@ -18,6 +18,7 @@ import svp.com.dontmissplaces.ui.BaseBundleProvider;
 import svp.com.dontmissplaces.ui.map.GoogleMapView;
 
 import svp.com.dontmissplaces.ui.activities.*;
+import svp.com.dontmissplaces.ui.map.OsmdroidMapView;
 
 public class App extends Application {
     private final Repository repository;
@@ -43,6 +44,20 @@ public class App extends Application {
                 return new GoogleMapView.ViewState(view);
             }
         });
+
+        register(OsmdroidMapView.class,
+                new PresenterContainer.IPresenterCreator() {
+                    @Override
+                    public IPresenter create() {
+                        return new MapsPresenter(repository);
+                    }
+                },
+                new ViewStateContainer.IViewStateCreator<OsmdroidMapView>() {
+                    @Override
+                    public IViewState create(OsmdroidMapView view) {
+                        return new OsmdroidMapView.ViewState(view);
+                    }
+                });
 
         //Main menu
         PresenterContainer.register(MainMenuActivity.class, new PresenterContainer.IPresenterCreator() {

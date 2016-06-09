@@ -16,11 +16,12 @@ import svp.com.dontmissplaces.db.Waypoint;
 import svp.com.dontmissplaces.model.gps.GPSServiceProvider;
 import svp.com.dontmissplaces.model.gps.OnLocationChangeListener;
 import svp.com.dontmissplaces.ui.map.GoogleMapView;
+import svp.com.dontmissplaces.ui.map.IMapViewState;
 import svp.com.dontmissplaces.ui.model.PolylineView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.utils.LocationEx;
 
-public class MapsPresenter extends Presenter<GoogleMapView,GoogleMapView.ViewState> implements OnLocationChangeListener {
+public class MapsPresenter extends Presenter<GoogleMapView,IMapViewState> implements OnLocationChangeListener {
     private static final String TAG = "MapsPresenter";
     private Location prevLocation;
     private Waypoint prevWaypoint;
@@ -113,7 +114,7 @@ public class MapsPresenter extends Presenter<GoogleMapView,GoogleMapView.ViewSta
 
     private Waypoint createWaypoint(Location location){
         Waypoint waypoint = new Waypoint(sessionTrack.getId(),location);
-        repository.Track.insertWaypoint(waypoint);
+        repository.track.insertWaypoint(waypoint);
         return waypoint;
     }
 

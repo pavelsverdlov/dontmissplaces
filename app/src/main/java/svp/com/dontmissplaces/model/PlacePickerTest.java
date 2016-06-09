@@ -41,13 +41,13 @@ public class PlacePickerTest extends Activity{
 
             if (resultCode == Activity.RESULT_OK) {
                 /* User has picked a place, extract data.
-                   Data is extracted from the returned intent by retrieving a Place object from
+                   Data is extracted from the returned intent by retrieving a place object from
                    the PlacePicker.
                  */
                 final Place place = PlacePicker.getPlace(data, this);
 
 
-                /* A Place object contains details about that place, such as its name, address
+                /* A place object contains details about that place, such as its name, address
                 and phone number. Extract the name, address, phone number, place ID and place types.
                  */
                 final CharSequence name = place.getName();
@@ -63,7 +63,7 @@ public class PlacePickerTest extends Activity{
 
 
                 // Print data to debug log
-                //  Log.d(TAG, "Place selected: " + placeId + " (" + name.toString() + ")");
+                //  Log.d(TAG, "place selected: " + placeId + " (" + name.toString() + ")");
 
                 // Show the card.
 
