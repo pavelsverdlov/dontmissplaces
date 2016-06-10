@@ -232,7 +232,6 @@ public class Repository extends SQLiteOpenHelper {
             sqldb.beginTransaction();
             try {
                 for (org.osmdroid.bonuspack.location.POI place : places) {
-
                     ContentValues args = new ContentValues();
                     //args.put(Places.COUNTRY, place);
                  //   args.put(Places.CITY, place.city);
@@ -254,7 +253,7 @@ public class Repository extends SQLiteOpenHelper {
 
                     args.put(Places.LATITUDE, place.mLocation.getLatitude());
                     args.put(Places.LONGITUDE, place.mLocation.getLongitude());
-                    place.id = sqldb.insert(POI.TABLE, null, args);
+                    sqldb.insert(POI.TABLE, null, args);
                 }
             }finally {
                 sqldb.endTransaction();
