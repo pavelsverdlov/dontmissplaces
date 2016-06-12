@@ -41,6 +41,7 @@ import svp.com.dontmissplaces.ui.TrackRecordingToolbarView;
 import svp.com.dontmissplaces.ui.map.IMapView;
 import svp.com.dontmissplaces.ui.map.MapViewTypes;
 import svp.com.dontmissplaces.ui.map.OnMapClickListener;
+import svp.com.dontmissplaces.ui.model.PlaceView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.ui.model.TrackView;
 import svp.com.dontmissplaces.utils.LocationEx;
@@ -109,12 +110,12 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
             view.mapView.showSessionsTrack(track.sessions);
         }
 
-        public void showPlaceInfo(Place place){
+        public void showPlaceInfo(PlaceView place){
             view.showPlaceInfoLayout();
-            ((TextView)view.findViewById(R.id.select_place_show_title)).setText(place.title);//place.country + " " + place.city + " " +place.address + " " + place.description);
-            ((TextView)view.findViewById(R.id.select_place_show_latlng)).setText(place.latitude + ", "+place.longitude);
+            ((TextView)view.findViewById(R.id.select_place_show_title)).setText(place.getName());
+            ((TextView)view.findViewById(R.id.select_place_show_latlng)).setText(place.getType());
 
-            view.mapView.drawMarker(place);
+            view.mapView.drawMarker(place.place);
         }
     }
 

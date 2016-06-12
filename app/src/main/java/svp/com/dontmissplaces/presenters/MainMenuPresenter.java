@@ -24,6 +24,7 @@ import svp.com.dontmissplaces.model.PlaceProvider;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.BaseBundleProvider;
 import svp.com.dontmissplaces.ui.map.MapViewTypes;
+import svp.com.dontmissplaces.ui.model.PlaceView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.ui.model.TrackView;
 
@@ -109,7 +110,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         Vector<Place> pois = repository.poi.get(bb);
 
         if(pois.size() > 0) {
-            state.showPlaceInfo(pois.get(0));
+            state.showPlaceInfo(new PlaceView(pois.get(0)));
         }
     }
 
