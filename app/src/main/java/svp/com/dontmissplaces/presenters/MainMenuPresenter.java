@@ -8,7 +8,9 @@ import com.svp.infrastructure.mvpvs.bundle.IBundleProvider;
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
@@ -19,8 +21,11 @@ import svp.com.dontmissplaces.db.Repository;
 import svp.com.dontmissplaces.db.SessionTrack;
 import svp.com.dontmissplaces.db.Track;
 import svp.com.dontmissplaces.db.Waypoint;
+import svp.com.dontmissplaces.model.BoundingBox;
 import svp.com.dontmissplaces.model.Map.Point2D;
 import svp.com.dontmissplaces.model.PlaceProvider;
+import svp.com.dontmissplaces.model.nominatim.PhraseProvider;
+import svp.com.dontmissplaces.model.nominatim.PointsOfInterestInsiteBoxTask;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.BaseBundleProvider;
 import svp.com.dontmissplaces.ui.map.MapViewTypes;
@@ -35,9 +40,12 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     private SessionTrack recordingSession;
     private MapViewTypes mapViewType;
 
+    private final HashSet<BoundingBoxE6> seachedBoxes;
+
     public MainMenuPresenter(Repository repository) {
         this.repository = repository;
         mapViewType = MapViewTypes.Osmdroid;
+        seachedBoxes = new HashSet<>();
     }
 
     public SessionView startNewTrackSession() {
@@ -95,6 +103,8 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         }
     }
 
+    /* POI */
+
     public void showPlaceInfoByLocation(Point2D point) {
 //        PlaceProvider pp = new PlaceProvider(state.getActivity());
 //        Place p = pp.getPlace(point.getLatLng());
@@ -115,12 +125,33 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     }
 
 
+    /* end POI */
+
     public MapViewTypes getMapViewType() {
         mapViewType = userSettings.getMapProvider();
         state.getActivity();
         return mapViewType;
     }
 
+    public void searchPOI(int zoom, BoundingBoxE6 box) {
+        PhraseProvider pp = new PhraseProvider();
+
+        ArrayList<PointsOfInterestInsiteBoxTask.InputData> datas = new ArrayList<>();
+        for (String phrase : pp.getPhrases(zoom)){
+            datas.add(new PointsOfInterestInsiteBoxTask.InputData(box,phrase,50));
+        }
+
+        if(datas.size() == 0 && !seachedBoxes.add(box)){
+            return;
+        }
+
+        new PointsOfInterestInsiteBoxTask(){
+            @Override
+            protected void processing(ArrayList<Place> poi, InputData data){
+                repository.poi.insertMany(poi);
+            }
+        }.execute(datas);
+    }
 
 
     private class TrackTimer extends TimerTask{

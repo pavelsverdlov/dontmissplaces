@@ -17,6 +17,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import svp.com.dontmissplaces.db.Place;
 
@@ -24,6 +25,8 @@ public abstract class PointsOfInterestInsiteBoxTask extends AsyncTask<ArrayList<
     private final String NAME = "PointsOfInterestInsiteBoxTask";
     private final String UTF_8 = java.nio.charset.StandardCharsets.UTF_8.toString();
     //mServiceId
+
+    private HashSet<Integer> hash;
 
     protected abstract void processing(ArrayList<Place> poi, InputData data) ;
 
@@ -74,6 +77,7 @@ public abstract class PointsOfInterestInsiteBoxTask extends AsyncTask<ArrayList<
             Log.e(BonusPackHelper.LOG_TAG, "NominatimPOIProvider: request failed.");
             return null;
         }
+        hash = new HashSet<>();
         try {
             JSONArray jPlaceIds = new JSONArray(jString);
             int n = jPlaceIds.length();
@@ -81,7 +85,10 @@ public abstract class PointsOfInterestInsiteBoxTask extends AsyncTask<ArrayList<
             Bitmap thumbnail = null;
             for (int i=0; i<n; i++){
                 JSONObject jPlace = jPlaceIds.getJSONObject(i);
-                pois.add(new Place(jPlace));
+                int id = jPlace.getInt("place_id");
+                if(hash.add(id)){
+                    pois.add(new Place(jPlace));
+                }
             }
             return pois;
         } catch (JSONException e) {

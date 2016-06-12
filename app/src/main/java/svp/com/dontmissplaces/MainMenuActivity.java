@@ -1,16 +1,13 @@
 package svp.com.dontmissplaces;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -21,17 +18,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
 
-import org.osmdroid.api.IMapController;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
+import org.osmdroid.util.BoundingBoxE6;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import svp.com.dontmissplaces.db.Place;
 import svp.com.dontmissplaces.model.Map.Point2D;
 import svp.com.dontmissplaces.presenters.MainMenuPresenter;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
@@ -39,12 +31,10 @@ import svp.com.dontmissplaces.ui.ActivityPermissions;
 import svp.com.dontmissplaces.ui.map.*;
 import svp.com.dontmissplaces.ui.TrackRecordingToolbarView;
 import svp.com.dontmissplaces.ui.map.IMapView;
-import svp.com.dontmissplaces.ui.map.MapViewTypes;
 import svp.com.dontmissplaces.ui.map.OnMapClickListener;
 import svp.com.dontmissplaces.ui.model.PlaceView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.ui.model.TrackView;
-import svp.com.dontmissplaces.utils.LocationEx;
 
 public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         implements  NavigationView.OnNavigationItemSelectedListener,
@@ -331,6 +321,14 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     @Override
     public void onMapClick(Point2D point) {
         getPresenter().showPlaceInfoByLocation(point);
+    }
+    @Override
+    public void onZoom(int zoom, BoundingBoxE6 box){
+        getPresenter().searchPOI(zoom, box);
+    }
+    @Override
+    public void onScroll(int zoom, BoundingBoxE6 box){
+        getPresenter().searchPOI(zoom, box);
     }
     private void showPlaceByCurrentLocation(View v){
         getPresenter().showPlaceInfoByLocation(new Point2D(mapView.getMyLocation()));

@@ -61,7 +61,8 @@ public interface DatabasePOIStructure {
     interface POI extends DatabaseStructure.Places{
         String TABLE = "poi";
         String CREATE_STATEMENT ="CREATE TABLE " + TABLE + "(" +
-                CREATE_COLUMNS +
+                CREATE_COLUMNS  +
+                ", UNIQUE (" + NOMINATIM_PLACE_ID + "," + OSM_NODE_ID + ")" +
                 ");";
     }
 }

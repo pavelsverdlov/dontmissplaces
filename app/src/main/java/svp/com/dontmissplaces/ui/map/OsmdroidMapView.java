@@ -212,7 +212,7 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
 
     @Override
     public Location getMyLocation() {
-        return null;
+        return myLocationOverlay.getMyLocation().l;
     }
 
     @Override
@@ -237,8 +237,7 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
         }
     }
 
-    /**
-     * */
+    /** Click handlers */
 
     @Override
     public boolean singleTapConfirmedHelper(GeoPoint p) {
@@ -251,168 +250,27 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
         return false;
     }
 
-    Marker startMarker;
+    /**  Map listeners */
 
-    private void drawMarker(GeoPoint p) {
-        if (startMarker != null) {
-            startMarker.remove(mapView);
-        }
-        startMarker = new Marker(mapView);
-        startMarker.setIcon(activity.getResources().getDrawable(R.drawable.map_marker));
-        //setTitle is displayed when clicking on marker
-        //startMarker.setTitle("Start point");
-        startMarker.setPosition(p);
-        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        mapView.getOverlays().add(startMarker);
-
-        mapView.invalidate();
-    }
-
-    private void drawLine(GeoPoint s, GeoPoint e) {
-        ArrayList<GeoPoint> pp = new ArrayList<GeoPoint>();
-        pp.add(s);
-        pp.add(e);
-        Polyline roadOverlay = new Polyline(activity);
-        roadOverlay.setColor(0x800000FF);
-        roadOverlay.setWidth(10);
-        roadOverlay.setPoints(pp);
-
-        mapView.getOverlays().add(roadOverlay);
-        mapView.invalidate();
-    }
-
-    /**
-     * Map listeners
-     */
     @Override
     public boolean onScroll(ScrollEvent event) {
-
-
+        int zoom = mapView.getZoomLevel();
+        BoundingBoxE6 box = mapView.getBoundingBox();
+        clickListener.onScroll(zoom,box);
         return true;
     }
-
     @Override
     public boolean onZoom(ZoomEvent event) {
         int zoom = event.getZoomLevel();
-
         BoundingBoxE6 box = mapView.getBoundingBox();
-
         permissions.checkPermissionNetwork();
 
-        getPresenter().onZoom(zoom, box);
-
-
-
-/*
-        getPOIs(new PointsOfInterestTask() {
-            @Override
-            protected ArrayList<POI> getPOI(InputData data) {
-//                OverpassAPIProvider overpass = new OverpassAPIProvider();
-//                String url  =overpass.urlForPOISearch(data.keyword,data.box,500,5);
-//                ArrayList<POI> poi = overpass.getPOIsFromUrl(url);
-
-                NominatimPOIProvider poiProvider = new NominatimPOIProvider(NominatimPOIProvider.NOMINATIM_POI_SERVICE);
-                return poiProvider.getPOIInside(data.box, data.keyword ,data.maxResults);
-            }
-        },datas);
-*/
+        clickListener.onZoom(zoom,box);
         return true;
     }
 
-    /**
-     * Points of interest
-     */
-    private void getPOIs(GeoPoint startPoint) {
-//        permissions.checkPermissionNetwork();
-//        InputData input = new InputData(startPoint, "cinema", 50, 0.1);
-//        new PointsOfInterestInsiteBoxTask().execute(input);
-    }
+    /** My location handlers */
 
-    private void getPOIs(PointsOfInterestTask task, ArrayList<InputData> data) {
-        permissions.checkPermissionNetwork();
-        task.execute(data);
-    }
-
-    private final HashSet<Long> poiLoaded = new HashSet<>();
-    private final HashMap<GeoPoint, Marker> poiLocationLoaded = new HashMap<>();
-
-    public final class InputData {
-        public final GeoPoint point;
-        public final String keyword;
-        public final int maxResults;
-        public final double maxDistance;
-        public final BoundingBoxE6 box;
-
-        /**
-         * @param maxDistance to the position, in degrees.
-         *                    Note that it is used to build a bounding box around the position, not a circle.
-         */
-        public InputData(GeoPoint point, String keyword, int maxResults, double maxDistance) {
-            this.box = null;
-            this.point = point;
-            this.keyword = keyword;
-            this.maxResults = maxResults;
-            this.maxDistance = maxDistance;
-        }
-
-        public InputData(BoundingBoxE6 box, String keyword, int maxResults) {
-            this.point = null;
-            this.box = box;
-            this.keyword = keyword;
-            this.maxResults = maxResults;
-            this.maxDistance = 0;
-        }
-    }
-
-    private abstract class PointsOfInterestTask extends AsyncTask<ArrayList<InputData>, Void, Void> {
-
-        protected abstract ArrayList<POI> getPOI(InputData data);
-
-        @Override
-        protected Void doInBackground(ArrayList<InputData>... params) {
-            try {
-                ArrayList<InputData> datas = params[0];
-                for (InputData data : datas) {
-                    ArrayList<POI> pois = getPOI(data);
-                    //poiProvider.getPOICloseTo(data.point, data.keyword, data.maxResults, data.maxDistance);
-//                    for (Overlay item : poiMarkers.getItems()) {
-//                        poiMarkers.remove(item);
-//                    }
-                    Drawable poiIcon = activity.getResources().getDrawable(R.drawable.map_marker);
-                    for (POI poi : pois) {
-                        if (!poiLoaded.add(poi.mId)) {
-                            continue;
-                        }
-                        Marker poiMarker = new Marker(mapView);
-                        poiLocationLoaded.put(poi.mLocation, poiMarker);
-                        poiMarker.setTitle(poi.mType);
-                        poiMarker.setSnippet(poi.mDescription);
-                        poiMarker.setPosition(poi.mLocation);
-                        poiMarker.setEnabled(false);
-
-                        //TODO: popularity of this POI, from 1 (lowest) to 100 (highest). 0 if not defined.
-                        //filter by this value
-//                    poi.mRank
-
-//                    if (poi.mThumbnail != null) {
-//                        poiMarker.setIcon(new BitmapDrawable(poi.mThumbnail));
-//                    }
-
-                        poiMarker.setIcon(poiIcon);
-                        //poiMarkers.add(poiMarker);
-                    }
-//                    mapView.postInvalidate();
-                }
-            } catch (Exception ex) {
-                ex.toString();
-            }
-            return null;
-        }
-    }
-
-    /**
-     * My location handlers
-     */
     private void setMyLocationUpdate(long milliSeconds) {
         myLocationOverlay.enableMyLocation();
         myLocationOverlay.setDrawAccuracyEnabled(true);
@@ -421,7 +279,6 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
         gpsMyLocationProvider.setLocationUpdateMinDistance(100);
         gpsMyLocationProvider.setLocationUpdateMinTime(milliSeconds);
     }
-
 
     private void setMapViewSettings() {
         //get value from settings
@@ -460,6 +317,35 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
         mapView.getTileProvider().createTileCache();
     }
 
+
+    Marker startMarker;
+    private void drawMarker(GeoPoint p) {
+        if (startMarker != null) {
+            startMarker.remove(mapView);
+        }
+        startMarker = new Marker(mapView);
+        startMarker.setIcon(activity.getResources().getDrawable(R.drawable.map_marker));
+        //setTitle is displayed when clicking on marker
+        //startMarker.setTitle("Start point");
+        startMarker.setPosition(p);
+        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        mapView.getOverlays().add(startMarker);
+
+        mapView.invalidate();
+    }
+
+    private void drawLine(GeoPoint s, GeoPoint e) {
+        ArrayList<GeoPoint> pp = new ArrayList<GeoPoint>();
+        pp.add(s);
+        pp.add(e);
+        Polyline roadOverlay = new Polyline(activity);
+        roadOverlay.setColor(0x800000FF);
+        roadOverlay.setWidth(10);
+        roadOverlay.setPoints(pp);
+
+        mapView.getOverlays().add(roadOverlay);
+        mapView.invalidate();
+    }
 /*
     private class MyItemizedIconOverlay extends ItemizedIconOverlay<OverlayItem> {
         public MyItemizedIconOverlay(

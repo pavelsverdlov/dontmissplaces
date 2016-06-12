@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.*;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 import org.osmdroid.util.BoundingBoxE6;
 
@@ -16,6 +17,7 @@ import svp.com.dontmissplaces.db.DatabaseStructure.*;
 import svp.com.dontmissplaces.db.DatabasePOIStructure.*;
 
 public class Repository extends SQLiteOpenHelper {
+    private final String NAME = "Repository";
     public static final String dbname = "dmpdb";
     private static final int dbversion = 1;
     private static String TAG = Repository.class.getName();
@@ -235,7 +237,9 @@ public class Repository extends SQLiteOpenHelper {
                     count = sqldb.insert(POI.TABLE, null, args);
                 }
                 sqldb.setTransactionSuccessful();
-            }finally {
+            }catch (Exception ex) {
+                Log.e(NAME,"",ex);
+            } finally {
                 sqldb.endTransaction();
             }
             return count;

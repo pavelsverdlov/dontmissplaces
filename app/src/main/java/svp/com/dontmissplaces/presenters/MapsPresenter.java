@@ -146,25 +146,7 @@ public class MapsPresenter extends Presenter<IMapView,IMapViewState> implements 
         state.moveCamera(first);
     }
 
-    public void onZoom(int zoom, BoundingBoxE6 box) {
-        PhraseProvider pp = new PhraseProvider();
 
-        ArrayList<PointsOfInterestInsiteBoxTask.InputData> datas = new ArrayList<>();
-        for (String phrase : pp.getPhrases(zoom)){
-            datas.add(new PointsOfInterestInsiteBoxTask.InputData(box,phrase,50));
-        }
-
-        if(datas.size() == 0){
-            return;
-        }
-
-        new PointsOfInterestInsiteBoxTask(){
-            @Override
-            protected void processing(ArrayList<Place> poi, InputData data){
-                repository.poi.insertMany(poi);
-            }
-        }.execute(datas);
-    }
 
 
 }
