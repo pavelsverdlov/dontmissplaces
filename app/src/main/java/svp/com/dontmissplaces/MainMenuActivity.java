@@ -32,6 +32,7 @@ import org.osmdroid.views.MapView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import svp.com.dontmissplaces.db.Place;
+import svp.com.dontmissplaces.model.Map.Point2D;
 import svp.com.dontmissplaces.presenters.MainMenuPresenter;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.ActivityPermissions;
@@ -110,8 +111,10 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
         public void showPlaceInfo(Place place){
             view.showPlaceInfoLayout();
-            ((TextView)view.findViewById(R.id.select_place_show_title)).setText(place.address);//place.country + " " + place.city + " " +place.address + " " + place.description);
+            ((TextView)view.findViewById(R.id.select_place_show_title)).setText(place.title);//place.country + " " + place.city + " " +place.address + " " + place.description);
             ((TextView)view.findViewById(R.id.select_place_show_latlng)).setText(place.latitude + ", "+place.longitude);
+
+            view.mapView.drawMarker(place);
         }
     }
 
@@ -325,11 +328,11 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
      * place show/save
      */
     @Override
-    public void onMapClick(LatLng latLng) {
-        getPresenter().showPlaceInfoByLocation(latLng);
+    public void onMapClick(Point2D point) {
+        getPresenter().showPlaceInfoByLocation(point);
     }
     private void showPlaceByCurrentLocation(View v){
-        getPresenter().showPlaceInfoByLocation(LocationEx.getLatLng(mapView.getMyLocation()));
+        getPresenter().showPlaceInfoByLocation(new Point2D(mapView.getMyLocation()));
 
 //        behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
 //            @Override

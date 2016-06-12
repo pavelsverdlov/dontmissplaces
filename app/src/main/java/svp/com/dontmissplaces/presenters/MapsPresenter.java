@@ -10,11 +10,14 @@ import com.svp.infrastructure.mvpvs.presenter.Presenter;
 
 import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Vector;
 
+import svp.com.dontmissplaces.db.Place;
 import svp.com.dontmissplaces.db.Repository;
 import svp.com.dontmissplaces.db.Waypoint;
 import svp.com.dontmissplaces.model.gps.GPSServiceProvider;
@@ -157,9 +160,11 @@ public class MapsPresenter extends Presenter<IMapView,IMapViewState> implements 
 
         new PointsOfInterestInsiteBoxTask(){
             @Override
-            protected void processing(ArrayList<POI> poi, InputData data){
+            protected void processing(ArrayList<Place> poi, InputData data){
                 repository.poi.insertMany(poi);
             }
         }.execute(datas);
     }
+
+
 }

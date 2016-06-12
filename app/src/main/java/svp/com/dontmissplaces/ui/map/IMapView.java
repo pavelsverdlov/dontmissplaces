@@ -6,7 +6,9 @@ import android.os.Bundle;
 import com.svp.infrastructure.mvpvs.view.IActivityView;
 
 import java.util.Collection;
+import java.util.Vector;
 
+import svp.com.dontmissplaces.db.Place;
 import svp.com.dontmissplaces.ui.model.SessionView;
 
 public interface IMapView extends IActivityView {
@@ -34,4 +36,5 @@ public interface IMapView extends IActivityView {
     Location getMyLocation();
 
     void setOnMapClickListener(OnMapClickListener listener);
+    void drawMarker(Place pois);
 }

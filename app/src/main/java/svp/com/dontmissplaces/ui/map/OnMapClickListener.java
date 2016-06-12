@@ -1,7 +1,7 @@
 package svp.com.dontmissplaces.ui.map;
 
-import com.google.android.gms.maps.model.LatLng;
+import svp.com.dontmissplaces.model.Map.Point2D;
 
 public interface OnMapClickListener {
-    void onMapClick(LatLng latLng);
+    void onMapClick(Point2D point);
 }

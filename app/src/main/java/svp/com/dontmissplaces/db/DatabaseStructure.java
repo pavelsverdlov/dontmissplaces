@@ -102,7 +102,7 @@ public class DatabaseStructure {
                         "," + GOOGLE_PLACE_ID   + " " + GOOGLE_PLACE_ID_TYPE +
                         "," + OSM_NODE_ID       + " " + OSM_NODE_ID_TYPE +
                         "," + OSM_TYPE          + " " + OSM_TYPE_TYPE +
-                        "," + NOMINATIM_CLASS   + " " + NOMINATIM_CLASS_TYPE +
+                        "," + NOMINATIM_CATEGORY + " " + NOMINATIM_CATEGORY_TYPE +
                         "," + NOMINATIM_TYPE    + " " + NOMINATIM_TYPE_TYPE +
                         "," + NOMINATIM_IMPORTANCE+ " " + NOMINATIM_IMPORTANCE_TYPE +
                         "," + OSM_PLACE_RANK    + " " + OSM_PLACE_RANK_TYPE +
@@ -115,13 +115,17 @@ public class DatabaseStructure {
                         "," + TITLE             + " " + TITLE_TYPE +
                         "," + CREATION_TIME     + " " + CREATION_TIME_TYPE +
                         "," + LATITUDE          + " " + LATITUDE_TYPE +
-                        "," + LONGITUDE         + " " + LONGITUDE_TYPE;
+                        "," + LONGITUDE         + " " + LONGITUDE_TYPE +
+                        "," + EXTRATAGS         + " " + EXTRATAGS_TYPE;
         String CREATE_STATEMENT ="CREATE TABLE " + TABLE + "(" + CREATE_COLUMNS + ");";
 
         String SELECT_ALL = "SELECT * FROM " + TABLE + ";";
         String DELETE_ALL = "DELETE FROM " + TABLE + ";";
+
     }
     public interface PlaceColumns extends Base, LocationColumns{
+        String EXTRATAGS = "extratags";
+        String EXTRATAGS_TYPE  = _TEXT_TYPE;
         /*
         *   "osm_type":"way",
         * */
@@ -131,12 +135,12 @@ public class DatabaseStructure {
          *  "place_id":"75413380"
          */
         String NOMINATIM_PLACE_ID = "nominatim_place_id";
-        String NOMINATIM_PLACE_ID_TYPE = _INTEGER_TYPE;
+        String NOMINATIM_PLACE_ID_TYPE = _INTEGER_NOT_NULL;
         /*
         * "class":"historic"
         * */
-        String NOMINATIM_CLASS = "nominatim_class";
-        String NOMINATIM_CLASS_TYPE  = _TEXT_TYPE;
+        String NOMINATIM_CATEGORY = "nominatim_category";
+        String NOMINATIM_CATEGORY_TYPE = _TEXT_TYPE;
         /*
         * "type":"monument"
         * */
@@ -158,38 +162,38 @@ public class DatabaseStructure {
          * a lake and similar other properties.
          * */
         String OSM_PLACE_RANK = "osm_place_rank";
-        String OSM_PLACE_RANK_TYPE   = _INTEGER_TYPE;
+        String OSM_PLACE_RANK_TYPE   = _INTEGER_NOT_NULL;
 
         String OSM_NODE_ID = "osmnodeid";
-        String OSM_NODE_ID_TYPE   = "INTEGER NOT NULL";
+        String OSM_NODE_ID_TYPE   = _INTEGER_NOT_NULL;
 
         /**
          * example - "place_id" : "ChIJrTLr-GyuEmsRBfy61i59si0",
          * */
         String GOOGLE_PLACE_ID = "googleplaceid";
-        String GOOGLE_PLACE_ID_TYPE   = "TEXT";
+        String GOOGLE_PLACE_ID_TYPE   = _TEXT_TYPE;
 
         String TITLE = "title";
-        String TITLE_TYPE   = "TEXT";
+        String TITLE_TYPE   = _TEXT_TYPE;
 
         String DESCRIPTION = "description";
-        String DESCRIPTION_TYPE   = "TEXT";
+        String DESCRIPTION_TYPE   = _TEXT_TYPE;
         /**
-         * Internal type for application for selecting user
+         * Internal type for application for selecting user, not used yet
          * */
         String PLACETYPE = "placetype";
-        String PLACETYPE_TYPE   = "INTEGER NOT NULL";
+        String PLACETYPE_TYPE   = "INTEGER";
 
         String CITY = "city";
-        String CITY_TYPE   = "TEXT";
+        String CITY_TYPE   = _TEXT_TYPE;
 
         String COUNTRY = "country";
-        String COUNTRY_TYPE   = "TEXT";
+        String COUNTRY_TYPE   = _TEXT_TYPE;
 
         //state, region
 
         String ADDRESS = "address";
-        String ADDRESS_TYPE   = "TEXT";
+        String ADDRESS_TYPE   = _TEXT_TYPE;
 
         String CREATION_TIME = "creationtime";
         String CREATION_TIME_TYPE   = "INTEGER NOT NULL";
@@ -197,7 +201,7 @@ public class DatabaseStructure {
 
     public interface Base extends BaseColumns {
         String _ID_TYPE       = "INTEGER PRIMARY KEY AUTOINCREMENT";
-        String _INTEGER_TYPE = "INTEGER NOT NULL";
+        String _INTEGER_NOT_NULL = "INTEGER NOT NULL";
         String _TEXT_TYPE = "TEXT";
         String _REAL_TYPE = "REAL NOT NULL";
     }

@@ -23,7 +23,9 @@ import com.svp.infrastructure.mvpvs.view.View;
 import java.util.Collection;
 
 import svp.com.dontmissplaces.R;
+import svp.com.dontmissplaces.db.Place;
 import svp.com.dontmissplaces.model.Map.GoogleMapsPlaceService;
+import svp.com.dontmissplaces.model.Map.Point2D;
 import svp.com.dontmissplaces.presenters.MapsPresenter;
 import svp.com.dontmissplaces.ui.ActivityPermissions;
 import svp.com.dontmissplaces.ui.model.SessionView;
@@ -220,12 +222,18 @@ public class GoogleMapView
             marker.remove();
         }
         marker = mMap.addMarker(new MarkerOptions().position(latLng));
-        listener.onMapClick(latLng);
+        listener.onMapClick(new Point2D(latLng));
     }
 
     public void setOnMapClickListener(OnMapClickListener listener){
         this.listener = listener;
     }
+
+    @Override
+    public void drawMarker(Place pois) {
+
+    }
+
     public void enableMyLocation() {
         if(permissions.isFineLocationGranted()) {
             mMap.setMyLocationEnabled(true);

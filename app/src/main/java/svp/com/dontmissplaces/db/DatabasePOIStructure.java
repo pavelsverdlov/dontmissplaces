@@ -8,7 +8,7 @@ public interface DatabasePOIStructure {
     interface POIBoxColumns extends DatabaseStructure.Base {
 
         String ZOOM_LEVEL = "zoom_level";
-        String ZOOM_LEVEL_TYPE = _INTEGER_TYPE;
+        String ZOOM_LEVEL_TYPE = _INTEGER_NOT_NULL;
 
         //N:48922424; E:2356224; S:48806788; W:2232627
         String BOUNDING_BOXE6 = "bounding_box";
@@ -39,7 +39,7 @@ public interface DatabasePOIStructure {
     interface POITypeColumns extends DatabaseStructure.Base{
         //poi_id -> poi.id
         String POI_ID = "poi_id";
-        String POI_ID_TYPE = _INTEGER_TYPE;
+        String POI_ID_TYPE = _INTEGER_NOT_NULL;
 
         String FACILITY = "facility";
         String FACILITY_TYPE = _TEXT_TYPE;

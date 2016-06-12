@@ -5,6 +5,9 @@ import android.content.Intent;
 import com.google.android.gms.maps.model.LatLng;
 import com.svp.infrastructure.mvpvs.bundle.IBundleProvider;
 
+import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.GeoPoint;
+
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -16,6 +19,7 @@ import svp.com.dontmissplaces.db.Repository;
 import svp.com.dontmissplaces.db.SessionTrack;
 import svp.com.dontmissplaces.db.Track;
 import svp.com.dontmissplaces.db.Waypoint;
+import svp.com.dontmissplaces.model.Map.Point2D;
 import svp.com.dontmissplaces.model.PlaceProvider;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.BaseBundleProvider;
@@ -90,17 +94,25 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         }
     }
 
-    public void showPlaceInfoByLocation(LatLng latLng) {
-        PlaceProvider pp = new PlaceProvider(state.getActivity());
-        Place p = pp.getPlace(latLng);
+    public void showPlaceInfoByLocation(Point2D point) {
+//        PlaceProvider pp = new PlaceProvider(state.getActivity());
+//        Place p = pp.getPlace(point.getLatLng());
 //        place p = pp.getPlace(new LatLng(46.4708294,30.7043384));
 
-        state.showPlaceInfo(p);
+        int maxD = 100;
+        GeoPoint p = point.getGeoPoint();
+        BoundingBoxE6 bb = new BoundingBoxE6(p.getLatitudeE6()+maxD,
+                p.getLongitudeE6()+maxD,
+                p.getLatitudeE6()-maxD,
+                p.getLongitudeE6()-maxD);
+
+        Vector<Place> pois = repository.poi.get(bb);
+
+        if(pois.size() > 0) {
+            state.showPlaceInfo(pois.get(0));
+        }
     }
 
-    public void savePlace() {
-
-    }
 
     public MapViewTypes getMapViewType() {
         mapViewType = userSettings.getMapProvider();

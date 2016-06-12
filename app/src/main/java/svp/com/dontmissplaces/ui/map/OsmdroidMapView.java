@@ -8,7 +8,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.*;
 import com.svp.infrastructure.mvpvs.view.IActivityView;
 import com.svp.infrastructure.mvpvs.view.View;
 
@@ -25,6 +25,8 @@ import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.*;
+import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.compass.*;
 import org.osmdroid.views.overlay.mylocation.*;
 
@@ -32,8 +34,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Vector;
 
 import svp.com.dontmissplaces.R;
+import svp.com.dontmissplaces.db.Place;
+import svp.com.dontmissplaces.model.Map.Point2D;
 import svp.com.dontmissplaces.model.nominatim.PhraseProvider;
 import svp.com.dontmissplaces.model.nominatim.PointsOfInterestInsiteBoxTask;
 import svp.com.dontmissplaces.presenters.MapsPresenter;
@@ -41,7 +46,7 @@ import svp.com.dontmissplaces.ui.ActivityPermissions;
 import svp.com.dontmissplaces.ui.model.PolylineView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 
-public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, MapEventsReceiver,MapListener {
+public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, MapEventsReceiver, MapListener {
     private final Activity activity;
     private final ActivityPermissions permissions;
     private final MapView mapView;
@@ -53,26 +58,32 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
 
     public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<OsmdroidMapView> implements IMapViewState {
         private final PolylineView polyline;
+
         public ViewState(OsmdroidMapView view) {
             super(view);
-            polyline = new PolylineView(Color.BLUE,5);
+            polyline = new PolylineView(Color.BLUE, 5);
         }
 
-        public boolean checkPermissionFineLocation(){
+        public boolean checkPermissionFineLocation() {
             return true;
         }
 
-        public void addPolyline(final PolylineView polyline){//final Collection<LatLng> lls){
-        }
-        public void moveCamera(final LatLng latLng){
+        public void addPolyline(final PolylineView polyline) {//final Collection<LatLng> lls){
         }
 
-        public void startLocationListening() { polyline.clear(); }
-        public void stopLocationListening() {  }
+        public void moveCamera(final LatLng latLng) {
+        }
+
+        public void startLocationListening() {
+            polyline.clear();
+        }
+
+        public void stopLocationListening() {
+        }
 
         @Override
         protected void restore() {
-            if(polyline.size() > 0){
+            if (polyline.size() > 0) {
                 addPolyline(polyline);
                 polyline.clear();
             }
@@ -84,6 +95,8 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
         }
 
     }
+
+    private OnMapClickListener clickListener;
 
     public OsmdroidMapView(Activity activity, ActivityPermissions permissions) {
         this.activity = activity;
@@ -122,6 +135,7 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
     public void showSessionsTrack(Collection<SessionView> sessions) {
 
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         permissions.checkPermissionExternalStorage();
@@ -152,6 +166,7 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
         //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, myLocationListener);
         */
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -202,32 +217,32 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
 
     @Override
     public void setOnMapClickListener(OnMapClickListener listener) {
-
+        clickListener = listener;
     }
 
+    public void drawMarker(Place poi) {
+        if (poi != null) {
+            for (Overlay m : poiMarkers.getItems()) {
+                poiMarkers.remove(m);
+            }
+            Marker poiMarker = new Marker(mapView);
+            poiMarker.setTitle(poi.nominatimType);
+            poiMarker.setSnippet(poi.title);
+            poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.map_marker));
+            poiMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+            poiMarker.setPosition(new GeoPoint(poi.latitude, poi.longitude));
+            poiMarkers.add(poiMarker);
+
+            mapView.postInvalidate();
+        }
+    }
+
+    /**
+     * */
 
     @Override
     public boolean singleTapConfirmedHelper(GeoPoint p) {
-        int maxD = 100;
-        BoundingBoxE6 bb = new BoundingBoxE6(p.getLatitudeE6()+maxD,
-                p.getLongitudeE6()+maxD,
-                p.getLatitudeE6()-maxD,
-                p.getLongitudeE6()-maxD);
-        //drawMarker(p);
-        ArrayList<GeoPoint> found =new ArrayList<>();
-        for (GeoPoint pp :poiLocationLoaded.keySet()){
-            if(bb.contains(pp)){
-                found.add(pp);
-            }
-        }
-        for (GeoPoint pp : found){
-            Marker m = poiLocationLoaded.get(pp);
-            m.setEnabled(true);
-            poiMarkers.add(m);
-        }
-        mapView.invalidate();
-       // new GeocoderNominatim()
-
+        clickListener.onMapClick(new Point2D(p));
         return false;
     }
 
@@ -267,8 +282,8 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
     }
 
     /**
-    * Map listeners
-    * */
+     * Map listeners
+     */
     @Override
     public boolean onScroll(ScrollEvent event) {
 
@@ -280,9 +295,7 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
     public boolean onZoom(ZoomEvent event) {
         int zoom = event.getZoomLevel();
 
-        final BoundingBoxE6 box = mapView.getBoundingBox();
-
-
+        BoundingBoxE6 box = mapView.getBoundingBox();
 
         permissions.checkPermissionNetwork();
 
@@ -314,13 +327,14 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
 //        InputData input = new InputData(startPoint, "cinema", 50, 0.1);
 //        new PointsOfInterestInsiteBoxTask().execute(input);
     }
+
     private void getPOIs(PointsOfInterestTask task, ArrayList<InputData> data) {
         permissions.checkPermissionNetwork();
         task.execute(data);
     }
 
     private final HashSet<Long> poiLoaded = new HashSet<>();
-    private final HashMap<GeoPoint,Marker> poiLocationLoaded = new HashMap<>();
+    private final HashMap<GeoPoint, Marker> poiLocationLoaded = new HashMap<>();
 
     public final class InputData {
         public final GeoPoint point;
@@ -340,6 +354,7 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
             this.maxResults = maxResults;
             this.maxDistance = maxDistance;
         }
+
         public InputData(BoundingBoxE6 box, String keyword, int maxResults) {
             this.point = null;
             this.box = box;
@@ -365,11 +380,11 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
 //                    }
                     Drawable poiIcon = activity.getResources().getDrawable(R.drawable.map_marker);
                     for (POI poi : pois) {
-                        if(!poiLoaded.add(poi.mId)){
+                        if (!poiLoaded.add(poi.mId)) {
                             continue;
                         }
                         Marker poiMarker = new Marker(mapView);
-                        poiLocationLoaded.put(poi.mLocation,poiMarker);
+                        poiLocationLoaded.put(poi.mLocation, poiMarker);
                         poiMarker.setTitle(poi.mType);
                         poiMarker.setSnippet(poi.mDescription);
                         poiMarker.setPosition(poi.mLocation);
@@ -398,7 +413,7 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
     /**
      * My location handlers
      */
-    private void setMyLocationUpdate(long milliSeconds){
+    private void setMyLocationUpdate(long milliSeconds) {
         myLocationOverlay.enableMyLocation();
         myLocationOverlay.setDrawAccuracyEnabled(true);
 

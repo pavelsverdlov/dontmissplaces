@@ -31,9 +31,8 @@ public class PlaceProvider {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Place place = new Place(-1);
-        place.longitude = latLng.longitude;
-        place.latitude = latLng.latitude;
+        Place place = new Place(latLng.longitude,latLng.latitude);
+
         if (addresses != null) {
             Address returnedAddress = addresses.get(0);
 

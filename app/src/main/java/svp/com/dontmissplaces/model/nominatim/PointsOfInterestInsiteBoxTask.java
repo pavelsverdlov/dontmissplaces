@@ -13,18 +13,22 @@ import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import svp.com.dontmissplaces.db.Place;
 
 public abstract class PointsOfInterestInsiteBoxTask extends AsyncTask<ArrayList<PointsOfInterestInsiteBoxTask.InputData>, Void, Void> {
+    private final String NAME = "PointsOfInterestInsiteBoxTask";
+    private final String UTF_8 = java.nio.charset.StandardCharsets.UTF_8.toString();
     //mServiceId
 
     protected abstract void processing(ArrayList<Place> poi, InputData data) ;
 
-    //countrycodes=<countrycode>[,<countrycode>][,<countrycode>]...
-    //http://nominatim.openstreetmap.org/search?format=jsonv2&q=[restaurant]&limit=200&bounded=1&viewbox=2.340642,48.871567,2.3445039999999997,48.867954&extratags=1&namedetails=1&addressdetails=1
+    //countrycodes=<countrycode>[,<countrycode>][,<countrycode>]... &addressdetails=1
+    //http://nominatim.openstreetmap.org/search?format=jsonv2&q=[restaurant]&limit=200&bounded=1&viewbox=2.340642,48.871567,2.3445039999999997,48.867954&extratags=1&namedetails=1
 
     @Override
     protected Void doInBackground(ArrayList<InputData>... params) {
@@ -33,17 +37,31 @@ public abstract class PointsOfInterestInsiteBoxTask extends AsyncTask<ArrayList<
         for (InputData data : datas) {
             BoundingBoxE6 box = data.box;
             StringBuffer urlString = new StringBuffer(NominatimPOIProvider.NOMINATIM_POI_SERVICE);
-            urlString.append("search?")
-                    .append("format=json").append("&q=[").append(URLEncoder.encode(data.keyword)).append("]")
-                    .append("&limit=").append(data.maxResults)
-                    .append("&bounded=1")
-                    .append("&viewbox=")
-                    .append(box.getLonWestE6()*1E-6).append(",")
-                    .append(box.getLatNorthE6()*1E-6).append(",")
-                    .append(box.getLonEastE6()*1E-6).append(",")
-                    .append(box.getLatSouthE6()*1E-6);
+//            try {
+                urlString.append("search?")
+                        .append("format=jsonv2").append("&q=[").append(URLEncoder.encode(data.keyword)).append("]")
+                        .append("&limit=").append(data.maxResults)
+                        .append("&extratags=1")
+                        .append("&bounded=1")
+                        .append("&viewbox=")
+                        .append(box.getLonWestE6()*1E-6).append(",")
+                        .append(box.getLatNorthE6()*1E-6).append(",")
+                        .append(box.getLonEastE6()*1E-6).append(",")
+                        .append(box.getLatSouthE6()*1E-6);
+//            } catch (UnsupportedEncodingException e) {
+//                Log.e(NAME, "", e);
+//                continue;
+//            }
 
             ArrayList<Place> poi = getThem(urlString.toString());
+
+            int size = poi.size();
+            Log.d(NAME,"poi count" + size);
+
+            if(size == data.maxResults){
+                Log.d(NAME,"Maybe need more request");
+            }
+
             processing(poi,data);
         }
         return null;
