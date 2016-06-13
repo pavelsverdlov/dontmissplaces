@@ -7,11 +7,13 @@ import android.widget.TextView;
 import com.svp.infrastructure.common.ViewExtensions;
 import com.svp.infrastructure.common.view.ICursorParcelable;
 
+import org.osmdroid.util.GeoPoint;
+
 import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.db.Place;
 
-public class PlaceView implements ICursorParcelable {
-    public Place place;
+public class PlaceView implements ICursorParcelable, IPOIView {
+    protected Place place;
     private TextView title;
     private PlaceAddressDetails addressDetails;
 
@@ -26,7 +28,9 @@ public class PlaceView implements ICursorParcelable {
     public String getType() {
         return place.nominatimType;
     }
-
+    public GeoPoint getGeoPoint(){
+        return new GeoPoint(place.latitude, place.longitude);
+    }
 
     public PlaceView() {}
     @Override

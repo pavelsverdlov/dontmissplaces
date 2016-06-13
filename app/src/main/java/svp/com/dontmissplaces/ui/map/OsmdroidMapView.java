@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -43,6 +44,7 @@ import svp.com.dontmissplaces.model.nominatim.PhraseProvider;
 import svp.com.dontmissplaces.model.nominatim.PointsOfInterestInsiteBoxTask;
 import svp.com.dontmissplaces.presenters.MapsPresenter;
 import svp.com.dontmissplaces.ui.ActivityPermissions;
+import svp.com.dontmissplaces.ui.model.IPOIView;
 import svp.com.dontmissplaces.ui.model.PolylineView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 
@@ -135,36 +137,10 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
     public void showSessionsTrack(Collection<SessionView> sessions) {
 
     }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         permissions.checkPermissionExternalStorage();
         permissions.checkPermissionFineLocation();
-
-
-
-
-/*
-        GpsMyLocationProvider gpsLocationProvider = new GpsMyLocationProvider(activity);
-        gpsLocationProvider.setLocationUpdateMinDistance(5);
-        gpsLocationProvider.setLocationUpdateMinTime(20);
-
-
-        locationOverlay = new MyLocationNewOverlay(activity, gpsLocationProvider , mapView);
-        locationOverlay.enableMyLocation(gpsLocationProvider);
-        locationOverlay.runOnFirstFix(new Runnable() {
-            public void run() {
-                mapController.animateTo(locationOverlay
-                        .getMyLocation());
-            }
-        });
-
-        mapView.getOverlays().add(locationOverlay);
-
-        LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, gpsLocationProvider );
-        //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, myLocationListener);
-        */
     }
 
     @Override
@@ -212,7 +188,12 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
 
     @Override
     public Location getMyLocation() {
-        return myLocationOverlay.getMyLocation().l;
+        GeoPoint point = myLocationOverlay.getMyLocation();
+        Location loc = new Location(LocationManager.GPS_PROVIDER);
+        loc.setLatitude(point.getLatitude());
+        loc.setLongitude(point.getLongitude());
+        loc.setAltitude(point.getAltitude());
+        return loc;
     }
 
     @Override
@@ -220,17 +201,17 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
         clickListener = listener;
     }
 
-    public void drawMarker(Place poi) {
+    public void drawMarker(IPOIView poi) {
         if (poi != null) {
             for (Overlay m : poiMarkers.getItems()) {
                 poiMarkers.remove(m);
             }
             Marker poiMarker = new Marker(mapView);
-            poiMarker.setTitle(poi.nominatimType);
-            poiMarker.setSnippet(poi.title);
+            poiMarker.setTitle(poi.getType());
+            poiMarker.setSnippet(poi.getName());
             poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.map_marker));
             poiMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            poiMarker.setPosition(new GeoPoint(poi.latitude, poi.longitude));
+            poiMarker.setPosition(poi.getGeoPoint());
             poiMarkers.add(poiMarker);
 
             mapView.postInvalidate();
@@ -263,7 +244,6 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
     public boolean onZoom(ZoomEvent event) {
         int zoom = event.getZoomLevel();
         BoundingBoxE6 box = mapView.getBoundingBox();
-        permissions.checkPermissionNetwork();
 
         clickListener.onZoom(zoom,box);
         return true;

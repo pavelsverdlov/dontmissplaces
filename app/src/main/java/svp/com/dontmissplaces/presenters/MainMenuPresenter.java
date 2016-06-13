@@ -110,6 +110,10 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
 //        Place p = pp.getPlace(point.getLatLng());
 //        place p = pp.getPlace(new LatLng(46.4708294,30.7043384));
 
+        if(!state.getPermissions().checkPermissionNetwork()){
+            return;
+        }
+
         int maxD = 100;
         GeoPoint p = point.getGeoPoint();
         BoundingBoxE6 bb = new BoundingBoxE6(p.getLatitudeE6()+maxD,

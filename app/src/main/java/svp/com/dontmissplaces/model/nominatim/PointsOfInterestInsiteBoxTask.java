@@ -1,6 +1,5 @@
 package svp.com.dontmissplaces.model.nominatim;
 
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -8,14 +7,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.bonuspack.location.NominatimPOIProvider;
-import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.util.BoundingBoxE6;
-import org.osmdroid.util.GeoPoint;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -36,7 +31,7 @@ public abstract class PointsOfInterestInsiteBoxTask extends AsyncTask<ArrayList<
     @Override
     protected Void doInBackground(ArrayList<InputData>... params) {
         ArrayList<InputData> datas = params[0];
-
+        hash = new HashSet<>();
         for (InputData data : datas) {
             BoundingBoxE6 box = data.box;
             StringBuffer urlString = new StringBuffer(NominatimPOIProvider.NOMINATIM_POI_SERVICE);
@@ -77,12 +72,12 @@ public abstract class PointsOfInterestInsiteBoxTask extends AsyncTask<ArrayList<
             Log.e(BonusPackHelper.LOG_TAG, "NominatimPOIProvider: request failed.");
             return null;
         }
-        hash = new HashSet<>();
+
         try {
             JSONArray jPlaceIds = new JSONArray(jString);
             int n = jPlaceIds.length();
             ArrayList<Place> pois = new ArrayList<Place>(n);
-            Bitmap thumbnail = null;
+//            Bitmap thumbnail = null;
             for (int i=0; i<n; i++){
                 JSONObject jPlace = jPlaceIds.getJSONObject(i);
                 int id = jPlace.getInt("place_id");

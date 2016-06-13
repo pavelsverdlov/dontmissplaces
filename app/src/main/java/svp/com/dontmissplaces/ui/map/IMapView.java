@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Vector;
 
 import svp.com.dontmissplaces.db.Place;
+import svp.com.dontmissplaces.ui.model.IPOIView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 
 public interface IMapView extends IActivityView {
@@ -36,5 +37,5 @@ public interface IMapView extends IActivityView {
     Location getMyLocation();
 
     void setOnMapClickListener(OnMapClickListener listener);
-    void drawMarker(Place pois);
+    void drawMarker(IPOIView poi);
 }

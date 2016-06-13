@@ -28,6 +28,7 @@ import svp.com.dontmissplaces.model.Map.GoogleMapsPlaceService;
 import svp.com.dontmissplaces.model.Map.Point2D;
 import svp.com.dontmissplaces.presenters.MapsPresenter;
 import svp.com.dontmissplaces.ui.ActivityPermissions;
+import svp.com.dontmissplaces.ui.model.IPOIView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.ui.model.PolylineView;
 
@@ -230,7 +231,7 @@ public class GoogleMapView
     }
 
     @Override
-    public void drawMarker(Place pois) {
+    public void drawMarker(IPOIView pois) {
 
     }
 
