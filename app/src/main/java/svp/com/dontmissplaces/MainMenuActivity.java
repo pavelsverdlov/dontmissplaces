@@ -118,6 +118,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     private final ActivityPermissions permissions;
     private TrackRecordingToolbarView recordingToolbarView;
     private BottomSheetBehavior behavior;
+    private final int bottomPanelHeight = 224;
 
     @Bind(R.id.track_recording_fabtoolbar) com.bowyer.app.fabtransitionlayout.FooterLayout trackRecordingFooter;
     @Bind(R.id.track_recording_start_fab) FloatingActionButton fabTrackRecordingBtn;
@@ -158,7 +159,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
         CoordinatorLayout coordinatorLayout = (CoordinatorLayout)MainMenuActivity.this.findViewById(R.id.content_main_menu_coordinator_layout);
         behavior = BottomSheetBehavior.from(coordinatorLayout.findViewById(R.id.select_place_scrolling_act_content_view));
-        behavior.setPeekHeight(0);
+        behavior.setPeekHeight(bottomPanelHeight);
 
         coordinatorLayout.findViewById(R.id.select_place_scrolling_header_layout)
                 .setOnClickListener(this);
@@ -350,9 +351,10 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 //            }
 //        });
     }
+
     private void showPlaceInfoLayout() {
         fabSavePlaceLocationBtn.setVisibility(View.VISIBLE);
-        behavior.setPeekHeight(225);
+        behavior.setPeekHeight(bottomPanelHeight*2);
         behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
     private void hidePlaceInfoLayout() {
