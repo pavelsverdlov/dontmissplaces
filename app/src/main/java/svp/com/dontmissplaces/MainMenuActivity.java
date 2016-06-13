@@ -33,7 +33,6 @@ import svp.com.dontmissplaces.ui.TrackRecordingToolbarView;
 import svp.com.dontmissplaces.ui.map.IMapView;
 import svp.com.dontmissplaces.ui.map.OnMapClickListener;
 import svp.com.dontmissplaces.ui.model.IPOIView;
-import svp.com.dontmissplaces.ui.model.PlaceView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.ui.model.TrackView;
 
@@ -73,11 +72,11 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         }
 
         public void expandTrackRecordingToolbar() {
-            view.trackRecordingFooter.expandFab();
-            view.createTrackRecordingToolbarView();
+            //view.trackRecordingFooter.expandFab();
+//            view.createTrackRecordingToolbarView();
         }
         public void slideOutFabTrackRecordingToolbar() {
-            view.trackRecordingFooter.slideOutFab();
+//            view.trackRecordingFooter.slideOutFab();
             view.recordingToolbarView = null;
         }
 
@@ -85,14 +84,14 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
             view.runOnUiThread(new Runnable(){
                 @Override
                 public void run() {
-                    view.recordingToolbarView.updateTime(timeSpent);
+                //    view.recordingToolbarView.updateTime(timeSpent);
                 }});
         }
         public void updateTrackDispance(final String dis) {
             view.runOnUiThread(new Runnable(){
                 @Override
                 public void run() {
-                    view.recordingToolbarView.updateDispance(dis);
+                  //  view.recordingToolbarView.updateDispance(dis);
                 }});
         }
 
@@ -119,10 +118,11 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     private TrackRecordingToolbarView recordingToolbarView;
     private BottomSheetBehavior behavior;
     private final int bottomPanelHeight = 224;
+    private final int bottomPanelExtendHeight = 324;
 
-    @Bind(R.id.track_recording_fabtoolbar) com.bowyer.app.fabtransitionlayout.FooterLayout trackRecordingFooter;
-    @Bind(R.id.track_recording_start_fab) FloatingActionButton fabTrackRecordingBtn;
-    @Bind(R.id.track_recording_show_place_info) FloatingActionButton fabShowPlaceByCurrentLocationBtn;
+//    @Bind(R.id.track_recording_fabtoolbar) com.bowyer.app.fabtransitionlayout.FooterLayout trackRecordingFooter;
+//    @Bind(R.id.track_recording_start_fab) FloatingActionButton fabTrackRecordingBtn;
+
     @Bind(R.id.floating_action_layout) LinearLayout floatingActionlayout;
 
     @Bind(R.id.select_place_scrolling_act_save_fab) FloatingActionButton fabSavePlaceLocationBtn;
@@ -141,7 +141,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         Toolbar toolbar = (Toolbar) findViewById(R.id.mainmenu_toolbar);
         setSupportActionBar(toolbar);
 
-        trackRecordingFooter.setFab(fabTrackRecordingBtn);
+//        trackRecordingFooter.setFab(fabTrackRecordingBtn);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.content_main_map_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -152,8 +152,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         NavigationView navigationView = (NavigationView) findViewById(R.id.mainmenu_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        fabShowPlaceByCurrentLocationBtn.setOnClickListener(this);
-        fabTrackRecordingBtn.setOnClickListener(this);
+//        fabTrackRecordingBtn.setOnClickListener(this);
         fabSavePlaceLocationBtn.setOnClickListener(this);
         fabSavePlaceLocationBtn.setVisibility(View.GONE);
 
@@ -163,6 +162,9 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
         coordinatorLayout.findViewById(R.id.select_place_scrolling_header_layout)
                 .setOnClickListener(this);
+        //action_bottom_panel
+        findViewById(R.id.track_recording_start_btn).setOnClickListener(this);
+        findViewById(R.id.track_recording_show_place_info_btn).setOnClickListener(this);
     }
     /**
      * Base click handler of activity
@@ -170,10 +172,10 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.track_recording_show_place_info:
+            case R.id.track_recording_show_place_info_btn:
                 showPlaceByCurrentLocation(v);
                 break;
-            case R.id.track_recording_start_fab:
+            case R.id.track_recording_start_btn:
                 startNewTrackSession();
                 break;
             case R.id.select_place_scrolling_header_layout:
@@ -288,13 +290,12 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
             this.permissions.fineLocationPermissionDenied = true;
         }
     }
-    /**
-    * Start recording track btn
-    */
+    /** Start recording track btn */
     private void startNewTrackSession(){
         SessionView session = getPresenter().startNewTrackSession();
         mapView.startTrackRecording(session);
     }
+    //TODO: implement new functional for this actions
     private void createTrackRecordingToolbarView(){
         recordingToolbarView = new TrackRecordingToolbarView(this);
         recordingToolbarView.setClickListeners(
@@ -321,9 +322,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         );
     }
 
-    /**
-     * place show/save
-     */
+    /** place show/save */
     @Override
     public void onMapClick(Point2D point) {
         getPresenter().showPlaceInfoByLocation(point);
@@ -336,6 +335,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     public void onScroll(int zoom, BoundingBoxE6 box){
         getPresenter().searchPOI(zoom, box);
     }
+
     private void showPlaceByCurrentLocation(View v){
         getPresenter().showPlaceInfoByLocation(new Point2D(mapView.getMyLocation()));
 
@@ -354,7 +354,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
     private void showPlaceInfoLayout() {
         fabSavePlaceLocationBtn.setVisibility(View.VISIBLE);
-        behavior.setPeekHeight(bottomPanelHeight*2);
+        behavior.setPeekHeight(bottomPanelExtendHeight);
         behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
     private void hidePlaceInfoLayout() {
