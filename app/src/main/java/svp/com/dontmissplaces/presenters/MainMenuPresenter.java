@@ -103,7 +103,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         }
     }
 
-    /* POI */
+    /** POI **/
 
     public void showPlaceInfoByLocation(Point2D point) {
 //        PlaceProvider pp = new PlaceProvider(state.getActivity());

@@ -107,7 +107,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         public void showPlaceInfo(IPOIView place){
             view.showPlaceInfoLayout();
             ((TextView)view.findViewById(R.id.select_place_show_title)).setText(place.getName());
-            ((TextView)view.findViewById(R.id.select_place_show_latlng)).setText(place.getType());
+            ((TextView)view.findViewById(R.id.select_place_show_placetype)).setText(place.getType());
 
             view.mapView.drawMarker(place);
         }
@@ -118,7 +118,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     private TrackRecordingToolbarView recordingToolbarView;
     private BottomSheetBehavior behavior;
     private final int bottomPanelHeight = 224;
-    private final int bottomPanelExtendHeight = 324;
+    private final int bottomPanelExtendHeight = 424;
 
 //    @Bind(R.id.track_recording_fabtoolbar) com.bowyer.app.fabtransitionlayout.FooterLayout trackRecordingFooter;
 //    @Bind(R.id.track_recording_start_fab) FloatingActionButton fabTrackRecordingBtn;
@@ -158,7 +158,24 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
         CoordinatorLayout coordinatorLayout = (CoordinatorLayout)MainMenuActivity.this.findViewById(R.id.content_main_menu_coordinator_layout);
         behavior = BottomSheetBehavior.from(coordinatorLayout.findViewById(R.id.select_place_scrolling_act_content_view));
-        behavior.setPeekHeight(bottomPanelHeight);
+       // behavior.setPeekHeight(bottomPanelHeight);
+        behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(View bottomSheet, int newState) {
+                if(newState == BottomSheetBehavior.STATE_EXPANDED){
+//                    behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                   // behavior.setPeekHeight(bottomPanelExtendHeight);
+                }else{
+                    behavior.setPeekHeight(bottomPanelExtendHeight-50);
+//                    behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                }
+            }
+
+            @Override
+            public void onSlide(View bottomSheet, float slideOffset) {
+            }
+        });
+
 
         coordinatorLayout.findViewById(R.id.select_place_scrolling_header_layout)
                 .setOnClickListener(this);
@@ -171,6 +188,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
      * */
     @Override
     public void onClick(View v) {
+
         switch (v.getId()){
             case R.id.track_recording_show_place_info_btn:
                 showPlaceByCurrentLocation(v);
@@ -179,11 +197,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
                 startNewTrackSession();
                 break;
             case R.id.select_place_scrolling_header_layout:
-                if(behavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
-                    behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                }else{
-                    behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                }
+                invertStatePlaceInfoLayout(behavior.getState());
                 break;
             case R.id.select_place_scrolling_act_save_fab:
 
@@ -324,8 +338,11 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
     /** place show/save */
     @Override
-    public void onMapClick(Point2D point) {
+    public void onMapClick(Point2D point)
+    {
         getPresenter().showPlaceInfoByLocation(point);
+
+        invertStatePlaceInfoLayout(BottomSheetBehavior.STATE_EXPANDED);
     }
     @Override
     public void onZoom(int zoom, BoundingBoxE6 box){
@@ -338,7 +355,6 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
     private void showPlaceByCurrentLocation(View v){
         getPresenter().showPlaceInfoByLocation(new Point2D(mapView.getMyLocation()));
-
 //        behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
 //            @Override
 //            public void onStateChanged(@NonNull View bottomSheet, int newState) {
@@ -354,8 +370,15 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
     private void showPlaceInfoLayout() {
         fabSavePlaceLocationBtn.setVisibility(View.VISIBLE);
-        behavior.setPeekHeight(bottomPanelExtendHeight);
-        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        invertStatePlaceInfoLayout(BottomSheetBehavior.STATE_COLLAPSED);
+    }
+    private void invertStatePlaceInfoLayout(int state){
+        if(state == BottomSheetBehavior.STATE_EXPANDED){
+            behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            behavior.setPeekHeight(bottomPanelExtendHeight);
+        }else{
+            behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        }
     }
     private void hidePlaceInfoLayout() {
         floatingActionlayout.setVisibility(View.VISIBLE);
@@ -371,7 +394,6 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
 //        setFabGone(fabSavePlaceLocationBtn);
     }
-
 
     private void setFabGone(FloatingActionButton fab){
         CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();

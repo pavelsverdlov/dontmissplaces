@@ -8,6 +8,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 
 import com.google.android.gms.maps.model.*;
 import com.svp.infrastructure.mvpvs.view.IActivityView;
@@ -37,6 +38,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Vector;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.db.Place;
 import svp.com.dontmissplaces.model.Map.Point2D;
@@ -48,7 +51,7 @@ import svp.com.dontmissplaces.ui.model.IPOIView;
 import svp.com.dontmissplaces.ui.model.PolylineView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 
-public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, MapEventsReceiver, MapListener {
+public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, MapEventsReceiver, MapListener, android.view.View.OnClickListener {
     private final Activity activity;
     private final ActivityPermissions permissions;
     private final MapView mapView;
@@ -99,10 +102,14 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
     }
 
     private OnMapClickListener clickListener;
+    @Bind(R.id.map_zoom_plus_fab) FloatingActionButton fabZoomPlus;
+    @Bind(R.id.map_zoom_minus_fab) FloatingActionButton fabZoomMinus;
 
     public OsmdroidMapView(Activity activity, ActivityPermissions permissions) {
         this.activity = activity;
         this.permissions = permissions;
+
+        ButterKnife.bind(this,activity);
 
         mapView = (MapView) activity.findViewById(R.id.osmdroid_map);
         mapView.setMapListener(new DelayedMapListener(this, 100));
@@ -128,6 +135,21 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
         mapView.getOverlays().add(poiMarkers);
         mapView.getOverlays().add(myLocationOverlay);
         mapView.invalidate();
+
+        fabZoomPlus.setOnClickListener(this);
+        fabZoomMinus.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(android.view.View v) {
+        switch (v.getId()){
+            case R.id.map_zoom_plus_fab:
+                mapController.setZoom(mapView.getZoomLevel()+1);
+                break;
+            case R.id.map_zoom_minus_fab:
+                mapController.setZoom(mapView.getZoomLevel()-1);
+                break;
+        }
     }
 
     /**
@@ -288,9 +310,8 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
         mapView.setTileSource(tileSource);
         //set auto resize text titles on map
         mapView.setTilesScaledToDpi(true);
-        mapView.setBuiltInZoomControls(true);
+        mapView.setBuiltInZoomControls(false);
         mapView.setMultiTouchControls(true);
-        mapView.setBuiltInZoomControls(true);
 
         mapView.setMinZoomLevel(3);
         mapView.setMaxZoomLevel(18); // Latest OSM can go to 21!

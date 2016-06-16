@@ -31,21 +31,32 @@
         android:layout_gravity="top|end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        app:layout_anchorGravity="top|end"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="4dp"
         android:orientation="vertical" >
 
         <android.support.design.widget.FloatingActionButton
+            android:id="@+id/map_zoom_plus_fab"
+            android:layout_marginTop="?attr/actionBarSize"
             android:layout_width="wrap_content"
+            app:fabSize="mini"
             android:layout_height="wrap_content"
             app:backgroundTint="@color/colorAccent"
-            android:layout_margin="@dimen/fab_margin"
-             />
+            android:src="@drawable/ic_add_white_48dp"
+            />
         <android.support.design.widget.FloatingActionButton
+            android:id="@+id/map_zoom_minus_fab"
+            android:layout_marginTop="@dimen/fab_margin"
+            app:fabSize="mini"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:backgroundTint="@color/colorAccent"
-            android:layout_margin="@dimen/fab_margin"
-            android:src="@drawable/ic_near_me_white_48dp" />
+            android:src="@drawable/ic_remove_white_48dp" />
     </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/select_place_scrolling_act_content_view"
@@ -96,55 +107,52 @@
         </LinearLayout>
         <LinearLayout
             android:id="@+id/select_place_scrolling_header_layout"
-            android:layout_gravity="center_vertical|start"
-            android:gravity="center_vertical|start"
-            android:layout_height="@dimen/android_standard_list_item"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:background="@color/colorPrimary"
-            android:paddingStart="16dp">
+            >
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/select_place_show_title"
                 android:textSize="@dimen/android_standard_headline"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/select_place_show_latlng"
+                android:id="@+id/select_place_show_placetype"
                 android:textSize="@dimen/android_standard_subheading"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="android_standard_subheading"/>
+                android:layout_height="wrap_content"/>
         </LinearLayout>
         <LinearLayout
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:orientation="vertical"
-            android:layout_marginTop="8dp"
             >
-            <android.support.v7.widget.AppCompatTextView
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="32dp"
-                android:layout_gravity="center_vertical|start"
-                android:gravity="center_vertical|start"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/android_standard_toolbar_subtitle"
-                android:text="Address fdxzsf fdsf . dsf"
-                />
-            <android.support.v7.widget.AppCompatTextView
-                android:layout_gravity="center_vertical|start"
-                android:gravity="center_vertical|start"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="32dp"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/android_standard_toolbar_subtitle"
-                android:text="Address 3453 fdxzsf fdsf . dsf"
-                />
-            <View
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"/>
+                       <android.support.v7.widget.AppCompatTextView
+                           android:layout_marginStart="16dp"
+                           android:layout_marginEnd="32dp"
+                           android:layout_gravity="center_vertical|start"
+                           android:gravity="center_vertical|start"
+                           android:layout_width="match_parent"
+                           android:layout_height="@dimen/android_standard_toolbar_subtitle"
+                           android:text="Address fdxzsf fdsf . dsf"
+                           />
+                       <android.support.v7.widget.AppCompatTextView
+                           android:layout_gravity="center_vertical|start"
+                           android:gravity="center_vertical|start"
+                           android:layout_marginStart="16dp"
+                           android:layout_marginEnd="32dp"
+                           android:layout_width="match_parent"
+                           android:layout_height="@dimen/android_standard_toolbar_subtitle"
+                           android:text="Address 3453 fdxzsf fdsf . dsf"
+                           />
+
+                       <View
+                           android:layout_marginTop="8dp"
+                           android:layout_marginBottom="8dp"
+                           android:layout_width="match_parent"
+                           android:layout_height="1dp"
+                           android:background="@android:color/darker_gray"/>
         </LinearLayout>
 
     </LinearLayout>
