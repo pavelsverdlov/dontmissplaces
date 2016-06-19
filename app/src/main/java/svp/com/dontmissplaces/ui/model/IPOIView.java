@@ -6,4 +6,6 @@ public interface IPOIView {
     String getName();
     String getType();
     GeoPoint getGeoPoint();
+    String getAddress();
+    PlaceExtraTags getExtraTags();
 }

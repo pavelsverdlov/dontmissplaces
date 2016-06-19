@@ -5,9 +5,15 @@ package svp.com.dontmissplaces.ui.model;
  */
 public class PlaceAddressDetails {
     private final String name;
+    private final String full;
     public PlaceAddressDetails(String title) {
+        full = title;
         String[] array = title.split(",");
         name = array[0];
+    }
+
+    public String getFullAddress(){
+        return full;
     }
 
     public String getName() {

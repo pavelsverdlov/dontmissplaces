@@ -1,5 +1,9 @@
 package svp.com.dontmissplaces.model.nominatim;
 
+import java.util.Objects;
+
+import svp.com.dontmissplaces.db.Place;
+
 //http://wiki.openstreetmap.org/wiki/Nominatim/Special_Phrases/EN
 public class PhraseProvider {
     public enum PhraseType {
@@ -23,6 +27,14 @@ public class PhraseProvider {
         }
     }
 
+    public static PhraseType getType(String type){
+        for (String item : food){
+            if(Objects.equals(item, type)){
+                return PhraseType.Food;
+            }
+        }
+        return PhraseType.Undefined;
+    }
 
     public String[] getPhrases(int zoomLevel) {
         //3 -> 19
@@ -41,7 +53,7 @@ public class PhraseProvider {
         return new String[0];
     }
 
-    private final String[] food =new String[]{"bar", "pub", "cafe", "fast_food", "restaurant"};
-    private final String[] monuments =new String[]{};
+    private static final String[] food =new String[]{"bar", "pub", "cafe", "fast_food", "restaurant"};
+    private static final String[] monuments =new String[]{};
 
 }

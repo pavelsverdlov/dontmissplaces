@@ -164,6 +164,7 @@ public class App extends Application {
     }
     @Override
     public void onTerminate(){
+        this.deleteDatabase(Repository.dbname);
         super.onTerminate();
         repository.close();
     }
