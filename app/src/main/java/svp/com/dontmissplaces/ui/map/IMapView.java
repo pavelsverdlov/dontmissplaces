@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Vector;
 
 import svp.com.dontmissplaces.db.Place;
+import svp.com.dontmissplaces.model.Map.Point2D;
 import svp.com.dontmissplaces.ui.model.IPOIView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 
@@ -34,8 +35,10 @@ public interface IMapView extends IActivityView {
 
     void stopTrackRecording();
 
-    Location getMyLocation();
+    Point2D getMyLocation();
 
     void setOnMapClickListener(OnMapClickListener listener);
     void drawMarker(IPOIView poi);
+
+    void moveTo(Point2D point);
 }

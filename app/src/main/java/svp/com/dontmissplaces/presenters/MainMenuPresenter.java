@@ -25,6 +25,7 @@ import svp.com.dontmissplaces.model.BoundingBox;
 import svp.com.dontmissplaces.model.Map.Point2D;
 import svp.com.dontmissplaces.model.PlaceProvider;
 import svp.com.dontmissplaces.model.nominatim.PhraseProvider;
+import svp.com.dontmissplaces.model.nominatim.PlaceByPoint;
 import svp.com.dontmissplaces.model.nominatim.PointsOfInterestInsiteBoxTask;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.BaseBundleProvider;
@@ -105,38 +106,36 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
 
     /** POI **/
 
-    public void showPlaceInfoByLocation(Point2D point) {
+    public void showPlaceInfoByPoint(Point2D point) {
 //        PlaceProvider pp = new PlaceProvider(state.getActivity());
 //        Place p = pp.getPlace(point.getLatLng());
 //        place p = pp.getPlace(new LatLng(46.4708294,30.7043384));
 
-        if(!state.getPermissions().checkPermissionNetwork()){
-            return;
-        }
+        if(state.getPermissions().checkPermissionNetwork()){
+            new PlaceByPoint(){
+                @Override
+                public void processing(ArrayList<Place> poi) {
+                    if(poi.size() > 0){
+                        state.showPlaceInfo(new PlaceView(poi.get(0)));
+                        repository.poi.insertMany(poi);
+                    }
+                }
+            }.execute(point);
+        }else{
+            int maxD = 100;
+            GeoPoint p = point.getGeoPoint();
+            BoundingBoxE6 bb = new BoundingBoxE6(p.getLatitudeE6()+maxD,
+                    p.getLongitudeE6()+maxD,
+                    p.getLatitudeE6()-maxD,
+                    p.getLongitudeE6()-maxD);
 
-        int maxD = 100;
-        GeoPoint p = point.getGeoPoint();
-        BoundingBoxE6 bb = new BoundingBoxE6(p.getLatitudeE6()+maxD,
-                p.getLongitudeE6()+maxD,
-                p.getLatitudeE6()-maxD,
-                p.getLongitudeE6()-maxD);
+            Vector<Place> pois = repository.poi.get(bb);
 
-        Vector<Place> pois = repository.poi.get(bb);
-
-        if(pois.size() > 0) {
-            state.showPlaceInfo(new PlaceView(pois.get(0)));
+            if(pois.size() > 0) {
+                state.showPlaceInfo(new PlaceView(pois.get(0)));
+            }
         }
     }
-
-
-    /* end POI */
-
-    public MapViewTypes getMapViewType() {
-        mapViewType = userSettings.getMapProvider();
-        state.getActivity();
-        return mapViewType;
-    }
-
     public void searchPOI(int zoom, BoundingBoxE6 box) {
         PhraseProvider pp = new PhraseProvider();
 
@@ -156,6 +155,16 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
             }
         }.execute(datas);
     }
+
+    /* end POI */
+
+    public MapViewTypes getMapViewType() {
+        mapViewType = userSettings.getMapProvider();
+        state.getActivity();
+        return mapViewType;
+    }
+
+
 
 
     private class TrackTimer extends TimerTask{

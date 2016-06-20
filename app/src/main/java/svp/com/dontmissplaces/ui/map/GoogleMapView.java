@@ -258,7 +258,11 @@ public class GoogleMapView
     public void showSessionsTrack(Collection<SessionView> sessions) {
         getPresenter().showSessionsTrack(sessions);
     }
-    public Location getMyLocation(){
-        return mMap.getMyLocation();
+    public Point2D getMyLocation(){
+        return new Point2D(mMap.getMyLocation());
+    }
+
+    public void moveTo(Point2D myLocation){
+        //mMap.moveCamera();
     }
 }

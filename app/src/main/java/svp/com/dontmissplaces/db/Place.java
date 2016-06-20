@@ -67,7 +67,7 @@ public class Place extends dto {
         latitude = jPlace.getDouble("lat");
         longitude = jPlace.getDouble("lon");
         title = jPlace.getString("display_name");
-        extratags = jPlace.getString("extratags");
+        extratags = jPlace.optString("extratags");
         //"icon":"http:\/\/nominatim.openstreetmap.org\/images\/mapicons\/tourist_monument.p.20.png"}
 
         //creationTime = new Date().getTime();

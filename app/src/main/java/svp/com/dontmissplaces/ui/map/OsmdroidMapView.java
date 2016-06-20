@@ -209,13 +209,16 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
     }
 
     @Override
-    public Location getMyLocation() {
+    public Point2D getMyLocation() {
         GeoPoint point = myLocationOverlay.getMyLocation();
-        Location loc = new Location(LocationManager.GPS_PROVIDER);
-        loc.setLatitude(point.getLatitude());
-        loc.setLongitude(point.getLongitude());
-        loc.setAltitude(point.getAltitude());
-        return loc;
+//        Location loc = new Location(LocationManager.GPS_PROVIDER);
+//        loc.setLatitude(point.getLatitude());
+//        loc.setLongitude(point.getLongitude());
+//        loc.setAltitude(point.getAltitude());
+        return new Point2D(point);
+    }
+    public void moveTo(Point2D p){
+        mapController.animateTo(p.getGeoPoint());
     }
 
     @Override
@@ -229,10 +232,11 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
                 poiMarkers.remove(m);
             }
             Marker poiMarker = new Marker(mapView);
-            poiMarker.setTitle(poi.getType());
+            poiMarker.isFlat();
+//            poiMarker.setTitle(poi.getType());
             poiMarker.setSnippet(poi.getName());
             poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.map_marker));
-            poiMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+            //poiMarker.setAnchor(Marker.NOT_SET, Marker.NOT_SET);
             poiMarker.setPosition(poi.getGeoPoint());
             poiMarkers.add(poiMarker);
 
@@ -250,6 +254,7 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
 
     @Override
     public boolean longPressHelper(GeoPoint p) {
+        clickListener.onMapLongClick(new Point2D(p));
         return false;
     }
 
