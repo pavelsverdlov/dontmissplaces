@@ -36,7 +36,7 @@ import svp.com.dontmissplaces.ui.map.OnMapClickListener;
 import svp.com.dontmissplaces.ui.model.IPOIView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.ui.model.TrackView;
-
+//http://wptrafficanalyzer.in/blog/adding-google-places-autocomplete-api-as-custom-suggestions-in-android-search-dialog/
 public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         implements NavigationView.OnNavigationItemSelectedListener,
         ActivityCommutator.ICommutativeElement,
