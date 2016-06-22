@@ -1,13 +1,18 @@
 package svp.com.dontmissplaces;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.ClipboardManager;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -24,6 +29,7 @@ import org.osmdroid.util.BoundingBoxE6;
 
 import butterknife.ButterKnife;
 import svp.com.dontmissplaces.model.Map.Point2D;
+import svp.com.dontmissplaces.model.PlaceProvider;
 import svp.com.dontmissplaces.model.nominatim.PhraseProvider;
 import svp.com.dontmissplaces.presenters.MainMenuPresenter;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
@@ -41,7 +47,8 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         implements NavigationView.OnNavigationItemSelectedListener,
         ActivityCommutator.ICommutativeElement,
         View.OnClickListener,
-        OnMapClickListener {
+        OnMapClickListener,
+        LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = "MainMenuActivity";
 
@@ -196,6 +203,8 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
         coordinatorLayout.findViewById(R.id.select_place_content_header_layout)
                 .setOnClickListener(this);
+
+        handleIntent(getIntent());
     }
 
     /**
@@ -270,6 +279,13 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_menu, menu);
@@ -278,17 +294,14 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            getPresenter().openSettings();
-            return true;
+        switch (item.getItemId()){
+            case R.id.main_menu_action_settings:
+                getPresenter().openSettings();
+                return true;
+            case R.id.main_menu_action_search:
+                onSearchRequested();
+                break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -403,6 +416,48 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         } else {
             behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         }
+    }
+
+
+    /*
+    * Search
+    * */
+    private void handleIntent(Intent intent){
+        if(intent.getAction().equals(Intent.ACTION_SEARCH)){
+            doSearch(intent.getStringExtra(SearchManager.QUERY));
+        }else if(intent.getAction().equals(Intent.ACTION_VIEW)){
+            getPlace(intent.getStringExtra(SearchManager.EXTRA_DATA_KEY));
+        }
+    }
+    private void doSearch(String query){
+        Bundle data = new Bundle();
+        data.putString("query", query);
+        getSupportLoaderManager().restartLoader(0, data, this);
+    }
+
+    private void getPlace(String query){
+        Bundle data = new Bundle();
+        data.putString("query", query);
+        getSupportLoaderManager().restartLoader(1, data, this);
+    }
+    @Override
+    public Loader<Cursor> onCreateLoader(int arg0, Bundle query) {
+        CursorLoader cLoader = null;
+//        if(arg0==0)
+//            cLoader = new CursorLoader(getBaseContext(), PlaceProvider.SEARCH_URI, null, null, new String[]{ query.getString("query") }, null);
+//        else if(arg0==1)
+//            cLoader = new CursorLoader(getBaseContext(), PlaceProvider.DETAILS_URI, null, null, new String[]{ query.getString("query") }, null);
+        return cLoader;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> arg0, Cursor c) {
+       // showLocations(c);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> arg0) {
+        // TODO Auto-generated method stub
     }
 }
 
