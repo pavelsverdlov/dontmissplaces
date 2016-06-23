@@ -3,6 +3,7 @@ package svp.com.dontmissplaces;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -14,12 +15,14 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.svp.infrastructure.common.ViewExtensions;
@@ -289,6 +292,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_menu, menu);
+        initSearch(menu);
         return true;
     }
 
@@ -422,6 +426,36 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     /*
     * Search
     * */
+    private void initSearch(Menu menu){
+        SearchManager searchManager =(SearchManager) this.getSystemService(Context.SEARCH_SERVICE);
+        MenuItem item = menu.findItem(R.id.main_menu_action_search);
+        SearchView searchView =(SearchView) MenuItemCompat.getActionView(item);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(this.getComponentName()));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                doSearch(newText);
+                return true;
+            }
+        });
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                //TODO: show all action btns
+                return false;
+            }
+        });
+        searchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO: hide all action btns
+            }
+        });
+    }
     private void handleIntent(Intent intent){
         if(intent.getAction().equals(Intent.ACTION_SEARCH)){
             doSearch(intent.getStringExtra(SearchManager.QUERY));
@@ -443,10 +477,12 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     @Override
     public Loader<Cursor> onCreateLoader(int arg0, Bundle query) {
         CursorLoader cLoader = null;
-//        if(arg0==0)
-//            cLoader = new CursorLoader(getBaseContext(), PlaceProvider.SEARCH_URI, null, null, new String[]{ query.getString("query") }, null);
-//        else if(arg0==1)
-//            cLoader = new CursorLoader(getBaseContext(), PlaceProvider.DETAILS_URI, null, null, new String[]{ query.getString("query") }, null);
+        if(arg0==0)
+            cLoader = new CursorLoader(getBaseContext(),
+                    svp.com.dontmissplaces.model.Map.google.PlaceProvider.SEARCH_URI, null, null, new String[]{ query.getString("query") }, null);
+        else if(arg0==1)
+            cLoader = new CursorLoader(getBaseContext(),
+                    svp.com.dontmissplaces.model.Map.google.PlaceProvider.DETAILS_URI, null, null, new String[]{ query.getString("query") }, null);
         return cLoader;
     }
 

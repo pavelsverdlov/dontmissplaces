@@ -2,10 +2,11 @@
 <searchable xmlns:android="http://schemas.android.com/apk/res/android"
     android:label="searchable"
     android:hint="@string/search_hint"
+    android:searchSettingsDescription="search_settings"
 
     android:searchSuggestIntentAction="android.intent.action.VIEW"
     android:searchSuggestSelection=" ?"
     android:searchSuggestThreshold="2"
+    android:searchSuggestAuthority="svp.com.dontmissplaces.model.Map.google.PlaceProvider"
     >
-    <!--android:searchSuggestAuthority="in.wptrafficanalyzer.locationsearchdialogv2.PlaceProvider"-->
 </searchable>
