@@ -39,6 +39,9 @@ public class ActivityPermissions {
         isFineLocationGranted = checkPermissionFineLocation(activity,Manifest.permission.ACCESS_FINE_LOCATION);
         return isFineLocationGranted;
     }
+    public boolean checkPermissionCoarseLocation(){
+        return checkPermissionFineLocation(activity,Manifest.permission.ACCESS_COARSE_LOCATION);
+    }
     public void checkPermissionExternalStorage() {
         checkPermissionFineLocation(activity,Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
@@ -54,7 +57,8 @@ public class ActivityPermissions {
     }
 
     private static boolean checkPermissionFineLocation(FragmentActivity activity, String manifestPermission){
-        if (ContextCompat.checkSelfPermission(activity, manifestPermission) != PackageManager.PERMISSION_GRANTED) {
+        int state = ContextCompat.checkSelfPermission(activity, manifestPermission);
+        if (state != PackageManager.PERMISSION_GRANTED) {
             PermissionUtils.requestPermission(activity, LOCATION_PERMISSION_REQUEST_CODE,
                     manifestPermission, false);
             return false;

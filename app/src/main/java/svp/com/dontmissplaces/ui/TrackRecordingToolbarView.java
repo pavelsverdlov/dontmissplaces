@@ -15,6 +15,8 @@ import svp.com.dontmissplaces.R;
  * Created by Pasha on 4/10/2016.
  */
 public class TrackRecordingToolbarView {
+
+
     public abstract static class OnResumePauseClickListener{
         public abstract void onPauseClick();
         public abstract void onResumeClick();
@@ -24,11 +26,19 @@ public class TrackRecordingToolbarView {
     @Bind(R.id.track_recording_stop) ImageButton stop;
     @Bind(R.id.track_recording_timer_output) TextView timeoutput;
     @Bind(R.id.track_recording_distance_output) TextView disoutput;
+    @Bind(R.id.track_recording_nav_header_toolbar) View view;
 
     public boolean isPause;
 
     public TrackRecordingToolbarView(Activity activity) {
         ButterKnife.bind(this, activity);
+    }
+
+    public void show() {
+        view.setVisibility(View.VISIBLE);
+    }
+    public void hide() {
+        view.setVisibility(View.GONE);
     }
 
     public void updateTime(long millis){

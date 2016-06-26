@@ -10,6 +10,7 @@ import java.util.HashMap;
 import svp.com.dontmissplaces.MainMenuActivity;
 import svp.com.dontmissplaces.ui.activities.HistoryTracksActivity;
 import svp.com.dontmissplaces.ui.activities.SaveTrackActivity;
+import svp.com.dontmissplaces.ui.activities.SearchPlacesActivity;
 import svp.com.dontmissplaces.ui.activities.SettingsActivity;
 
 public final class ActivityCommutator {
@@ -18,7 +19,8 @@ public final class ActivityCommutator {
         MainMenu(1),
         HistoryTracks(2),
         SaveTrack(3),
-        Settings(4);
+        Settings(4),
+        SearchPlaces(5);
 
         private final int code;
 
@@ -56,6 +58,7 @@ public final class ActivityCommutator {
         activities.put(ActivityOperationResult.HistoryTracks, HistoryTracksActivity.class);
         activities.put(ActivityOperationResult.SaveTrack, SaveTrackActivity.class);
         activities.put(ActivityOperationResult.Settings, SettingsActivity.class);
+        activities.put(ActivityOperationResult.SearchPlaces, SearchPlacesActivity.class);
     }
 
     private final ICommutativeElement element;

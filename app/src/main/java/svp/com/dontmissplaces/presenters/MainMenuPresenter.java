@@ -2,7 +2,6 @@ package svp.com.dontmissplaces.presenters;
 
 import android.content.Intent;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.svp.infrastructure.mvpvs.bundle.IBundleProvider;
 
 import org.osmdroid.util.BoundingBoxE6;
@@ -21,9 +20,7 @@ import svp.com.dontmissplaces.db.Repository;
 import svp.com.dontmissplaces.db.SessionTrack;
 import svp.com.dontmissplaces.db.Track;
 import svp.com.dontmissplaces.db.Waypoint;
-import svp.com.dontmissplaces.model.BoundingBox;
 import svp.com.dontmissplaces.model.Map.Point2D;
-import svp.com.dontmissplaces.model.PlaceProvider;
 import svp.com.dontmissplaces.model.nominatim.PhraseProvider;
 import svp.com.dontmissplaces.model.nominatim.PlaceByPoint;
 import svp.com.dontmissplaces.model.nominatim.PointsOfInterestInsiteBoxTask;
@@ -49,13 +46,12 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         seachedBoxes = new HashSet<>();
     }
 
-    public SessionView startNewTrackSession() {
+    public void startNewTrackSession() {
         if(timer != null){
             timer.stop();
             timer = null;
         }
         timer = new TrackTimer(1000);
-        state.expandTrackRecordingToolbar();
 
         if(recordingTrack == null){
             Date date = new Date();
@@ -67,7 +63,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         recordingTrack = repository.track.getOrInsertTrack(recordingTrack);
         recordingSession = repository.track.insertSession(recordingTrack);
 
-        return new SessionView(recordingSession,new Vector<Waypoint>());
+        state.startTrackRecording(new SessionView(recordingSession,new Vector<Waypoint>()));
     }
     public void pauseTrackRecording() {
         timer.pause();
@@ -88,6 +84,9 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     }
     public void openSettings() {
         commutator.goTo(ActivityCommutator.ActivityOperationResult.Settings);
+    }
+    public void openSearch(String newText) {
+        commutator.goTo(ActivityCommutator.ActivityOperationResult.SearchPlaces);
     }
 
     public void incomingResultFrom(ActivityCommutator.ActivityOperationResult from, Intent data) {
@@ -163,9 +162,6 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         state.getActivity();
         return mapViewType;
     }
-
-
-
 
     private class TrackTimer extends TimerTask{
         private long elapsedMses;

@@ -70,7 +70,7 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
         }
 
         public boolean checkPermissionFineLocation() {
-            return true;
+            return view.permissions.checkPermissionFineLocation();
         }
 
         public void addPolyline(final PolylineView polyline) {//final Collection<LatLng> lls){
@@ -211,10 +211,6 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
     @Override
     public Point2D getMyLocation() {
         GeoPoint point = myLocationOverlay.getMyLocation();
-//        Location loc = new Location(LocationManager.GPS_PROVIDER);
-//        loc.setLatitude(point.getLatitude());
-//        loc.setLongitude(point.getLongitude());
-//        loc.setAltitude(point.getAltitude());
         return new Point2D(point);
     }
     public void moveTo(Point2D p){

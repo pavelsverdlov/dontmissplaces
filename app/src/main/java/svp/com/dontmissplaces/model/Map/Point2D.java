@@ -37,4 +37,8 @@ public final class Point2D {
     public GeoPoint getGeoPoint() {
         return new GeoPoint(latitude,longitude);
     }
+
+    public static Point2D empty() {
+        return new Point2D(0,0);
+    }
 }

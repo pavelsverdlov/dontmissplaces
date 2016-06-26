@@ -1,11 +1,13 @@
 package svp.com.dontmissplaces;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -32,7 +34,6 @@ import org.osmdroid.util.BoundingBoxE6;
 
 import butterknife.ButterKnife;
 import svp.com.dontmissplaces.model.Map.Point2D;
-import svp.com.dontmissplaces.model.PlaceProvider;
 import svp.com.dontmissplaces.model.nominatim.PhraseProvider;
 import svp.com.dontmissplaces.presenters.MainMenuPresenter;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
@@ -85,9 +86,9 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
             return view.permissions;
         }
 
-        public void expandTrackRecordingToolbar() {
-            //view.trackRecordingFooter.expandFab();
-//            view.createTrackRecordingToolbarView();
+        public void startTrackRecording(SessionView sessionView) {
+            view.mapView.startTrackRecording(sessionView);
+            view.createTrackRecordingToolbarView();
         }
 
         public void slideOutFabTrackRecordingToolbar() {
@@ -159,6 +160,8 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
                 }
             });
         }
+
+
     }
 
     private IMapView mapView;
@@ -227,7 +230,11 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
                 invertStatePlaceInfoLayout(behavior.getState());
                 break;
             case R.id.move_to_my_location:
-                mapView.moveTo(mapView.getMyLocation());
+                if (permissions.checkPermissionFineLocation() && permissions.checkPermissionCoarseLocation()){
+                    mapView.moveTo(mapView.getMyLocation());
+                }else{
+
+                }
                 break;
 
         }
@@ -303,7 +310,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
                 getPresenter().openSettings();
                 return true;
             case R.id.main_menu_action_search:
-                onSearchRequested();
+                //onSearchRequested();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -345,17 +352,13 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         }
     }
 
-    /**
-     * Start recording track btn
-     */
+    /** Start recording track btn  */
     private void startNewTrackSession() {
-        SessionView session = getPresenter().startNewTrackSession();
-        mapView.startTrackRecording(session);
+        getPresenter().startNewTrackSession();
     }
-
-    //TODO: implement new functional for this actions
     private void createTrackRecordingToolbarView() {
         recordingToolbarView = new TrackRecordingToolbarView(this);
+        recordingToolbarView.show();
         recordingToolbarView.setClickListeners(
                 new TrackRecordingToolbarView.OnResumePauseClickListener() {
                     @Override
@@ -438,30 +441,17 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
             }
             @Override
             public boolean onQueryTextChange(String newText) {
-                doSearch(newText);
+                getPresenter().openSearch(newText);
                 return true;
-            }
-        });
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                //TODO: show all action btns
-                return false;
-            }
-        });
-        searchView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO: hide all action btns
             }
         });
     }
     private void handleIntent(Intent intent){
-        if(intent.getAction().equals(Intent.ACTION_SEARCH)){
-            doSearch(intent.getStringExtra(SearchManager.QUERY));
-        }else if(intent.getAction().equals(Intent.ACTION_VIEW)){
-            getPlace(intent.getStringExtra(SearchManager.EXTRA_DATA_KEY));
-        }
+//        if(intent.getAction().equals(Intent.ACTION_SEARCH)){
+//            doSearch(intent.getStringExtra(SearchManager.QUERY));
+//        }else if(intent.getAction().equals(Intent.ACTION_VIEW)){
+//            getPlace(intent.getStringExtra(SearchManager.EXTRA_DATA_KEY));
+//        }
     }
     private void doSearch(String query){
         Bundle data = new Bundle();
@@ -494,6 +484,21 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     @Override
     public void onLoaderReset(Loader<Cursor> arg0) {
         // TODO Auto-generated method stub
+    }
+    @SuppressLint("NewApi")
+    @Override
+    public boolean onSearchRequested() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+//            MenuItem mi = mMenu.findItem(R.id.search);
+//            if(mi.isActionViewExpanded()){
+//                mi.collapseActionView();
+//            } else{
+//                mi.expandActionView();
+//            }
+        } else{
+            //onOptionsItemSelected(mMenu.findItem(R.id.search));
+        }
+        return super.onSearchRequested();
     }
 }
 

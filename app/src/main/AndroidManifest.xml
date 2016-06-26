@@ -17,12 +17,11 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!-- Protect the map component of the application using application signature -->
-    <!--<permission  android:name="in.wptrafficanalyzer.locationsearchdialogv2.permission.MAPS_RECEIVE" android:protectionLevel="signature" />-->
+    <!-- <permission  android:name="in.wptrafficanalyzer.locationsearchdialogv2.permission.MAPS_RECEIVE" android:protectionLevel="signature" /> -->
     <!-- Allows to receive map -->
-    <!--<uses-permission android:name="in.wptrafficanalyzer.locationsearchdialogv2.permission.MAPS_RECEIVE" />-->
+    <!-- <uses-permission android:name="in.wptrafficanalyzer.locationsearchdialogv2.permission.MAPS_RECEIVE" /> -->
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
 
     <!-- Allows to contact Google Serves -->
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
@@ -58,14 +57,17 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:launchMode="singleTop"
             android:name=".MainMenuActivity"
             android:label="@string/app_name"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
-
-            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable"/>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
             <!-- Points to searchable activity -->
-            <meta-data android:name="android.app.default_searchable" android:value=".MainActivity" />
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".MainActivity" />
 
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -87,7 +89,8 @@
         </service>
         <!-- <service android:name="svp.com.opengpstracker.util.BreadcrumbsService" /> -->
 
-         <provider
+         
+        <provider
             android:name=".model.Map.google.PlaceProvider"
             android:authorities="svp.com.dontmissplaces.model.Map.google.PlaceProvider"
             android:exported="false" />
@@ -127,6 +130,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="svp.com.dontmissplaces.MainMenuActivity" />
         </activity>
+        <activity android:name=".ui.activities.SearchPlacesActivity"></activity>
     </application>
 
 </manifest>
