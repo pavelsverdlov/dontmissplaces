@@ -35,6 +35,9 @@ public class SearchPlacesActivity extends AppCompatActivity
         SearchView searchView =(SearchView) MenuItemCompat.getActionView(item);
         //searchView.setSearchableInfo(searchManager.getSearchableInfo(this.getComponentName()));
         searchView.setQuery("bla", false);
+        searchView.setIconified(false);
+//        item.collapseActionView();
+//        item.expandActionView();
 
       //  searchManager.triggerSearch();
 

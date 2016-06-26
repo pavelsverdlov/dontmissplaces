@@ -7,8 +7,11 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
@@ -21,11 +24,13 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.svp.infrastructure.common.ViewExtensions;
 import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
@@ -51,8 +56,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         implements NavigationView.OnNavigationItemSelectedListener,
         ActivityCommutator.ICommutativeElement,
         View.OnClickListener,
-        OnMapClickListener,
-        LoaderManager.LoaderCallbacks<Cursor> {
+        OnMapClickListener {
 
     private static final String TAG = "MainMenuActivity";
 
@@ -209,8 +213,6 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
         coordinatorLayout.findViewById(R.id.select_place_content_header_layout)
                 .setOnClickListener(this);
-
-        handleIntent(getIntent());
     }
 
     /**
@@ -230,13 +232,13 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
                 invertStatePlaceInfoLayout(behavior.getState());
                 break;
             case R.id.move_to_my_location:
-                if (permissions.checkPermissionFineLocation() && permissions.checkPermissionCoarseLocation()){
-                    mapView.moveTo(mapView.getMyLocation());
-                }else{
-
+                Point2D p = mapView.getMyLocation();
+                if(p.isEmpty()){
+                    Toast.makeText(this, "GPS location disabled.",Toast.LENGTH_LONG).show();
+                }else {
+                    mapView.moveTo(p);
                 }
                 break;
-
         }
     }
 
@@ -286,13 +288,6 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
-        handleIntent(intent);
     }
 
     @Override
@@ -445,60 +440,6 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
                 return true;
             }
         });
-    }
-    private void handleIntent(Intent intent){
-//        if(intent.getAction().equals(Intent.ACTION_SEARCH)){
-//            doSearch(intent.getStringExtra(SearchManager.QUERY));
-//        }else if(intent.getAction().equals(Intent.ACTION_VIEW)){
-//            getPlace(intent.getStringExtra(SearchManager.EXTRA_DATA_KEY));
-//        }
-    }
-    private void doSearch(String query){
-        Bundle data = new Bundle();
-        data.putString("query", query);
-        getSupportLoaderManager().restartLoader(0, data, this);
-    }
-
-    private void getPlace(String query){
-        Bundle data = new Bundle();
-        data.putString("query", query);
-        getSupportLoaderManager().restartLoader(1, data, this);
-    }
-    @Override
-    public Loader<Cursor> onCreateLoader(int arg0, Bundle query) {
-        CursorLoader cLoader = null;
-        if(arg0==0)
-            cLoader = new CursorLoader(getBaseContext(),
-                    svp.com.dontmissplaces.model.Map.google.PlaceProvider.SEARCH_URI, null, null, new String[]{ query.getString("query") }, null);
-        else if(arg0==1)
-            cLoader = new CursorLoader(getBaseContext(),
-                    svp.com.dontmissplaces.model.Map.google.PlaceProvider.DETAILS_URI, null, null, new String[]{ query.getString("query") }, null);
-        return cLoader;
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> arg0, Cursor c) {
-       // showLocations(c);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> arg0) {
-        // TODO Auto-generated method stub
-    }
-    @SuppressLint("NewApi")
-    @Override
-    public boolean onSearchRequested() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-//            MenuItem mi = mMenu.findItem(R.id.search);
-//            if(mi.isActionViewExpanded()){
-//                mi.collapseActionView();
-//            } else{
-//                mi.expandActionView();
-//            }
-        } else{
-            //onOptionsItemSelected(mMenu.findItem(R.id.search));
-        }
-        return super.onSearchRequested();
     }
 }
 

@@ -56,8 +56,7 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
     private final ActivityPermissions permissions;
     private final MapView mapView;
     private final IMapController mapController;
-    private final MyLocationNewOverlay myLocationOverlay;
-    private final GpsMyLocationProvider gpsMyLocationProvider;
+    private final GpsLocationProvider gpsProvider;
     private final FolderOverlay poiMarkers;
     private final CompassOverlay compassOverlay;
 
@@ -102,14 +101,16 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
     }
 
     private OnMapClickListener clickListener;
-    @Bind(R.id.map_zoom_plus_fab) FloatingActionButton fabZoomPlus;
-    @Bind(R.id.map_zoom_minus_fab) FloatingActionButton fabZoomMinus;
+    @Bind(R.id.map_zoom_plus_fab)
+    FloatingActionButton fabZoomPlus;
+    @Bind(R.id.map_zoom_minus_fab)
+    FloatingActionButton fabZoomMinus;
 
     public OsmdroidMapView(Activity activity, ActivityPermissions permissions) {
         this.activity = activity;
         this.permissions = permissions;
 
-        ButterKnife.bind(this,activity);
+        ButterKnife.bind(this, activity);
 
         mapView = (MapView) activity.findViewById(R.id.osmdroid_map);
         mapView.setMapListener(new DelayedMapListener(this, 100));
@@ -124,16 +125,13 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
 
         MapEventsOverlay mapEventsOverlay = new MapEventsOverlay(activity, this);
 
-        gpsMyLocationProvider = new GpsMyLocationProvider(activity);
-        myLocationOverlay = new MyLocationNewOverlay(gpsMyLocationProvider, mapView);
-        setMyLocationUpdate(1000);
+        gpsProvider = new GpsLocationProvider();
 
         mapController.setZoom(12);
 
         mapView.getOverlays().add(mapEventsOverlay);
         mapView.getOverlays().add(compassOverlay);
         mapView.getOverlays().add(poiMarkers);
-        mapView.getOverlays().add(myLocationOverlay);
         mapView.invalidate();
 
         fabZoomPlus.setOnClickListener(this);
@@ -142,12 +140,12 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
 
     @Override
     public void onClick(android.view.View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.map_zoom_plus_fab:
-                mapController.setZoom(mapView.getZoomLevel()+1);
+                mapController.setZoom(mapView.getZoomLevel() + 1);
                 break;
             case R.id.map_zoom_minus_fab:
-                mapController.setZoom(mapView.getZoomLevel()-1);
+                mapController.setZoom(mapView.getZoomLevel() - 1);
                 break;
         }
     }
@@ -159,6 +157,7 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
     public void showSessionsTrack(Collection<SessionView> sessions) {
 
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         permissions.checkPermissionExternalStorage();
@@ -210,10 +209,11 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
 
     @Override
     public Point2D getMyLocation() {
-        GeoPoint point = myLocationOverlay.getMyLocation();
-        return new Point2D(point);
+        return gpsProvider.getMyLocation();
     }
-    public void moveTo(Point2D p){
+
+    @Override
+    public void moveTo(Point2D p) {
         mapController.animateTo(p.getGeoPoint());
     }
 
@@ -240,7 +240,9 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
         }
     }
 
-    /** Click handlers */
+    /**
+     * Click handlers
+     */
 
     @Override
     public boolean singleTapConfirmedHelper(GeoPoint p) {
@@ -254,34 +256,32 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
         return false;
     }
 
-    /**  Map listeners */
+    /**
+     * Map listeners
+     */
 
     @Override
     public boolean onScroll(ScrollEvent event) {
         int zoom = mapView.getZoomLevel();
         BoundingBoxE6 box = mapView.getBoundingBox();
-        clickListener.onScroll(zoom,box);
+        clickListener.onScroll(zoom, box);
         return true;
     }
+
     @Override
     public boolean onZoom(ZoomEvent event) {
         int zoom = event.getZoomLevel();
         BoundingBoxE6 box = mapView.getBoundingBox();
 
-        clickListener.onZoom(zoom,box);
+        clickListener.onZoom(zoom, box);
         return true;
     }
 
-    /** My location handlers */
+    /**
+     * My location handlers
+     */
 
-    private void setMyLocationUpdate(long milliSeconds) {
-        myLocationOverlay.enableMyLocation();
-        myLocationOverlay.setDrawAccuracyEnabled(true);
 
-        gpsMyLocationProvider.startLocationProvider(myLocationOverlay);
-        gpsMyLocationProvider.setLocationUpdateMinDistance(100);
-        gpsMyLocationProvider.setLocationUpdateMinTime(milliSeconds);
-    }
 
     private void setMapViewSettings() {
         //get value from settings
@@ -319,8 +319,8 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
         mapView.getTileProvider().createTileCache();
     }
 
-
     Marker startMarker;
+
     private void drawMarker(GeoPoint p) {
         if (startMarker != null) {
             startMarker.remove(mapView);
@@ -380,4 +380,44 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
         }
     }
     */
+
+    public class GpsLocationProvider {
+        private MyLocationNewOverlay myLocationOverlay;
+        private GpsMyLocationProvider gpsMyLocationProvider;
+        private boolean shouldRecreate;
+
+        public GpsLocationProvider() {
+            create();
+        }
+        public Point2D getMyLocation() {
+            if(shouldRecreate){
+                create();
+            }
+            GeoPoint point = myLocationOverlay.getMyLocation();
+            if (point == null) {//gps disable
+                shouldRecreate = true;
+                return Point2D.empty();
+            }
+            return new Point2D(point);
+        }
+
+        private void create() {
+            if(myLocationOverlay != null){
+                mapView.getOverlays().remove(myLocationOverlay);
+            }
+            gpsMyLocationProvider = new GpsMyLocationProvider(activity);
+            myLocationOverlay = new MyLocationNewOverlay(gpsMyLocationProvider, mapView);
+            setMyLocationUpdate(1000);
+            mapView.getOverlays().add(myLocationOverlay);
+            shouldRecreate = false;
+        }
+        private void setMyLocationUpdate(long milliSeconds) {
+            myLocationOverlay.enableMyLocation();
+            myLocationOverlay.setDrawAccuracyEnabled(true);
+
+            gpsMyLocationProvider.startLocationProvider(myLocationOverlay);
+            gpsMyLocationProvider.setLocationUpdateMinDistance(100);
+            gpsMyLocationProvider.setLocationUpdateMinTime(milliSeconds);
+        }
+    }
 }

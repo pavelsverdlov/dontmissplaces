@@ -2,6 +2,7 @@ package svp.com.dontmissplaces.ui;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 
@@ -59,8 +60,14 @@ public class ActivityPermissions {
     private static boolean checkPermissionFineLocation(FragmentActivity activity, String manifestPermission){
         int state = ContextCompat.checkSelfPermission(activity, manifestPermission);
         if (state != PackageManager.PERMISSION_GRANTED) {
-            PermissionUtils.requestPermission(activity, LOCATION_PERMISSION_REQUEST_CODE,
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
+                    Manifest.permission.READ_CONTACTS)) {
+
+            }else{
+                PermissionUtils.requestPermission(activity, LOCATION_PERMISSION_REQUEST_CODE,
                     manifestPermission, false);
+            }
             return false;
         }
         return true;

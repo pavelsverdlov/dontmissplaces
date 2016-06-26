@@ -7,6 +7,7 @@ import com.google.android.gms.maps.model.LatLng;
 import org.osmdroid.util.GeoPoint;
 
 public final class Point2D {
+    private boolean isEmpty = false;
     public final double latitude;
     public final double longitude;
 
@@ -38,7 +39,13 @@ public final class Point2D {
         return new GeoPoint(latitude,longitude);
     }
 
+    public boolean isEmpty(){
+        return isEmpty;
+    }
+
     public static Point2D empty() {
-        return new Point2D(0,0);
+        Point2D p = new Point2D(0, 0);
+        p.isEmpty = true;
+        return p;
     }
 }

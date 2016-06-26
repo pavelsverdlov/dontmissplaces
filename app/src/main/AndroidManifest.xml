@@ -61,16 +61,8 @@
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-            <!-- Points to searchable activity -->
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".MainActivity" />
 
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -130,7 +122,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="svp.com.dontmissplaces.MainMenuActivity" />
         </activity>
-        <activity android:name=".ui.activities.SearchPlacesActivity"></activity>
+        <activity android:name=".ui.activities.SearchPlacesActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+            <!-- Points to searchable activity -->
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".MainActivity" />
+        </activity>
     </application>
 
 </manifest>
