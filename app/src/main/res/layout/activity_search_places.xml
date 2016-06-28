@@ -9,4 +9,16 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="svp.com.dontmissplaces.ui.activities.SearchPlacesActivity">
 
+    <ListView
+        android:choiceMode="singleChoice"
+        android:listSelector="#666666"
+        android:clickable="true"
+        android:focusable="true"
+        android:id="@+id/search_places_list_view"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </ListView>
+
 </RelativeLayout>

@@ -325,13 +325,10 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         return true;
     }
 
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (RESULT_CANCELED == resultCode) {
-            return;
-        }
-        getPresenter().incomingResultFrom(
-                ActivityCommutator.ActivityOperationResult.get(resultCode), data);
+        getPresenter().onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -425,9 +422,9 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     * Search
     * */
     private void initSearch(Menu menu){
-        SearchManager searchManager =(SearchManager) this.getSystemService(Context.SEARCH_SERVICE);
-        MenuItem item = menu.findItem(R.id.main_menu_action_search);
-        SearchView searchView =(SearchView) MenuItemCompat.getActionView(item);
+        final SearchManager searchManager =(SearchManager) this.getSystemService(Context.SEARCH_SERVICE);
+        final MenuItem item = menu.findItem(R.id.main_menu_action_search);
+        final SearchView searchView =(SearchView) MenuItemCompat.getActionView(item);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(this.getComponentName()));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -437,6 +434,8 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
             @Override
             public boolean onQueryTextChange(String newText) {
                 getPresenter().openSearch(newText);
+//                item.collapseActionView();
+//                searchView.setIconified(true);
                 return true;
             }
         });

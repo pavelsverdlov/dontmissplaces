@@ -129,6 +129,20 @@ public class App extends Application {
                     }
                 });
 
+        register(SearchPlacesActivity.class,
+                new PresenterContainer.IPresenterCreator() {
+                    @Override
+                    public IPresenter create() {
+                        return new SearchPlacesPresenter();
+                    }
+                },
+                new ViewStateContainer.IViewStateCreator<SearchPlacesActivity>() {
+                    @Override
+                    public IViewState create(SearchPlacesActivity view) {
+                        return new SearchPlacesActivity.ViewState(view);
+                    }
+                });
+
         registerBundleProviders();
 
         super.onCreate();

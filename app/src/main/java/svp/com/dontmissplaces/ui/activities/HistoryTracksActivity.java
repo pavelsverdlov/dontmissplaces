@@ -43,10 +43,6 @@ public class HistoryTracksActivity extends AppCompatActivityView<HistoryTracksPr
             super(view);
         }
 
-        public BaseBundleProvider getBundle(){
-            return view.getBundle();
-        }
-
         @Override
         protected void restore() {
 

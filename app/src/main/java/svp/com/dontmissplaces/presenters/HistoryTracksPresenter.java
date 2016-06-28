@@ -1,9 +1,11 @@
 package svp.com.dontmissplaces.presenters;
 
+import android.content.Intent;
 import android.database.Cursor;
 
 import svp.com.dontmissplaces.db.Repository;
 import svp.com.dontmissplaces.db.Track;
+import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.BaseBundleProvider;
 import svp.com.dontmissplaces.ui.activities.HistoryTracksActivity;
 import svp.com.dontmissplaces.ui.model.TrackView;
@@ -17,9 +19,15 @@ public class HistoryTracksPresenter extends CommutativePresenter<HistoryTracksAc
     }
 
     @Override
-    public void onAttachedView(HistoryTracksActivity view) {
+    protected void incomingResultFrom(ActivityCommutator.ActivityOperationResult from, Intent data) {
+
+    }
+
+    @Override
+    public void onAttachedView(HistoryTracksActivity view, Intent intent) {
         super.onAttachedView(view);
-        CharSequence text = state.getBundle().getPreviousActionText();
+        BaseBundleProvider bundle = new BaseBundleProvider(intent);
+        CharSequence text = bundle.getPreviousActionText();
         if(text != null) {
             state.getToast(text);
         }

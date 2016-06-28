@@ -38,9 +38,6 @@ public class SaveTrackActivity extends AppCompatActivityView<SaveTrackPresenter>
             super(view);
         }
 
-        public BaseBundleProvider getBundle(){
-            return view.getBundle();
-        }
         public void setTrackName(CharSequence text){
             view.name.setText(text);
         }

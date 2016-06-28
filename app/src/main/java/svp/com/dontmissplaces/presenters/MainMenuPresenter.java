@@ -2,6 +2,7 @@ package svp.com.dontmissplaces.presenters;
 
 import android.content.Intent;
 
+import com.svp.infrastructure.mvpvs.bundle.BundleProvider;
 import com.svp.infrastructure.mvpvs.bundle.IBundleProvider;
 
 import org.osmdroid.util.BoundingBoxE6;
@@ -26,6 +27,7 @@ import svp.com.dontmissplaces.model.nominatim.PlaceByPoint;
 import svp.com.dontmissplaces.model.nominatim.PointsOfInterestInsiteBoxTask;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.BaseBundleProvider;
+import svp.com.dontmissplaces.ui.activities.SearchPlacesActivity;
 import svp.com.dontmissplaces.ui.map.MapViewTypes;
 import svp.com.dontmissplaces.ui.model.PlaceView;
 import svp.com.dontmissplaces.ui.model.SessionView;
@@ -85,11 +87,13 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     public void openSettings() {
         commutator.goTo(ActivityCommutator.ActivityOperationResult.Settings);
     }
-    public void openSearch(String newText) {
-        commutator.goTo(ActivityCommutator.ActivityOperationResult.SearchPlaces);
+    public void openSearch(String query) {
+        IBundleProvider bp = new SearchPlacesActivity.SearchPlacesBundleProvider().putQuery(query);
+        commutator.goTo(ActivityCommutator.ActivityOperationResult.SearchPlaces,bp);
     }
 
-    public void incomingResultFrom(ActivityCommutator.ActivityOperationResult from, Intent data) {
+    @Override
+    protected void incomingResultFrom(ActivityCommutator.ActivityOperationResult from, Intent data) {
         if(ActivityCommutator.ActivityOperationResult.HistoryTracks == from){
             BaseBundleProvider bp = new BaseBundleProvider(data);
             recordingTrack = bp.getTrack();
@@ -101,6 +105,10 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
 
             state.displayTrackOnMap(new TrackView(recordingTrack, sessions));
         }
+    }
+    @Override
+    protected void onAttachedView(MainMenuActivity view, Intent intent) {
+
     }
 
     /** POI **/

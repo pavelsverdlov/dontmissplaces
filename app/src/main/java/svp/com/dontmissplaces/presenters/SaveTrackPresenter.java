@@ -1,5 +1,7 @@
 package svp.com.dontmissplaces.presenters;
 
+import android.content.Intent;
+
 import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.db.Repository;
 import svp.com.dontmissplaces.db.Track;
@@ -19,9 +21,14 @@ public class SaveTrackPresenter extends CommutativePresenter<SaveTrackActivity,S
         this.repository = repository;
     }
 
-    protected void onAttachedView(SaveTrackActivity view){
+    @Override
+    protected void incomingResultFrom(ActivityCommutator.ActivityOperationResult from, Intent data) {
+
+    }
+    @Override
+    protected void onAttachedView(SaveTrackActivity view, Intent intent){
         super.onAttachedView(view);
-        BaseBundleProvider bundleProvider = state.getBundle();
+        BaseBundleProvider bundleProvider = new BaseBundleProvider(intent);
         track = bundleProvider.getTrack();
 
         state.setTrackName(track.name);

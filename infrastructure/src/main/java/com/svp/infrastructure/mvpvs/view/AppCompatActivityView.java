@@ -53,7 +53,7 @@ public class AppCompatActivityView<P extends Presenter> extends AppCompatActivit
         super.onStop();
     }
 
-    protected final <B extends IBundleProvider> B getBundle(){
-        return (B)bundleProvider;
-    }
+//    protected final <B extends IBundleProvider> B getBundle(){
+//        return (B)bundleProvider;
+//    }
 }
