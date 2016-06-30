@@ -6,29 +6,32 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import com.svp.infrastructure.common.ViewExtensions;
 import com.svp.infrastructure.common.view.BaseCursorAdapter;
 import com.svp.infrastructure.common.view.ICursorParcelable;
 import com.svp.infrastructure.mvpvs.bundle.BundleProvider;
 import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
 
+import java.util.Vector;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import svp.com.dontmissplaces.R;
-import svp.com.dontmissplaces.db.Track;
+import svp.com.dontmissplaces.db.Place;
 import svp.com.dontmissplaces.presenters.SearchPlacesPresenter;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.model.PlaceView;
-import svp.com.dontmissplaces.ui.model.TrackView;
 
 public class SearchPlacesActivity extends AppCompatActivityView<SearchPlacesPresenter>
         implements ActivityCommutator.ICommutativeElement {
@@ -38,40 +41,69 @@ public class SearchPlacesActivity extends AppCompatActivityView<SearchPlacesPres
         public SearchPlacesBundleProvider(Intent intent) {
             super(intent);
         }
+
         public SearchPlacesBundleProvider() {
             this(new Bundle());
         }
+
         public SearchPlacesBundleProvider(Bundle b) {
             super(b);
         }
 
-        public String getQuery(){
+        public String getQuery() {
             return bundle.getString(KEY);
         }
-        public SearchPlacesBundleProvider putQuery(String query){
+
+        public SearchPlacesBundleProvider putQuery(String query) {
             bundle.putString(KEY, query);
             return this;
         }
     }
 
-    public static class PlacesCursorAdapter extends BaseCursorAdapter<PlaceView> {
+    public static class PlaceSearchResult extends PlaceView implements ICursorParcelable {
+        ImageView imageView;
+
+        public PlaceSearchResult(Place p) {
+            super(p);
+        }
+
+        public PlaceSearchResult() {
+        }
+
+        @Override
+        public void parse(Cursor cursor) {
+
+        }
+
+        @Override
+        public void initView(View view) {
+            title = ViewExtensions.findViewById(view, R.id.history_tracks_item_text);
+
+            //imageView.setImageBitmap(mThumbnail);
+        }
+    }
+
+    public static class PlacesCursorAdapter extends BaseCursorAdapter<PlaceSearchResult> {
+
+        private LayoutInflater mInflater;
 
         public PlacesCursorAdapter(Context context, Cursor c) {
             super(context, c);
+            mInflater = LayoutInflater.from(context);
         }
 
         @Override
         public ICursorParcelable createParcelableObject() {
-            return null;
+            return new PlaceSearchResult();
         }
 
         @Override
         public View getView(LayoutInflater inflater, ViewGroup parent) {
-            return null;
+            return mInflater.inflate(R.layout.activity_history_tracks_item_template, parent, false);
         }
 
         @Override
-        public void onItemClick(View view, PlaceView item) {
+        public void onItemClick(View view, PlaceSearchResult item) {
 
         }
     }
@@ -91,7 +123,7 @@ public class SearchPlacesActivity extends AppCompatActivityView<SearchPlacesPres
             return view;
         }
 
-        public void setSearchQuery(final String query){
+        public void setSearchQuery(final String query) {
             view.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -101,7 +133,17 @@ public class SearchPlacesActivity extends AppCompatActivityView<SearchPlacesPres
             });
         }
 
-        public void addPlaces(Cursor places){
+        public void addPlaces(final Vector<String> places) {
+            view.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(view, android.R.layout.simple_list_item_1, places);
+                    view.placesView.setAdapter(adapter);
+                }
+            });
+        }
+
+        public void addPlaces(Cursor places) {
             PlacesCursorAdapter cursorAdapter = new PlacesCursorAdapter(view, places);
 //            cursorAdapter.setOnItemClickListener(new HistoryCursorAdapter.OnItemClickListener() {
 //                @Override
@@ -117,7 +159,8 @@ public class SearchPlacesActivity extends AppCompatActivityView<SearchPlacesPres
     }
 
     private SearchView searchView;
-    @Bind(R.id.search_places_list_view)  ListView placesView;
+    @Bind(R.id.search_places_list_view)
+    ListView placesView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +170,7 @@ public class SearchPlacesActivity extends AppCompatActivityView<SearchPlacesPres
         ButterKnife.bind(this);
     }
 
-    public void onStart(){
+    public void onStart() {
         super.onStart();
     }
 
@@ -136,44 +179,46 @@ public class SearchPlacesActivity extends AppCompatActivityView<SearchPlacesPres
         getMenuInflater().inflate(R.menu.searchplace_menu, menu);
         initSearch(menu);
 
-        getPresenter().startSearch();
+        getPresenter().startSearch(null);
 
         return true;
     }
+
     @Override
     public void onBackPressed() {
 
     }
 
-    private void initSearch(Menu menu){
-        SearchManager searchManager =(SearchManager) this.getSystemService(Context.SEARCH_SERVICE);
+    private void initSearch(Menu menu) {
+        SearchManager searchManager = (SearchManager) this.getSystemService(Context.SEARCH_SERVICE);
         MenuItem item = menu.findItem(R.id.search_place_menu_action_search);
-        searchView =(SearchView) MenuItemCompat.getActionView(item);
+        searchView = (SearchView) MenuItemCompat.getActionView(item);
         //searchView.setSearchableInfo(searchManager.getSearchableInfo(this.getComponentName()));
 
 //        item.collapseActionView();
 //        item.expandActionView();
 
-      //  searchManager.triggerSearch();
+        //  searchManager.triggerSearch();
 
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                return false;
-//            }
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                // doSearch(newText);
-//                return true;
-//            }
-//        });
-//        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-//            @Override
-//            public boolean onClose() {
-//                //TODO: show all action btns
-//                return false;
-//            }
-//        });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                getPresenter().startSearch(newText);
+                return true;
+            }
+        });
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                //TODO: show all action btns
+                return false;
+            }
+        });
 //        searchView.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {

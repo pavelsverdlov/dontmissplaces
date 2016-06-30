@@ -82,10 +82,10 @@
         <!-- <service android:name="svp.com.opengpstracker.util.BreadcrumbsService" /> -->
 
          
-        <provider
-            android:name=".model.Map.google.PlaceProvider"
-            android:authorities="svp.com.dontmissplaces.model.Map.google.PlaceProvider"
-            android:exported="false" />
+        <!--<provider-->
+            <!--android:name=".model.Map.google.PlaceProvider"-->
+            <!--android:authorities="svp.com.dontmissplaces.model.Map.google.PlaceProvider"-->
+            <!--android:exported="false" />-->
 
         <activity
             android:name=".ui.activities.HistoryTracksActivity"

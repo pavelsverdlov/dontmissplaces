@@ -13,9 +13,10 @@ import org.osmdroid.util.GeoPoint;
 import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.db.Place;
 
-public class PlaceView implements ICursorParcelable, IPOIView {
+public class PlaceView implements IPOIView {
+    protected TextView title;
+
     protected Place place;
-    private TextView title;
     private PlaceAddressDetails addressDetails;
     private PlaceExtraTags extraTags;
 
@@ -41,15 +42,7 @@ public class PlaceView implements ICursorParcelable, IPOIView {
     public PlaceExtraTags getExtraTags(){ return extraTags; }
 
     public PlaceView() {}
-    @Override
-    public void parse(Cursor cursor) {
-        title.setText(Place.getTitle(cursor));
-    }
 
-    @Override
-    public void initView(View view) {
-        title = ViewExtensions.findViewById(view, R.id.history_tracks_item_text);
-    }
 
 
 }

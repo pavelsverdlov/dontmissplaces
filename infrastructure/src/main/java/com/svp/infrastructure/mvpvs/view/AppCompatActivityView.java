@@ -14,12 +14,11 @@ public class AppCompatActivityView<P extends Presenter> extends AppCompatActivit
    // public static final UUID id = UUID.randomUUID();
 
     private final PresenterContainer prContainer;
-    private final BundleContainer bundleContainer;
-    private IBundleProvider bundleProvider;
+   // private final BundleContainer bundleContainer;
 
     public AppCompatActivityView(){
         prContainer = new PresenterContainer();
-        bundleContainer = new BundleContainer();
+      //  bundleContainer = new BundleContainer();
     }
 
     protected final P getPresenter(){
@@ -33,7 +32,7 @@ public class AppCompatActivityView<P extends Presenter> extends AppCompatActivit
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
-        bundleProvider = bundleContainer.get(this.getClass(),BundleProvider.getBundle(savedInstanceState,this));
+        //bundleProvider = bundleContainer.get(this.getClass(),BundleProvider.getBundle(savedInstanceState,this));
         super.onCreate(savedInstanceState);
     }
 

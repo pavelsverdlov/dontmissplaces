@@ -26,7 +26,7 @@ public class PlaceDetailsJSONParser {
 
         } catch (JSONException e) {
             e.printStackTrace();
-        }catch(Exception e){
+        } catch(Exception e){
             e.printStackTrace();
         }
 

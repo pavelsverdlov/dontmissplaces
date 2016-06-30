@@ -4,6 +4,7 @@ import android.database.Cursor;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.osmdroid.bonuspack.location.POI;
 
 public class Place extends dto {
     public final long osmNodeId;
