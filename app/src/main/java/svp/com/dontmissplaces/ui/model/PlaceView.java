@@ -14,7 +14,6 @@ import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.db.Place;
 
 public class PlaceView implements IPOIView {
-    protected TextView title;
 
     protected Place place;
     private PlaceAddressDetails addressDetails;

@@ -4,7 +4,6 @@ import android.database.Cursor;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.osmdroid.bonuspack.location.POI;
 
 public class Place extends dto {
     public final long osmNodeId;
@@ -34,6 +33,7 @@ public class Place extends dto {
 
     public int placeType;
     public long creationTime;
+    public String iconUrl;
 
 
     public Place(long id) {
@@ -70,6 +70,8 @@ public class Place extends dto {
         title = jPlace.getString("display_name");
         extratags = jPlace.optString("extratags");
         //"icon":"http:\/\/nominatim.openstreetmap.org\/images\/mapicons\/tourist_monument.p.20.png"}
+
+        iconUrl = jPlace.optString("icon");
 
         //creationTime = new Date().getTime();
     }

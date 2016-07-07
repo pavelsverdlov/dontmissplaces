@@ -39,6 +39,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     private Track recordingTrack;
     private SessionTrack recordingSession;
     private MapViewTypes mapViewType;
+    private final Object lock;
 
     private final HashSet<BoundingBoxE6> seachedBoxes;
 
@@ -46,6 +47,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         this.repository = repository;
         mapViewType = MapViewTypes.Osmdroid;
         seachedBoxes = new HashSet<>();
+        lock = new Object();
     }
 
     public void startNewTrackSession() {
@@ -144,6 +146,9 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         }
     }
     public void searchPOI(int zoom, BoundingBoxE6 box) {
+        if(!state.getPermissions().checkPermissionNetwork()){
+            return;
+        }
         PhraseProvider pp = new PhraseProvider();
 
         ArrayList<PointsOfInterestInsiteBoxTask.InputData> datas = new ArrayList<>();
@@ -158,7 +163,9 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         new PointsOfInterestInsiteBoxTask(){
             @Override
             protected void processing(ArrayList<Place> poi, InputData data){
-                repository.poi.insertMany(poi);
+                synchronized (lock) {
+                    repository.poi.insertMany(poi);
+                }
             }
         }.execute(datas);
     }

@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.svp.infrastructure.common.ViewExtensions;
 import com.svp.infrastructure.common.view.BaseCursorAdapter;
@@ -41,6 +42,7 @@ public class SavedPlacesActivity extends AppCompatActivity {
         }
     }
     public static class SavePlaceView extends PlaceView implements ICursorParcelable {
+        private TextView title;
         @Override
         public void parse(Cursor cursor) {
             title.setText(Place.getTitle(cursor));

@@ -5,6 +5,8 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.support.v4.view.MenuItemCompat;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,16 +14,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.svp.infrastructure.common.ViewExtensions;
 import com.svp.infrastructure.common.view.BaseCursorAdapter;
 import com.svp.infrastructure.common.view.ICursorParcelable;
 import com.svp.infrastructure.mvpvs.bundle.BundleProvider;
 import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
+
+import org.osmdroid.bonuspack.location.POI;
+import org.osmdroid.bonuspack.utils.WebImageCache;
 
 import java.util.Vector;
 
@@ -60,30 +67,81 @@ public class SearchPlacesActivity extends AppCompatActivityView<SearchPlacesPres
         }
     }
 
-    public static class PlaceSearchResult extends PlaceView implements ICursorParcelable {
-        ImageView imageView;
+    public static class PlaceSearchResult extends PlaceView {
+        ImageButton image;
 
+        //public final String PLACE_KEY = "PLACE_KEY";
         public PlaceSearchResult(Place p) {
             super(p);
         }
 
-        public PlaceSearchResult() {
-        }
-
-        @Override
-        public void parse(Cursor cursor) {
-
-        }
-
-        @Override
         public void initView(View view) {
-            title = ViewExtensions.findViewById(view, R.id.history_tracks_item_text);
+            ViewExtensions.<TextView>findViewById(view, R.id.history_tracks_item_text)
+                    .setText(place.title);
 
-            //imageView.setImageBitmap(mThumbnail);
+            image = ViewExtensions.findViewById(view, R.id.history_tracks_item_image);
+
+            new ThumbnailTask().execute(image);
+        }
+
+        class ThumbnailTask extends AsyncTask<ImageView, Void, ImageView> {
+            Bitmap btm;
+
+            @Override
+            protected ImageView doInBackground(ImageView... params) {
+                WebImageCache mThumbnailCache = new WebImageCache(300);
+                btm = mThumbnailCache.get(place.iconUrl);
+//                image.setImageBitmap(btm);
+//                image.setVisibility(View.VISIBLE);
+                return params[0];
+            }
+
+            @Override
+            protected void onPostExecute(ImageView iv) {
+                if (btm != null) {
+                    iv.setImageBitmap(btm);
+                    iv.setVisibility(View.VISIBLE);
+                }
+            }
         }
     }
 
-    public static class PlacesCursorAdapter extends BaseCursorAdapter<PlaceSearchResult> {
+    public static class PlaceSearchAdapter extends BaseAdapter {
+        private final LayoutInflater layoutInflater;
+        private final Vector<PlaceSearchResult> places;
+
+        public PlaceSearchAdapter(LayoutInflater layoutInflater, Vector<PlaceSearchResult> places) {
+            this.layoutInflater = layoutInflater;
+            this.places = places;
+        }
+
+        @Override
+        public int getCount() {
+            return places.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return places.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return places.get(position).hashCode();
+        }
+
+        @Override
+        public View getView(int position, View view, ViewGroup parent) {
+            if (view == null) {
+                view = layoutInflater.inflate(R.layout.activity_history_tracks_item_template, parent, false);
+            }
+
+            places.get(position).initView(view);
+
+            return view;
+        }
+    }
+    /*public static class PlacesCursorAdapter extends BaseCursorAdapter<PlaceSearchResult> {
 
         private LayoutInflater mInflater;
 
@@ -106,7 +164,7 @@ public class SearchPlacesActivity extends AppCompatActivityView<SearchPlacesPres
         public void onItemClick(View view, PlaceSearchResult item) {
 
         }
-    }
+    }*/
 
     public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<SearchPlacesActivity> {
         public ViewState(SearchPlacesActivity view) {
@@ -133,18 +191,21 @@ public class SearchPlacesActivity extends AppCompatActivityView<SearchPlacesPres
             });
         }
 
-        public void addPlaces(final Vector<String> places) {
+        public void addPlaces(final Vector<PlaceSearchResult> places) {
             view.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(view, android.R.layout.simple_list_item_1, places);
+                    PlaceSearchAdapter adapter = new PlaceSearchAdapter(view.getLayoutInflater(), places);
                     view.placesView.setAdapter(adapter);
                 }
             });
         }
 
-        public void addPlaces(Cursor places) {
-            PlacesCursorAdapter cursorAdapter = new PlacesCursorAdapter(view, places);
+        public void addPlaces(final Cursor places) {
+            view.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    //PlacesCursorAdapter cursorAdapter = new PlacesCursorAdapter(view, places);
 //            cursorAdapter.setOnItemClickListener(new HistoryCursorAdapter.OnItemClickListener() {
 //                @Override
 //                public void onItemClick(View view, TrackView track) {
@@ -154,7 +215,9 @@ public class SearchPlacesActivity extends AppCompatActivityView<SearchPlacesPres
 ////                        .setAction("Action", null).show();
 //                }
 //            });
-            view.placesView.setAdapter(cursorAdapter);
+                    // view.placesView.setAdapter(cursorAdapter);
+                }
+            });
         }
     }
 
@@ -215,14 +278,12 @@ public class SearchPlacesActivity extends AppCompatActivityView<SearchPlacesPres
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                //TODO: show all action btns
                 return false;
             }
         });
 //        searchView.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                //TODO: hide all action btns
 //            }
 //        });
     }

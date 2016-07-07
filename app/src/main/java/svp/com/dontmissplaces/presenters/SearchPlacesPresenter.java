@@ -1,6 +1,7 @@
 package svp.com.dontmissplaces.presenters;
 
 import android.content.Intent;
+import android.database.MatrixCursor;
 
 import java.util.ArrayList;
 import java.util.Vector;
@@ -13,6 +14,10 @@ import svp.com.dontmissplaces.ui.activities.SearchPlacesActivity;
 public class SearchPlacesPresenter extends CommutativePresenter<SearchPlacesActivity,SearchPlacesActivity.ViewState> {
     SearchPlacesActivity.SearchPlacesBundleProvider bundle;
 
+    public SearchPlacesPresenter() {
+        this.lock = new Object();
+    }
+
     @Override
     protected void incomingResultFrom(ActivityCommutator.ActivityOperationResult from, Intent data) {
 
@@ -24,6 +29,7 @@ public class SearchPlacesPresenter extends CommutativePresenter<SearchPlacesActi
     }
 
     String processing = "";
+    private final Object lock;
 
     public void startSearch(String newText) {
         String query = newText == null ? bundle.getQuery() : newText;
@@ -33,9 +39,11 @@ public class SearchPlacesPresenter extends CommutativePresenter<SearchPlacesActi
             new SearchByText(){
                 @Override
                 protected void processing(ArrayList<Place> poi){
-                    Vector<String> pv = new Vector<>();
+                    //MatrixCursor cursor = new MatrixCursor(new String[] { SearchPlacesActivity.PlaceSearchResult.PLACE_KEY });
+                    Vector<SearchPlacesActivity.PlaceSearchResult> pv = new Vector<>();
                     for (Place p : poi){
-                        pv.add(p.title);
+//                        cursor.addRow(new Place[] { p });
+                        pv.add(new SearchPlacesActivity.PlaceSearchResult(p));
                     }
                     state.addPlaces(pv);
                 }
