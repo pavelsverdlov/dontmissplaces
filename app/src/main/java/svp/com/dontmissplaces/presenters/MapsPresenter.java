@@ -44,6 +44,10 @@ public class MapsPresenter extends Presenter<IMapView,IMapViewState> implements 
     }
 
     @Override
+    protected void onDetachedView(IMapView view){
+        //save state
+    }
+    @Override
     protected void onAttachedView(IMapView view){
         gpsService = new GPSServiceProvider(state.getActivity());
         if(state.checkPermissionFineLocation()) {

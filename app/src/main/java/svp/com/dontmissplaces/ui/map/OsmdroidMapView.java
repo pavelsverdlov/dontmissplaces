@@ -14,6 +14,7 @@ import com.google.android.gms.maps.model.*;
 import com.svp.infrastructure.mvpvs.view.IActivityView;
 import com.svp.infrastructure.mvpvs.view.View;
 
+import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.location.*;
 import org.osmdroid.events.DelayedMapListener;
@@ -62,6 +63,7 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
 
     public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<OsmdroidMapView> implements IMapViewState {
         private final PolylineView polyline;
+        IGeoPoint startPoint;
 
         public ViewState(OsmdroidMapView view) {
             super(view);
@@ -91,6 +93,13 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
                 addPolyline(polyline);
                 polyline.clear();
             }
+            if(startPoint != null) {
+                view.mapController.animateTo(startPoint);
+            }
+        }
+
+        public void saveState(){
+            startPoint = view.mapView.getMapCenter();
         }
 
         @Override
@@ -167,9 +176,6 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
     @Override
     public void onStart() {
         super.onStart();
-        GeoPoint startPoint = new GeoPoint(48.8583, 2.2944);
-        //setCenter
-        mapController.animateTo(startPoint);
     }
 
     @Override
