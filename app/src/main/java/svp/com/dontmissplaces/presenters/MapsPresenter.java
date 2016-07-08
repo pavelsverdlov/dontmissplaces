@@ -89,6 +89,7 @@ public class MapsPresenter extends Presenter<IMapView,IMapViewState> implements 
         state.startLocationListening();
     }
     public void gpsStop() {
+        state.saveState();
         gpsService.shutdown();
         Log.d(TAG,"GPS service shutdown");
         state.stopLocationListening();

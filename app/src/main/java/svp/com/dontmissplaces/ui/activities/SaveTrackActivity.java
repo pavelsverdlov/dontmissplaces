@@ -46,6 +46,11 @@ public class SaveTrackActivity extends AppCompatActivityView<SaveTrackPresenter>
         protected void restore() { }
 
         @Override
+        public void saveState() {
+
+        }
+
+        @Override
         public Activity getActivity() {
             return view;
         }

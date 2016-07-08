@@ -27,7 +27,7 @@ public abstract class Presenter<V extends IActivityView, VS extends IViewState>
         onAttachedView(view);
     }
     public final void detachView(V view) {
-        vsContainer.removeView(view);
+        //vsContainer.removeView(view);
         onDetachedView(view);
     }
 

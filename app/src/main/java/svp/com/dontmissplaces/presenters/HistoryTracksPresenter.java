@@ -25,7 +25,7 @@ public class HistoryTracksPresenter extends CommutativePresenter<HistoryTracksAc
 
     @Override
     public void onAttachedView(HistoryTracksActivity view, Intent intent) {
-        super.onAttachedView(view);
+//        super.onAttachedView(view);
         BaseBundleProvider bundle = new BaseBundleProvider(intent);
         CharSequence text = bundle.getPreviousActionText();
         if(text != null) {

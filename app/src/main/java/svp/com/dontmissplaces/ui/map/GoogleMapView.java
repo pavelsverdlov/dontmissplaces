@@ -87,6 +87,11 @@ public class GoogleMapView
         }
 
         @Override
+        public void saveState() {
+
+        }
+
+        @Override
         public Activity getActivity() {
             return view.activity;
         }

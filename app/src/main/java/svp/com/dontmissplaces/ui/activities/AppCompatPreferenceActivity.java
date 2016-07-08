@@ -29,6 +29,12 @@ public abstract class AppCompatPreferenceActivity<P extends Presenter> extends P
 
         @Override
         protected void restore() {}
+
+        @Override
+        public void saveState() {
+
+        }
+
         @Override
         public Activity getActivity() {
             return view;

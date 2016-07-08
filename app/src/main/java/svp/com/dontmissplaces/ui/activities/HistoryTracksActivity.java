@@ -49,6 +49,11 @@ public class HistoryTracksActivity extends AppCompatActivityView<HistoryTracksPr
         }
 
         @Override
+        public void saveState() {
+
+        }
+
+        @Override
         public Activity getActivity() {
             return view;
         }

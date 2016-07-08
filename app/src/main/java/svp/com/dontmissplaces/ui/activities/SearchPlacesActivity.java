@@ -177,6 +177,11 @@ public class SearchPlacesActivity extends AppCompatActivityView<SearchPlacesPres
         }
 
         @Override
+        public void saveState() {
+
+        }
+
+        @Override
         public Activity getActivity() {
             return view;
         }

@@ -63,11 +63,13 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
 
     public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<OsmdroidMapView> implements IMapViewState {
         private final PolylineView polyline;
-        IGeoPoint startPoint;
+        private IGeoPoint startPoint;
+        private int zoomLevel;
 
         public ViewState(OsmdroidMapView view) {
             super(view);
             polyline = new PolylineView(Color.BLUE, 5);
+            zoomLevel = -1;
         }
 
         public boolean checkPermissionFineLocation() {
@@ -93,13 +95,23 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
                 addPolyline(polyline);
                 polyline.clear();
             }
+            if(startPoint == null){
+                Point2D point = view.gpsProvider.getMyLocation();
+                if(!point.isEmpty()){
+                    startPoint = point.getGeoPoint();
+                }
+            }
             if(startPoint != null) {
                 view.mapController.animateTo(startPoint);
+            }
+            if(zoomLevel != -1){
+                view.mapController.setZoom(zoomLevel);
             }
         }
 
         public void saveState(){
             startPoint = view.mapView.getMapCenter();
+            zoomLevel = view.mapView.getZoomLevel();
         }
 
         @Override
@@ -180,7 +192,7 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
 
     @Override
     public void onStop() {
-
+        super.onStop();
     }
 
     @Override
