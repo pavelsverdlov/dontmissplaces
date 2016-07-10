@@ -61,7 +61,6 @@
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -82,10 +81,10 @@
         <!-- <service android:name="svp.com.opengpstracker.util.BreadcrumbsService" /> -->
 
          
-        <!--<provider-->
-            <!--android:name=".model.Map.google.PlaceProvider"-->
-            <!--android:authorities="svp.com.dontmissplaces.model.Map.google.PlaceProvider"-->
-            <!--android:exported="false" />-->
+        <!-- <provider -->
+        <!-- android:name=".model.Map.google.PlaceProvider" -->
+        <!-- android:authorities="svp.com.dontmissplaces.model.Map.google.PlaceProvider" -->
+        <!-- android:exported="false" /> -->
 
         <activity
             android:name=".ui.activities.HistoryTracksActivity"
@@ -126,6 +125,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
@@ -134,6 +134,7 @@
                 android:name="android.app.default_searchable"
                 android:value=".MainActivity" />
         </activity>
+        <activity android:name=".ui.activities.CrashActivity"></activity>
     </application>
 
 </manifest>

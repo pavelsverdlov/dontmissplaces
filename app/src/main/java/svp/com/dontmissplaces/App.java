@@ -24,7 +24,7 @@ public class App extends Application {
     private final Repository repository;
 
     public App(){
-        Thread.setDefaultUncaughtExceptionHandler(new svp.com.dontmissplaces.ui.UncaughtExceptionHandler());
+        Thread.setDefaultUncaughtExceptionHandler(new svp.com.dontmissplaces.ui.UncaughtExceptionHandler(this.getBaseContext()));
         repository = new Repository(this);
     }
 
@@ -133,7 +133,7 @@ public class App extends Application {
                 new PresenterContainer.IPresenterCreator() {
                     @Override
                     public IPresenter create() {
-                        return new SearchPlacesPresenter();
+                        return new SearchPlacesPresenter(repository);
                     }
                 },
                 new ViewStateContainer.IViewStateCreator<SearchPlacesActivity>() {

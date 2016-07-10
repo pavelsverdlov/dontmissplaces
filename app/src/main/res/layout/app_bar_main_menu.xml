@@ -64,7 +64,7 @@
         android:gravity="bottom|center_horizontal"
         android:orientation="vertical"
         app:layout_behavior="svp.com.dontmissplaces.ui.behaviors.OverMapBottomSheetBehavior">
-
+        <!-- action btns toolbar-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/android_standard_toolbar_subtitle"
@@ -109,7 +109,7 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_gps_fixed_white_48dp" />
         </LinearLayout>
-
+        <!-- place info header-->
         <LinearLayout
             android:id="@+id/select_place_header_layout"
             android:layout_width="match_parent"
@@ -125,12 +125,81 @@
                 android:textSize="@dimen/android_standard_headline" />
 
             <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/select_place_show_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|start"
+                android:gravity="center_vertical|start"
+                android:textIsSelectable="true"
+                />
+
+            <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/select_place_show_placetype"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/android_standard_subheading" />
         </LinearLayout>
+        <!-- action place btn -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/android_standard_toolbar_subtitle"
+            android:layout_gravity="fill|fill_horizontal"
+            android:background="@color/colorAccent"
+            android:gravity="fill|fill_horizontal"
+            android:orientation="horizontal">
 
+            <ImageButton
+
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_beenhere_white_48dp" />
+
+            <ImageButton
+
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_rate_review_white_48dp" />
+
+            <ImageButton
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_person_pin_white_48dp" />
+
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/android_standard_toolbar_subtitle"
+        android:layout_gravity="fill|fill_horizontal"
+        android:background="@color/colorItemSelected"
+        android:gravity="fill|fill_horizontal"
+        android:orientation="horizontal">
+
+            <ImageButton
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:scaleType="fitCenter"
+                android:src="@mipmap/ic_place_white_48dp" />
+            <TextView
+                android:id="@+id/select_place_content_location"
+                android:layout_weight="1"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|start"
+                />
+        </LinearLayout>
+        <!-- place info content-->
         <LinearLayout
             android:id="@+id/select_place_content_header_layout"
             android:layout_width="match_parent"
@@ -140,7 +209,6 @@
 
             <android.support.v7.widget.AppCompatTextView
                 android:layout_margin="16dp"
-                android:id="@+id/select_place_show_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|start"

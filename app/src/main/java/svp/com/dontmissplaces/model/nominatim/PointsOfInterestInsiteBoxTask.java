@@ -22,8 +22,13 @@ public abstract class PointsOfInterestInsiteBoxTask extends AsyncTask<ArrayList<
     //mServiceId
 
     private HashSet<Integer> hash;
+    private final Object lock;
 
-    protected abstract void processing(ArrayList<Place> poi, InputData data) ;
+    public PointsOfInterestInsiteBoxTask() {
+        lock = new Object();
+    }
+
+    protected abstract void processing(ArrayList<Place> poi, InputData data);
 
     //countrycodes=<countrycode>[,<countrycode>][,<countrycode>]... &addressdetails=1
     //http://nominatim.openstreetmap.org/search?format=jsonv2&q=[restaurant]&limit=200&bounded=1&viewbox=2.340642,48.871567,2.3445039999999997,48.867954&extratags=1&namedetails=1
@@ -32,9 +37,10 @@ public abstract class PointsOfInterestInsiteBoxTask extends AsyncTask<ArrayList<
     protected Void doInBackground(ArrayList<InputData>... params) {
         ArrayList<InputData> datas = params[0];
         hash = new HashSet<>();
-        for (InputData data : datas) {
-            BoundingBoxE6 box = data.box;
-            StringBuffer urlString = new StringBuffer(NominatimPOIProvider.NOMINATIM_POI_SERVICE);
+        synchronized (lock) {
+            for (InputData data : datas) {
+                BoundingBoxE6 box = data.box;
+                StringBuffer urlString = new StringBuffer(NominatimPOIProvider.NOMINATIM_POI_SERVICE);
 //            try {
                 urlString.append("search?")
                         .append("format=jsonv2").append("&q=[").append(URLEncoder.encode(data.keyword)).append("]")
@@ -42,31 +48,32 @@ public abstract class PointsOfInterestInsiteBoxTask extends AsyncTask<ArrayList<
                         .append("&extratags=1")
                         .append("&bounded=1")
                         .append("&viewbox=")
-                        .append(box.getLonWestE6()*1E-6).append(",")
-                        .append(box.getLatNorthE6()*1E-6).append(",")
-                        .append(box.getLonEastE6()*1E-6).append(",")
-                        .append(box.getLatSouthE6()*1E-6);
+                        .append(box.getLonWestE6() * 1E-6).append(",")
+                        .append(box.getLatNorthE6() * 1E-6).append(",")
+                        .append(box.getLonEastE6() * 1E-6).append(",")
+                        .append(box.getLatSouthE6() * 1E-6);
 //            } catch (UnsupportedEncodingException e) {
 //                Log.e(NAME, "", e);
 //                continue;
 //            }
 
-            ArrayList<Place> poi = getThem(urlString.toString());
+                ArrayList<Place> poi = getThem(urlString.toString());
 
-            int size = poi.size();
-            Log.d(NAME,"poi count" + size);
+                int size = poi.size();
+                Log.d(NAME, "poi count" + size);
 
-            if(size == data.maxResults){
-                Log.d(NAME,"Maybe need more request");
+                if (size == data.maxResults) {
+                    Log.d(NAME, "Maybe need more request");
+                }
+
+                processing(poi, data);
             }
-
-            processing(poi,data);
         }
         return null;
     }
 
-    public ArrayList<Place> getThem(String url){
-        Log.d(BonusPackHelper.LOG_TAG, "NominatimPOIProvider:get:"+url);
+    public ArrayList<Place> getThem(String url) {
+        Log.d(BonusPackHelper.LOG_TAG, "NominatimPOIProvider:get:" + url);
         String jString = BonusPackHelper.requestStringFromUrl(url, NominatimPOIProvider.NOMINATIM_POI_SERVICE);
         if (jString == null) {
             Log.e(BonusPackHelper.LOG_TAG, "NominatimPOIProvider: request failed.");
@@ -78,10 +85,10 @@ public abstract class PointsOfInterestInsiteBoxTask extends AsyncTask<ArrayList<
             int n = jPlaceIds.length();
             ArrayList<Place> pois = new ArrayList<Place>(n);
 //            Bitmap thumbnail = null;
-            for (int i=0; i<n; i++){
+            for (int i = 0; i < n; i++) {
                 JSONObject jPlace = jPlaceIds.getJSONObject(i);
                 int id = jPlace.getInt("place_id");
-                if(hash.add(id)){
+                if (hash.add(id)) {
                     pois.add(new Place(jPlace));
                 }
             }

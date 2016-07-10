@@ -382,4 +382,12 @@ Enter number of feet for acres/hour or meters for use in hectares/hour.\n </stri
 
     <string name="pref_title_vibrate">Vibrate</string>
 
+    <!--Settings cache data-->
+    <string name="pref_header_cache_data">Cache data</string>
+
+    <!--Settings log-->
+    <string name="pref_header_log">Log</string>
+    <string name="pref_settings_log_clear_key">settings_log_clear_key</string>
+    <string name="pref_settings_log_text">settings_log_text</string>
+
 </resources>

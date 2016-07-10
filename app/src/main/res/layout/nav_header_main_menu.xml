@@ -14,7 +14,7 @@
 
     <!--timer -->
     <RelativeLayout
-        android:id="@+id/track_recording_nav_header_toolbar"
+        android:id="@+id/track_recording_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone">

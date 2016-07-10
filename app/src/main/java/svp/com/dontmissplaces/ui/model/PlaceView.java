@@ -12,6 +12,7 @@ import org.osmdroid.util.GeoPoint;
 
 import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.db.Place;
+import svp.com.dontmissplaces.model.Map.Point2D;
 
 public class PlaceView implements IPOIView {
 
@@ -36,6 +37,14 @@ public class PlaceView implements IPOIView {
     }
     public String getAddress(){
         return addressDetails.getFullAddress();
+    }
+    public String getLocationStringFormat(){
+        return place.latitude + " " + place.longitude;
+    }
+
+    @Override
+    public Point2D getPoint() {
+        return new Point2D(place.longitude, place.longitude);
     }
 
     public PlaceExtraTags getExtraTags(){ return extraTags; }

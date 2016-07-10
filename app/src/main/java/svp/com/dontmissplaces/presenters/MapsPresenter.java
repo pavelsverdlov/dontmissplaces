@@ -45,7 +45,7 @@ public class MapsPresenter extends Presenter<IMapView,IMapViewState> implements 
 
     @Override
     protected void onDetachedView(IMapView view){
-        //save state
+        state.saveState();
     }
     @Override
     protected void onAttachedView(IMapView view){
@@ -89,7 +89,6 @@ public class MapsPresenter extends Presenter<IMapView,IMapViewState> implements 
         state.startLocationListening();
     }
     public void gpsStop() {
-        state.saveState();
         gpsService.shutdown();
         Log.d(TAG,"GPS service shutdown");
         state.stopLocationListening();

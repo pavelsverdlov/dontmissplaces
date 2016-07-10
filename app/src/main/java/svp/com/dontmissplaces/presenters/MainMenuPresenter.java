@@ -33,13 +33,14 @@ import svp.com.dontmissplaces.ui.model.PlaceView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.ui.model.TrackView;
 
+import static svp.com.dontmissplaces.ui.ActivityCommutator.ActivityOperationResult.HistoryTracks;
+
 public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,MainMenuActivity.ViewState> {
     private TrackTimer timer;
     private final Repository repository;
     private Track recordingTrack;
     private SessionTrack recordingSession;
     private MapViewTypes mapViewType;
-    private final Object lock;
 
     private final HashSet<BoundingBoxE6> seachedBoxes;
 
@@ -47,7 +48,6 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         this.repository = repository;
         mapViewType = MapViewTypes.Osmdroid;
         seachedBoxes = new HashSet<>();
-        lock = new Object();
     }
 
     public void startNewTrackSession() {
@@ -84,7 +84,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     }
 
     public void openHistoryTracks() {
-        commutator.goTo(ActivityCommutator.ActivityOperationResult.HistoryTracks);
+        commutator.goTo(HistoryTracks);
     }
     public void openSettings() {
         commutator.goTo(ActivityCommutator.ActivityOperationResult.Settings);
@@ -96,17 +96,27 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
 
     @Override
     protected void incomingResultFrom(ActivityCommutator.ActivityOperationResult from, Intent data) {
-        if(ActivityCommutator.ActivityOperationResult.HistoryTracks == from){
-            BaseBundleProvider bp = new BaseBundleProvider(data);
-            recordingTrack = bp.getTrack();
+        switch (from){
+            case HistoryTracks:
+                BaseBundleProvider bp = new BaseBundleProvider(data);
+                recordingTrack = bp.getTrack();
 
-            Vector<SessionView> sessions = new Vector<>();
-            for (SessionTrack session : repository.track.getSessions(recordingTrack)){
-                sessions.add(new SessionView(session,repository.track.getWaypoints(session)));
-            }
+                Vector<SessionView> sessions = new Vector<>();
+                for (SessionTrack session : repository.track.getSessions(recordingTrack)){
+                    sessions.add(new SessionView(session,repository.track.getWaypoints(session)));
+                }
 
-            state.displayTrackOnMap(new TrackView(recordingTrack, sessions));
+                state.displayTrackOnMap(new TrackView(recordingTrack, sessions));
+                break;
+            case SearchPlaces:
+                SearchPlacesActivity.SearchPlacesBundleProvider sbp = new SearchPlacesActivity.SearchPlacesBundleProvider(data);
+                long id = sbp.getFoundPlaceId();
+                Place place = repository.poi.getPlaceById(id);
+                state.showPlaceInfo(new PlaceView(place), Point2D.empty());
+                //state.showMarker();
+                break;
         }
+
     }
     @Override
     protected void onAttachedView(MainMenuActivity view, Intent intent) {
@@ -115,7 +125,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
 
     /** POI **/
 
-    public void showPlaceInfoByPoint(Point2D point) {
+    public void showPlaceInfoByPoint(final Point2D point) {
 //        PlaceProvider pp = new PlaceProvider(state.getActivity());
 //        Place p = pp.getPlace(point.getLatLng());
 //        place p = pp.getPlace(new LatLng(46.4708294,30.7043384));
@@ -125,7 +135,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
                 @Override
                 public void processing(ArrayList<Place> poi) {
                     if(poi.size() > 0){
-                        state.showPlaceInfo(new PlaceView(poi.get(0)));
+                        state.showPlaceInfo(new PlaceView(poi.get(0)), point);
                         repository.poi.insertMany(poi);
                     }
                 }
@@ -141,7 +151,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
             Vector<Place> pois = repository.poi.get(bb);
 
             if(pois.size() > 0) {
-                state.showPlaceInfo(new PlaceView(pois.get(0)));
+                state.showPlaceInfo(new PlaceView(pois.get(0)), point);
             }
         }
     }
@@ -163,9 +173,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         new PointsOfInterestInsiteBoxTask(){
             @Override
             protected void processing(ArrayList<Place> poi, InputData data){
-                synchronized (lock) {
-                    repository.poi.insertMany(poi);
-                }
+                repository.poi.insertMany(poi);
             }
         }.execute(datas);
     }

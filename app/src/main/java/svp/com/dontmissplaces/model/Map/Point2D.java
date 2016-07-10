@@ -48,4 +48,19 @@ public final class Point2D {
         p.isEmpty = true;
         return p;
     }
+
+    @Override
+    public boolean equals(Object ob) {
+        if (ob == null) return false;
+        if (ob.getClass() != getClass()) return false;
+        Point2D other = (Point2D) ob;
+        if (!(latitude == other.latitude)) return false;
+        if (!(longitude == other.longitude)) return false;
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int)(latitude * 1E6) ^ (int) (longitude * 1E6);
+    }
 }

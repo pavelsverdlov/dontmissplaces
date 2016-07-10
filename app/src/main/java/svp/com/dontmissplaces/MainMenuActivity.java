@@ -123,13 +123,18 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
             view.mapView.showSessionsTrack(track.sessions);
         }
 
-        public void showPlaceInfo(final IPOIView place) {
+        public void showPlaceInfo(final IPOIView place, final Point2D point) {
             if (place == null) {
                 return;
             }
             view.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    String name = place.getName();
+                    if(!point.isEmpty() && point != place.getPoint()){
+                        name = "Near '" + name + "'";
+                    }
+
                     view.showPlaceInfoLayout();
                     ViewExtensions.<TextView>setOnLongClickListener(view, R.id.select_place_show_title,
                             new View.OnLongClickListener() {
@@ -142,7 +147,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
                                     return true;
                                 }
                             })
-                        .setText(place.getName());
+                        .setText(name);
                     String type = place.getType();
                     switch (PhraseProvider.getType(type)) {
                         case Food:
@@ -153,6 +158,8 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
                             break;
                     }
                     ((TextView) view.findViewById(R.id.select_place_show_placetype)).setText(type);
+                    ViewExtensions.<TextView>findViewById(view, R.id.select_place_content_location)
+                            .setText(place.getLocationStringFormat());
                     ViewExtensions.<TextView>findViewById(view, R.id.select_place_show_address)
                             .setText(place.getAddress());
 

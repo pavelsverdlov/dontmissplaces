@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -38,12 +39,15 @@ import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.db.Place;
 import svp.com.dontmissplaces.presenters.SearchPlacesPresenter;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
+import svp.com.dontmissplaces.ui.adapters.PlaceSearchAdapter;
 import svp.com.dontmissplaces.ui.model.PlaceView;
 
 public class SearchPlacesActivity extends AppCompatActivityView<SearchPlacesPresenter>
-        implements ActivityCommutator.ICommutativeElement {
+        implements ActivityCommutator.ICommutativeElement, PlaceSearchAdapter.OnClickListener {
+
     public static class SearchPlacesBundleProvider extends BundleProvider {
         private static final java.lang.String KEY = "QUERY_KEY";
+        private static final java.lang.String FOUND_PLACE_KEY = "FOUND_PLACE_KEY";
 
         public SearchPlacesBundleProvider(Intent intent) {
             super(intent);
@@ -65,6 +69,15 @@ public class SearchPlacesActivity extends AppCompatActivityView<SearchPlacesPres
             bundle.putString(KEY, query);
             return this;
         }
+
+        public long getFoundPlaceId() {
+            return bundle.getLong(FOUND_PLACE_KEY);
+        }
+
+        public SearchPlacesBundleProvider putFoundPlaceId(long id) {
+            bundle.putLong(FOUND_PLACE_KEY, id);
+            return this;
+        }
     }
 
     public static class PlaceSearchResult extends PlaceView {
@@ -73,6 +86,10 @@ public class SearchPlacesActivity extends AppCompatActivityView<SearchPlacesPres
         //public final String PLACE_KEY = "PLACE_KEY";
         public PlaceSearchResult(Place p) {
             super(p);
+        }
+
+        public Place getPlace(){
+            return place;
         }
 
         public void initView(View view) {
@@ -106,41 +123,7 @@ public class SearchPlacesActivity extends AppCompatActivityView<SearchPlacesPres
         }
     }
 
-    public static class PlaceSearchAdapter extends BaseAdapter {
-        private final LayoutInflater layoutInflater;
-        private final Vector<PlaceSearchResult> places;
 
-        public PlaceSearchAdapter(LayoutInflater layoutInflater, Vector<PlaceSearchResult> places) {
-            this.layoutInflater = layoutInflater;
-            this.places = places;
-        }
-
-        @Override
-        public int getCount() {
-            return places.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return places.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return places.get(position).hashCode();
-        }
-
-        @Override
-        public View getView(int position, View view, ViewGroup parent) {
-            if (view == null) {
-                view = layoutInflater.inflate(R.layout.activity_history_tracks_item_template, parent, false);
-            }
-
-            places.get(position).initView(view);
-
-            return view;
-        }
-    }
     /*public static class PlacesCursorAdapter extends BaseCursorAdapter<PlaceSearchResult> {
 
         private LayoutInflater mInflater;
@@ -201,6 +184,7 @@ public class SearchPlacesActivity extends AppCompatActivityView<SearchPlacesPres
                 @Override
                 public void run() {
                     PlaceSearchAdapter adapter = new PlaceSearchAdapter(view.getLayoutInflater(), places);
+                    adapter.setOnClickListener(view);
                     view.placesView.setAdapter(adapter);
                 }
             });
@@ -227,8 +211,7 @@ public class SearchPlacesActivity extends AppCompatActivityView<SearchPlacesPres
     }
 
     private SearchView searchView;
-    @Bind(R.id.search_places_list_view)
-    ListView placesView;
+    @Bind(R.id.search_places_list_view) ListView placesView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -236,6 +219,13 @@ public class SearchPlacesActivity extends AppCompatActivityView<SearchPlacesPres
         setContentView(R.layout.activity_search_places);
 
         ButterKnife.bind(this);
+
+
+    }
+
+    @Override
+    public void onClick(PlaceSearchResult result) {
+        getPresenter().placeSelected(result);
     }
 
     public void onStart() {

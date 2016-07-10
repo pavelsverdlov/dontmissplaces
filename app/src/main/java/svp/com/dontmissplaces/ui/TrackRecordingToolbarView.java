@@ -12,7 +12,7 @@ import butterknife.ButterKnife;
 import svp.com.dontmissplaces.R;
 
 /**
- * Created by Pasha on 4/10/2016.
+ * Track view open in nav bar in drawer
  */
 public class TrackRecordingToolbarView {
 
@@ -26,7 +26,7 @@ public class TrackRecordingToolbarView {
     @Bind(R.id.track_recording_stop) ImageButton stop;
     @Bind(R.id.track_recording_timer_output) TextView timeoutput;
     @Bind(R.id.track_recording_distance_output) TextView disoutput;
-    @Bind(R.id.track_recording_nav_header_toolbar) View view;
+    @Bind(R.id.track_recording_toolbar) View view;
 
     public boolean isPause;
 

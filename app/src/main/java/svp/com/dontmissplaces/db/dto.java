@@ -8,4 +8,8 @@ public class dto implements Serializable {
     public dto(long id) {
         this.id = id;
     }
+
+    public boolean isStored() {
+        return id != -1;
+    }
 }

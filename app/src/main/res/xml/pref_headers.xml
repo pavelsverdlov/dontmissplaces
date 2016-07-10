@@ -21,4 +21,13 @@
         android:icon="@drawable/ic_sync_black_24dp"
         android:title="@string/pref_header_data_sync" />
 
+    <header
+        android:icon="@drawable/ic_sync_black_24dp"
+        android:title="@string/pref_header_cache_data" />
+
+    <header
+        android:fragment="svp.com.dontmissplaces.ui.activities.SettingsActivity$LogPreferenceFragment"
+        android:icon="@drawable/ic_sync_black_24dp"
+        android:title="@string/pref_header_log" />
+
 </preference-headers>

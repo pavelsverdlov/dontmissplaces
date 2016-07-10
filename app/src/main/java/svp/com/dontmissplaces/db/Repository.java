@@ -277,6 +277,16 @@ public class Repository extends SQLiteOpenHelper {
 
             return places;
         }
+
+        public Place getPlaceById(long id) {
+            try(Cursor cursor = getCursorById(POI.TABLE,id)){
+                if (cursor == null){
+                    return null;
+                }
+                return new Place(cursor);
+            }
+
+        }
     }
 
     private Cursor getCursorById(String table,long id) {

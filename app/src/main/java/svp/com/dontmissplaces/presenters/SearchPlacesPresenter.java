@@ -2,19 +2,24 @@ package svp.com.dontmissplaces.presenters;
 
 import android.content.Intent;
 import android.database.MatrixCursor;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Vector;
 
 import svp.com.dontmissplaces.db.Place;
+import svp.com.dontmissplaces.db.Repository;
 import svp.com.dontmissplaces.model.nominatim.SearchByText;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.activities.SearchPlacesActivity;
 
 public class SearchPlacesPresenter extends CommutativePresenter<SearchPlacesActivity,SearchPlacesActivity.ViewState> {
+    private static final String TAG = "SearchPlacesPresenter";
+    private final Repository repository;
     SearchPlacesActivity.SearchPlacesBundleProvider bundle;
 
-    public SearchPlacesPresenter() {
+    public SearchPlacesPresenter(Repository repository) {
+        this.repository = repository;
         this.lock = new Object();
     }
 
@@ -51,5 +56,15 @@ public class SearchPlacesPresenter extends CommutativePresenter<SearchPlacesActi
 
             state.setSearchQuery(query);
         }
+    }
+
+    public void placeSelected(SearchPlacesActivity.PlaceSearchResult item) {
+        Place place = repository.poi.insert(item.getPlace());
+        if(place.isStored()){
+            commutator.backTo(new SearchPlacesActivity.SearchPlacesBundleProvider().putFoundPlaceId(place.id));
+        }else{
+            Log.w(TAG,"Place has already stored in db.");
+        }
+
     }
 }

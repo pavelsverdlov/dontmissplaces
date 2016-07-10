@@ -110,4 +110,6 @@ public class Place extends dto {
     public static String getTitle(Cursor cursor) {
         return cursor.getString(cursor.getColumnIndex(DatabaseStructure.Places.TITLE));
     }
+
+
 }

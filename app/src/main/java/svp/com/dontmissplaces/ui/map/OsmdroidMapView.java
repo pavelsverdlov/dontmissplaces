@@ -1,22 +1,18 @@
 package svp.com.dontmissplaces.ui.map;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 
-import com.google.android.gms.maps.model.*;
-import com.svp.infrastructure.mvpvs.view.IActivityView;
+import com.google.android.gms.maps.model.LatLng;
 import com.svp.infrastructure.mvpvs.view.View;
 
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
-import org.osmdroid.bonuspack.location.*;
 import org.osmdroid.events.DelayedMapListener;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.events.MapListener;
@@ -27,25 +23,23 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.*;
+import org.osmdroid.views.overlay.FolderOverlay;
+import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.Polyline;
-import org.osmdroid.views.overlay.compass.*;
-import org.osmdroid.views.overlay.mylocation.*;
+import org.osmdroid.views.overlay.compass.CompassOverlay;
+import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Vector;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import svp.com.dontmissplaces.R;
-import svp.com.dontmissplaces.db.Place;
 import svp.com.dontmissplaces.model.Map.Point2D;
-import svp.com.dontmissplaces.model.nominatim.PhraseProvider;
-import svp.com.dontmissplaces.model.nominatim.PointsOfInterestInsiteBoxTask;
 import svp.com.dontmissplaces.presenters.MapsPresenter;
 import svp.com.dontmissplaces.ui.ActivityPermissions;
 import svp.com.dontmissplaces.ui.model.IPOIView;
@@ -412,6 +406,13 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
                 create();
             }
             GeoPoint point = myLocationOverlay.getMyLocation();
+            if(point == null){
+                LocationManager locationManager = (LocationManager) activity.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+                Location loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                if(loc != null) {
+                    point = new GeoPoint(loc.getLatitude(), loc.getLongitude());
+                }
+            }
             if (point == null) {//gps disable
                 shouldRecreate = true;
                 return Point2D.empty();
@@ -425,9 +426,9 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
             }
             gpsMyLocationProvider = new GpsMyLocationProvider(activity);
             myLocationOverlay = new MyLocationNewOverlay(gpsMyLocationProvider, mapView);
-            setMyLocationUpdate(1000);
             mapView.getOverlays().add(myLocationOverlay);
             shouldRecreate = false;
+            setMyLocationUpdate(1000);
         }
         private void setMyLocationUpdate(long milliSeconds) {
             myLocationOverlay.enableMyLocation();

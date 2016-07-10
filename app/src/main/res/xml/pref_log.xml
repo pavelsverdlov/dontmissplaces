@@ -1,0 +1,18 @@
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:key="@string/pref_settings_log_clear_key"
+        android:title="Clear"
+        />
+    <Preference
+        android:key="@string/pref_settings_log_text"
+        android:selectable="false"
+        android:persistent="false"
+        />
+
+    <!--<Preference-->
+        <!--android:key="about"-->
+        <!--android:title="About">-->
+        <!--<intent android:action="android.intent.action.PACKAGE_DATA_CLEARED"/>-->
+    <!--</Preference>-->
+</PreferenceScreen>
