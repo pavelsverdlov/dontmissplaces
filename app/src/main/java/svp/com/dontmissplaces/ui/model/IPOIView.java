@@ -14,6 +14,7 @@ public interface IPOIView  {
     PlaceExtraTags getExtraTags();
 
     String getLocationStringFormat();
+    String getAccuracyDistance();
 
     Point2D getPoint();
 }

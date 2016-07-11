@@ -112,7 +112,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
                 SearchPlacesActivity.SearchPlacesBundleProvider sbp = new SearchPlacesActivity.SearchPlacesBundleProvider(data);
                 long id = sbp.getFoundPlaceId();
                 Place place = repository.poi.getPlaceById(id);
-                state.showPlaceInfo(new PlaceView(place), Point2D.empty());
+                state.showPlaceInfo(new PlaceView(place, Point2D.empty()), Point2D.empty());
                 //state.showMarker();
                 break;
         }
@@ -124,18 +124,24 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     }
 
     /** POI **/
-
+    public void showPlaceInfoNearPoint(Point2D point) {
+        //for search nearest POI to point we should check found point this original
+        showPlaceInfo(point, point);
+    }
     public void showPlaceInfoByPoint(final Point2D point) {
 //        PlaceProvider pp = new PlaceProvider(state.getActivity());
 //        Place p = pp.getPlace(point.getLatLng());
-//        place p = pp.getPlace(new LatLng(46.4708294,30.7043384));
+//        place p = pp.getPlace(new LatLng(46.4708294,30.7043384))
+        showPlaceInfo(point, Point2D.empty());
+    }
 
+    private void showPlaceInfo(final Point2D point, final Point2D originalPoint) {
         if(state.getPermissions().checkPermissionNetwork()){
             new PlaceByPoint(){
                 @Override
                 public void processing(ArrayList<Place> poi) {
                     if(poi.size() > 0){
-                        state.showPlaceInfo(new PlaceView(poi.get(0)), point);
+                        state.showPlaceInfo(new PlaceView(poi.get(0),originalPoint), null);
                         repository.poi.insertMany(poi);
                     }
                 }
@@ -151,10 +157,11 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
             Vector<Place> pois = repository.poi.get(bb);
 
             if(pois.size() > 0) {
-                state.showPlaceInfo(new PlaceView(pois.get(0)), point);
+                state.showPlaceInfo(new PlaceView(pois.get(0), originalPoint), point);
             }
         }
     }
+
     public void searchPOI(int zoom, BoundingBoxE6 box) {
         if(!state.getPermissions().checkPermissionNetwork()){
             return;
@@ -185,6 +192,8 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         state.getActivity();
         return mapViewType;
     }
+
+
 
     private class TrackTimer extends TimerTask{
         private long elapsedMses;

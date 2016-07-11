@@ -33,6 +33,7 @@ import svp.com.dontmissplaces.model.nominatim.PhraseProvider;
 import svp.com.dontmissplaces.presenters.MainMenuPresenter;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.ActivityPermissions;
+import svp.com.dontmissplaces.ui.PlaceInfoLayoutView;
 import svp.com.dontmissplaces.ui.TrackRecordingToolbarView;
 import svp.com.dontmissplaces.ui.behaviors.OverMapBottomSheetBehavior;
 import svp.com.dontmissplaces.ui.map.GoogleMapView;
@@ -130,39 +131,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
             view.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    String name = place.getName();
-                    if(!point.isEmpty() && point != place.getPoint()){
-                        name = "Near '" + name + "'";
-                    }
-
-                    view.showPlaceInfoLayout();
-                    ViewExtensions.<TextView>setOnLongClickListener(view, R.id.select_place_show_title,
-                            new View.OnLongClickListener() {
-                                @Override
-                                public boolean onLongClick(View v) {
-                                    CharSequence text = ((TextView) v).getText();
-                                    ClipboardManager clipboard = (ClipboardManager) view.getSystemService(CLIPBOARD_SERVICE);
-                                    clipboard.setText(text);
-                                    getSnackbar("Name was copied to clipboard.");
-                                    return true;
-                                }
-                            })
-                        .setText(name);
-                    String type = place.getType();
-                    switch (PhraseProvider.getType(type)) {
-                        case Food:
-                            String cuisine = place.getExtraTags().getCuisine();
-                            if (!cuisine.isEmpty()) {
-                                type = type + " (" + cuisine + ")";
-                            }
-                            break;
-                    }
-                    ((TextView) view.findViewById(R.id.select_place_show_placetype)).setText(type);
-                    ViewExtensions.<TextView>findViewById(view, R.id.select_place_content_location)
-                            .setText(place.getLocationStringFormat());
-                    ViewExtensions.<TextView>findViewById(view, R.id.select_place_show_address)
-                            .setText(place.getAddress());
-
+                    view.placeInfoLayoutView.show(ViewState.this, place);
                     view.mapView.drawMarker(place);
                 }
             });
@@ -174,8 +143,9 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     private IMapView mapView;
     private final ActivityPermissions permissions;
     private TrackRecordingToolbarView recordingToolbarView;
-    private OverMapBottomSheetBehavior behavior;
-    private final int bottomPanelHeight = 224;
+    private PlaceInfoLayoutView placeInfoLayoutView;
+//    private OverMapBottomSheetBehavior behavior;
+//    private final int bottomPanelHeight = 224;
 
     View placeInfoHeader;
 
@@ -203,12 +173,14 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         navigationView.setNavigationItemSelectedListener(this);
 
         CoordinatorLayout coordinatorLayout = (CoordinatorLayout) MainMenuActivity.this.findViewById(R.id.content_main_menu_coordinator_layout);
-        behavior = OverMapBottomSheetBehavior.from(this.findViewById(R.id.select_place_scrolling_act_content_view));
-        behavior.setPeekHeight(bottomPanelHeight);
-
 
         placeInfoHeader = coordinatorLayout.findViewById(R.id.select_place_header_layout);
         placeInfoHeader.setOnClickListener(this);
+
+        placeInfoLayoutView = new PlaceInfoLayoutView(this, placeInfoHeader);
+//        behavior = OverMapBottomSheetBehavior.from(this.findViewById(R.id.select_place_scrolling_act_content_view));
+//        behavior.setPeekHeight(bottomPanelHeight);
+
         //action_bottom_panel
         ViewExtensions.setOnClickListener(this,R.id.track_recording_start_btn, this);
         findViewById(R.id.track_recording_show_place_info_btn).setOnClickListener(this);
@@ -232,7 +204,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
                 startNewTrackSession();
                 break;
             case R.id.select_place_header_layout:
-                invertStatePlaceInfoLayout(behavior.getState());
+                placeInfoLayoutView.invertState();
                 break;
             case R.id.move_to_my_location:
                 Point2D p = mapView.getMyLocation();
@@ -398,27 +370,15 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
     @Override
     public void onMapLongClick(Point2D p) {
-        getPresenter().showPlaceInfoByPoint(p);
+        getPresenter().showPlaceInfoNearPoint(p);
     }
 
 
     private void showPlacesByCurrentLocation(View v) {
-        getPresenter().showPlaceInfoByPoint(mapView.getMyLocation());
+        getPresenter().showPlaceInfoNearPoint(mapView.getMyLocation());
     }
 
-    private void showPlaceInfoLayout() {
-        invertStatePlaceInfoLayout(BottomSheetBehavior.STATE_EXPANDED);
-    }
 
-    private void invertStatePlaceInfoLayout(int state) {
-        if (state == BottomSheetBehavior.STATE_EXPANDED) {
-            behavior.setState(
-                    BottomSheetBehavior.STATE_COLLAPSED,
-                    bottomPanelHeight + placeInfoHeader.getMeasuredHeight());
-        } else {
-            behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        }
-    }
 
 
     /*

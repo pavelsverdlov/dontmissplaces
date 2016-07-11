@@ -119,6 +119,12 @@
             android:padding="@dimen/activity_vertical_margin">
 
             <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/select_place_show_near_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/android_standard_subheading" />
+
+            <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/select_place_show_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -128,16 +134,14 @@
                 android:id="@+id/select_place_show_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|start"
-                android:gravity="center_vertical|start"
-                android:textIsSelectable="true"
-                />
+                android:textSize="@dimen/android_standard_subheading" />
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/select_place_show_placetype"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/android_standard_subheading" />
+
         </LinearLayout>
         <!-- action place btn -->
         <LinearLayout

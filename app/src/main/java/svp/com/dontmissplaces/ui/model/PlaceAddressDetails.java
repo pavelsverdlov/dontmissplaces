@@ -1,22 +1,27 @@
 package svp.com.dontmissplaces.ui.model;
 
-/**
- * Created by Pasha on 6/12/2016.
- */
+/*
+* Toilette Tour Eiffel, 19, Avenue Gustave Eiffel, Gros-Caillou, 7e, Paris, Île-de-France, France métropolitaine, 75007, France
+* */
 public class PlaceAddressDetails {
-    private final String name;
     private final String full;
+    private final String[] array;
+
     public PlaceAddressDetails(String title) {
         full = title;
-        String[] array = title.split(",");
-        name = array[0];
+        array = title.split(",");
     }
 
     public String getFullAddress(){
-        return full;
+        return (getStreet() + " " +  array[1] +  ", " + array[array.length-1]).trim();
     }
 
     public String getName() {
-        return name;
+        return array[0].trim();
     }
+
+    public String getStreet() {
+        return array[2].trim();
+    }
+
 }

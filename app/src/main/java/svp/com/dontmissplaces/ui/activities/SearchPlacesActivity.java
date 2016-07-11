@@ -37,6 +37,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.db.Place;
+import svp.com.dontmissplaces.model.Map.Point2D;
 import svp.com.dontmissplaces.presenters.SearchPlacesPresenter;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.adapters.PlaceSearchAdapter;
@@ -85,7 +86,7 @@ public class SearchPlacesActivity extends AppCompatActivityView<SearchPlacesPres
 
         //public final String PLACE_KEY = "PLACE_KEY";
         public PlaceSearchResult(Place p) {
-            super(p);
+            super(p, Point2D.empty());
         }
 
         public Place getPlace(){

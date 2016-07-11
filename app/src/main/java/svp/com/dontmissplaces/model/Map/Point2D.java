@@ -30,6 +30,12 @@ public final class Point2D {
         latitude = latLng.latitude;
         longitude = latLng.longitude;
     }
+    /**
+     * return distance in meters
+     * */
+    public long distanceTo(Point2D other){
+        return getGeoPoint().distanceTo(other.getGeoPoint());
+    }
 
     public LatLng getLatLng() {
        return new LatLng(latitude, longitude);
@@ -53,7 +59,9 @@ public final class Point2D {
     public boolean equals(Object ob) {
         if (ob == null) return false;
         if (ob.getClass() != getClass()) return false;
+
         Point2D other = (Point2D) ob;
+
         if (!(latitude == other.latitude)) return false;
         if (!(longitude == other.longitude)) return false;
         return true;

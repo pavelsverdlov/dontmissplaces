@@ -17,11 +17,13 @@ import svp.com.dontmissplaces.model.Map.Point2D;
 public class PlaceView implements IPOIView {
 
     protected Place place;
+    private final Point2D originalPoint;
     private PlaceAddressDetails addressDetails;
     private PlaceExtraTags extraTags;
 
-    public PlaceView(Place place) {
+    public PlaceView(Place place, Point2D originalPoint) {
         this.place = place;
+        this.originalPoint = originalPoint;
         addressDetails = new PlaceAddressDetails(place.title);
         extraTags = new PlaceExtraTags(place.extratags);
     }
@@ -29,6 +31,17 @@ public class PlaceView implements IPOIView {
     public String getName(){
         return addressDetails.getName();
     }
+
+    public String getAccuracyDistance(){
+        //for search nearest POI to point we should check found point this original
+        long dist = originalPoint.distanceTo(getPoint());
+        if(!originalPoint.isEmpty() && dist > 5){
+            return  "Near " + dist + " meters to ";
+        }
+        return null;
+    }
+
+
     public String getType() {
         return place.nominatimType;
     }
@@ -44,12 +57,14 @@ public class PlaceView implements IPOIView {
 
     @Override
     public Point2D getPoint() {
-        return new Point2D(place.longitude, place.longitude);
+        return new Point2D(place.latitude, place.longitude);
     }
 
     public PlaceExtraTags getExtraTags(){ return extraTags; }
 
-    public PlaceView() {}
+    public PlaceView() {
+        originalPoint = Point2D.empty();
+    }
 
 
 
