@@ -101,7 +101,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
             view.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    //    view.recordingToolbarView.updateTime(timeSpent);
+                view.recordingToolbarView.updateTime(timeSpent);
                 }
             });
         }
@@ -195,7 +195,6 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
      */
     @Override
     public void onClick(View v) {
-
         switch (v.getId()) {
             case R.id.track_recording_show_place_info_btn:
                 showPlacesByCurrentLocation(v);

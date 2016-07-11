@@ -38,7 +38,7 @@ public class PlaceView implements IPOIView {
         if(!originalPoint.isEmpty() && dist > 5){
             return  "Near " + dist + " meters to ";
         }
-        return null;
+        return "";
     }
 
 

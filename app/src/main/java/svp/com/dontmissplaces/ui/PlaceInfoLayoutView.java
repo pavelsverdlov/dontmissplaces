@@ -6,15 +6,14 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.view.View;
 import android.widget.TextView;
 
-import com.svp.infrastructure.common.ViewExtensions;
 import com.svp.infrastructure.mvpvs.viewstate.IViewState;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.model.nominatim.PhraseProvider;
 import svp.com.dontmissplaces.ui.behaviors.OverMapBottomSheetBehavior;
 import svp.com.dontmissplaces.ui.model.IPOIView;
-import svp.com.dontmissplaces.ui.model.PlaceView;
 
 public class PlaceInfoLayoutView {
     private final int bottomPanelHeight = 224;
@@ -24,33 +23,36 @@ public class PlaceInfoLayoutView {
     private OverMapBottomSheetBehavior behavior;
     View placeInfoHeader;
 
-//    @Bind(R.id.select_place_show_near_info) TextView nearInfo;
-//    @Bind(R.id.select_place_show_title) TextView title;
-//    @Bind(R.id.select_place_show_placetype) TextView placetype;
-//    @Bind(R.id.select_place_content_location) TextView contentLocation;
-
-
+    @Bind(R.id.select_place_show_near_info) TextView nearInfo;
+    @Bind(R.id.select_place_show_title) TextView title;
+    @Bind(R.id.select_place_show_placetype) TextView placetype;
+    @Bind(R.id.select_place_content_location) TextView contentLocation;
+    @Bind(R.id.select_place_show_address) TextView address;
 
     public PlaceInfoLayoutView(Activity activity,View placeInfoHeader){
-
         this.activity = activity;
         this.placeInfoHeader = placeInfoHeader;
 
         behavior = OverMapBottomSheetBehavior.from(activity.findViewById(R.id.select_place_scrolling_act_content_view));
         behavior.setPeekHeight(bottomPanelHeight);
+
+        ButterKnife.bind(this, activity);
     }
 
     public void show(final IViewState viewState, IPOIView place){
         String name = place.getName();
         String type = place.getType();
+        String accuracyDistance = place.getAccuracyDistance();
 
         showPlaceInfoLayout();
 
-//        ButterKnife.bind(activity);
+        if(accuracyDistance.isEmpty()) {
+            nearInfo.setVisibility(View.GONE);
+        }else{
+            nearInfo.setText(accuracyDistance);
+        }
 
-        ViewExtensions.<TextView>findViewById(activity,R.id.select_place_show_near_info).setText(place.getAccuracyDistance());
-
-        ViewExtensions.<TextView>setOnLongClickListener(activity,R.id.select_place_show_title,
+        title.setOnLongClickListener(
                 new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
@@ -60,8 +62,8 @@ public class PlaceInfoLayoutView {
                         viewState.getSnackbar("Name was copied to clipboard.");
                         return true;
                     }
-                })
-                .setText(name);
+                });
+        title.setText(name);
 
         switch (PhraseProvider.getType(type)) {
             case Food:
@@ -72,10 +74,9 @@ public class PlaceInfoLayoutView {
                 break;
         }
 
-        ViewExtensions.<TextView>findViewById(activity,R.id.select_place_show_placetype).setText(type);
-        ViewExtensions.<TextView>findViewById(activity,R.id.select_place_content_location).setText(place.getLocationStringFormat());
-        ViewExtensions.<TextView>findViewById(activity,R.id.select_place_show_address)
-                .setText(place.getAddress());
+        placetype.setText(type);
+        contentLocation.setText(place.getLocationStringFormat());
+        address.setText(place.getAddress());
     }
 
     private void showPlaceInfoLayout() {
