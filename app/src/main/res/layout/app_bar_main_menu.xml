@@ -63,7 +63,7 @@
         android:background="@color/windowBackground"
         android:gravity="bottom|center_horizontal"
         android:orientation="vertical"
-        app:layout_behavior="svp.com.dontmissplaces.ui.behaviors.OverMapBottomSheetBehavior">
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
         <!-- action btns toolbar-->
         <LinearLayout
             android:id="@+id/main_action_btns_toolbar"
@@ -154,7 +154,7 @@
             android:orientation="horizontal">
 
             <ImageButton
-
+                android:id="@+id/select_place_beenhere_btn"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

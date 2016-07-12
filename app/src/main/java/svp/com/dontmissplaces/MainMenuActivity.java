@@ -202,7 +202,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
             case R.id.move_to_my_location:
                 Point2D p = mapView.getMyLocation();
                 if(p.isEmpty()){
-                    Toast.makeText(this, "GPS location disabled.",Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "GPS location disabled.",Toast.LENGTH_SHORT).show();
                 }else {
                     mapView.moveTo(p);
                 }
