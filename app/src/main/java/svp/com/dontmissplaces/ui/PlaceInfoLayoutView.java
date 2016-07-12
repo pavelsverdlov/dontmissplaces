@@ -16,6 +16,7 @@ import svp.com.dontmissplaces.ui.behaviors.OverMapBottomSheetBehavior;
 import svp.com.dontmissplaces.ui.model.IPOIView;
 
 public class PlaceInfoLayoutView implements View.OnClickListener {
+    private int bottomPanelHeight = 224;
     private final Activity activity;
 
     private BottomSheetBehavior behavior;
@@ -40,7 +41,13 @@ public class PlaceInfoLayoutView implements View.OnClickListener {
 //        placeInfoHeader = coordinatorLayout.findViewById(R.id.select_place_header_layout);
         placeInfoHeader.setOnClickListener(this);
 
-        behavior.setPeekHeight(actiontoolbar.getLayoutParams().height);
+        actiontoolbar.post(new Runnable() {
+            @Override
+            public void run() {
+                bottomPanelHeight = (int)(actiontoolbar.getMeasuredHeight()* 1.5);
+                behavior.setPeekHeight(bottomPanelHeight);
+            }
+        });
     }
 
     @Override
@@ -58,7 +65,7 @@ public class PlaceInfoLayoutView implements View.OnClickListener {
         String type = place.getType();
         String accuracyDistance = place.getAccuracyDistance();
 
-        behavior.setPeekHeight(actiontoolbar.getMeasuredHeight() + placeInfoHeader.getMeasuredHeight());
+        behavior.setPeekHeight(bottomPanelHeight + placeInfoHeader.getMeasuredHeight());
 
         showPlaceInfoLayout();
 
@@ -119,7 +126,7 @@ public class PlaceInfoLayoutView implements View.OnClickListener {
     }
 
     public void hide() {
-        behavior.setPeekHeight(actiontoolbar.getMeasuredHeight());
+        behavior.setPeekHeight(bottomPanelHeight);
         behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         isShowed = false;
     }
