@@ -66,6 +66,7 @@
         app:layout_behavior="svp.com.dontmissplaces.ui.behaviors.OverMapBottomSheetBehavior">
         <!-- action btns toolbar-->
         <LinearLayout
+            android:id="@+id/main_action_btns_toolbar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/android_standard_toolbar_subtitle"
             android:layout_gravity="fill|fill_horizontal"

@@ -147,7 +147,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 //    private OverMapBottomSheetBehavior behavior;
 //    private final int bottomPanelHeight = 224;
 
-    View placeInfoHeader;
+
 
     public MainMenuActivity() {
         permissions = new ActivityPermissions(this);
@@ -174,10 +174,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
         CoordinatorLayout coordinatorLayout = (CoordinatorLayout) MainMenuActivity.this.findViewById(R.id.content_main_menu_coordinator_layout);
 
-        placeInfoHeader = coordinatorLayout.findViewById(R.id.select_place_header_layout);
-        placeInfoHeader.setOnClickListener(this);
-
-        placeInfoLayoutView = new PlaceInfoLayoutView(this, placeInfoHeader);
+        placeInfoLayoutView = new PlaceInfoLayoutView(this);
 //        behavior = OverMapBottomSheetBehavior.from(this.findViewById(R.id.select_place_scrolling_act_content_view));
 //        behavior.setPeekHeight(bottomPanelHeight);
 
@@ -201,9 +198,6 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
                 break;
             case R.id.track_recording_start_btn:
                 startNewTrackSession();
-                break;
-            case R.id.select_place_header_layout:
-                placeInfoLayoutView.invertState();
                 break;
             case R.id.move_to_my_location:
                 Point2D p = mapView.getMyLocation();
@@ -256,6 +250,11 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
     @Override
     public void onBackPressed() {
+        if(placeInfoLayoutView.isShow()){
+            placeInfoLayoutView.hide();
+            return;
+        }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.content_main_map_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
