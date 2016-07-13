@@ -65,14 +65,25 @@ public class PlaceInfoLayoutView implements View.OnClickListener {
         String type = place.getType();
         String accuracyDistance = place.getAccuracyDistance();
 
-        behavior.setPeekHeight(bottomPanelHeight + placeInfoHeader.getMeasuredHeight());
-
         showPlaceInfoLayout();
 
         if(accuracyDistance.isEmpty()) {
             nearInfo.setVisibility(View.GONE);
+            nearInfo.clearComposingText();
+            nearInfo.setText(null);
         }else{
+            nearInfo.setVisibility(View.VISIBLE);
             nearInfo.setText(accuracyDistance);
+        }
+
+
+        switch (PhraseProvider.getType(type)) {
+            case Food:
+                String cuisine = place.getExtraTags().getCuisine();
+                if (!cuisine.isEmpty()) {
+                    type = type + " (" + cuisine + ")";
+                }
+                break;
         }
 
         title.setOnLongClickListener(
@@ -86,20 +97,13 @@ public class PlaceInfoLayoutView implements View.OnClickListener {
                         return true;
                     }
                 });
+
         title.setText(name);
-
-        switch (PhraseProvider.getType(type)) {
-            case Food:
-                String cuisine = place.getExtraTags().getCuisine();
-                if (!cuisine.isEmpty()) {
-                    type = type + " (" + cuisine + ")";
-                }
-                break;
-        }
-
         placetype.setText(type);
         contentLocation.setText(place.getLocationStringFormat());
         address.setText(place.getAddress());
+
+        behavior.setPeekHeight(bottomPanelHeight + (int)(placeInfoHeader.getMeasuredHeight()*0.8));
     }
 
     private void showPlaceInfoLayout() {

@@ -13,7 +13,7 @@ public class PlaceAddressDetails {
     }
 
     public String getFullAddress(){
-        return (getStreet() + " " +  array[1] +  ", " + array[array.length-1]).trim();
+        return (getStreet() + " " +  array[1] +  ", " + array[array.length-1]).replace("  "," ").trim();
     }
 
     public String getName() {

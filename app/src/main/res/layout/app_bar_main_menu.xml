@@ -121,6 +121,7 @@
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/select_place_show_near_info"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/android_standard_subheading" />
