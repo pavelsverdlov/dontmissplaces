@@ -2,10 +2,13 @@ package svp.com.dontmissplaces.ui.map;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -398,6 +401,33 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
         private GpsMyLocationProvider gpsMyLocationProvider;
         private boolean shouldRecreate;
 
+        public void turnGPSOn()
+        {
+            Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
+            intent.putExtra("enabled", true);
+            activity.sendBroadcast(intent);
+
+            String provider = Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+            if(!provider.contains("gps")){ //if gps is disabled
+                final Intent poke = new Intent();
+                poke.setClassName("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvider");
+                poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
+                poke.setData(Uri.parse("3"));
+                activity.sendBroadcast(poke);
+            }
+        }
+        private void turnGPSOn1(){
+            String provider = Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+
+            if(!provider.contains("gps")){ //if gps is disabled
+                final Intent poke = new Intent();
+                poke.setClassName("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvider");
+                poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
+                poke.setData(Uri.parse("3"));
+                activity.sendBroadcast(poke);
+            }
+        }
+
         public GpsLocationProvider() {
             create();
         }
@@ -407,11 +437,13 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
             }
             GeoPoint point = myLocationOverlay.getMyLocation();
             if(point == null){
-                LocationManager locationManager = (LocationManager) activity.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-                Location loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                if(loc != null) {
-                    point = new GeoPoint(loc.getLatitude(), loc.getLongitude());
-                }
+                turnGPSOn();
+                return Point2D.empty();
+//                LocationManager locationManager = (LocationManager) activity.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+//                Location loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//                if(loc != null) {
+//                    point = new GeoPoint(loc.getLatitude(), loc.getLongitude());
+//                }
             }
             if (point == null) {//gps disable
                 shouldRecreate = true;
