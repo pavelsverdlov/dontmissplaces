@@ -20,7 +20,7 @@ import java.util.HashMap;
 
 public class GPSService extends Service {
     private static final String TAG = "GPSService";
-    private static final int LOCATION_INTERVAL = 1000;
+    private static final int LOCATION_INTERVAL = 50000;
     private static final float LOCATION_DISTANCE = 10f;
 
     private LocationManager locationManager;
@@ -62,7 +62,7 @@ public class GPSService extends Service {
                 }
             });
         }
-        //isNetworkProvider = requestLocationUpdates(LocationManager.NETWORK_PROVIDER);
+        isNetworkProvider = requestLocationUpdates(LocationManager.NETWORK_PROVIDER);
         isGPSProvider = requestLocationUpdates(LocationManager.GPS_PROVIDER);
 
         Log.d(TAG, "onCreate: GPSProvider = " + isGPSProvider);
@@ -90,10 +90,14 @@ public class GPSService extends Service {
                 return false;
             }
 
-            filter.addLocation(locationManager.getLastKnownLocation(provider));
+            Location last = locationManager.getLastKnownLocation(provider);
+            Log.d(TAG, "LastKnownLocation: " + (last == null ? "NULL" : last.toString()));
+            filter.addLocation(last);
 
             locationManager.requestLocationUpdates(provider, LOCATION_INTERVAL, LOCATION_DISTANCE,
                     listeners.get(provider));
+
+            Log.d(TAG, provider + " true");
 
             return true;
         } catch (java.lang.SecurityException ex) {

@@ -35,6 +35,7 @@ import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.BaseBundleProvider;
 import svp.com.dontmissplaces.ui.activities.SearchPlacesActivity;
 import svp.com.dontmissplaces.ui.map.MapViewTypes;
+import svp.com.dontmissplaces.ui.model.IPOIView;
 import svp.com.dontmissplaces.ui.model.PlaceView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.ui.model.TrackView;
@@ -107,8 +108,12 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     }
 
     public void onMoveToMyLocation() {
-        state.MapCameraMoveTo(new Point2D(prevLocation));
+        state.MapCameraMoveTo(prevLocation == null ? Point2D.empty() : new Point2D(prevLocation));
     }
+    public void pinPlace(IPOIView place) {
+//        repository.place.insert(place);
+    }
+
     public void permissionFineLocationReceived() {
         if(prevLocation == null) {
             try {
@@ -121,7 +126,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     }
     @Override
     public void OnLocationChange(Location location) {
-        if(prevLocation  == null){
+        if(prevLocation == null && location != null){
             state.MapCameraMoveTo(new Point2D(location));
         }
         prevLocation = location;

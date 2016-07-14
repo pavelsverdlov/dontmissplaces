@@ -17,6 +17,7 @@ public class LocationListener implements android.location.LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
+        Log.d(TAG,location.toString());
         filter.addLocation(location);
     }
 

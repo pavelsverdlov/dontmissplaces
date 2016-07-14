@@ -36,7 +36,7 @@ public class LocationFilter {
         return previousLocation;
     }
     public void addLocation(Location proposedLocation) {
-            previousLocation = proposedLocation;
+        previousLocation = proposedLocation;
     }
     public void addLocation1(Location proposedLocation) {
         if(previousLocation == null){

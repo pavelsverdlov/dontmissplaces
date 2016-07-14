@@ -160,6 +160,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 //    private OverMapBottomSheetBehavior behavior;
 //    private final int bottomPanelHeight = 224;
     @Bind(R.id.select_place_move_to_location_btn) ImageButton moveToLocation;
+    @Bind(R.id.select_place_person_pin) ImageButton personPin;
 
 
     public MainMenuActivity() {
@@ -199,6 +200,8 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         coordinatorLayout.findViewById(R.id.select_place_content_header_layout)
                 .setOnClickListener(this);
         moveToLocation.setOnClickListener(this);
+        personPin.setOnClickListener(this);
+
     }
 
     /**
@@ -218,6 +221,9 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
                 break;
             case R.id.select_place_move_to_location_btn:
                 mapView.moveTo(placeInfoLayoutView.getPlace().getPoint());
+                break;
+            case R.id.select_place_person_pin:
+                getPresenter().pinPlace(placeInfoLayoutView.getPlace());
                 break;
         }
     }

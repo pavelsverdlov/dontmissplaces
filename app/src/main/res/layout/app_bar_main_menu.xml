@@ -173,6 +173,7 @@
                 android:src="@drawable/ic_rate_review_white_48dp" />
 
             <ImageButton
+                android:id="@+id/select_place_person_pin"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
