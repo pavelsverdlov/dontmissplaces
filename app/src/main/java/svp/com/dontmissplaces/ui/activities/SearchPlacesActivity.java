@@ -95,7 +95,7 @@ public class SearchPlacesActivity extends AppCompatActivityView<SearchPlacesPres
 
         public void initView(View view) {
             ViewExtensions.<TextView>findViewById(view, R.id.history_tracks_item_text)
-                    .setText(place.title);
+                    .setText(getAddress());
 
             image = ViewExtensions.findViewById(view, R.id.history_tracks_item_image);
 

@@ -1,6 +1,9 @@
 package svp.com.dontmissplaces.presenters;
 
 import android.content.Intent;
+import android.location.Location;
+import android.os.RemoteException;
+import android.util.Log;
 
 import com.svp.infrastructure.mvpvs.bundle.BundleProvider;
 import com.svp.infrastructure.mvpvs.bundle.IBundleProvider;
@@ -22,6 +25,9 @@ import svp.com.dontmissplaces.db.SessionTrack;
 import svp.com.dontmissplaces.db.Track;
 import svp.com.dontmissplaces.db.Waypoint;
 import svp.com.dontmissplaces.model.Map.Point2D;
+import svp.com.dontmissplaces.model.PlaceProvider;
+import svp.com.dontmissplaces.model.gps.GPSServiceProvider;
+import svp.com.dontmissplaces.model.gps.OnLocationChangeListener;
 import svp.com.dontmissplaces.model.nominatim.PhraseProvider;
 import svp.com.dontmissplaces.model.nominatim.PlaceByPoint;
 import svp.com.dontmissplaces.model.nominatim.PointsOfInterestInsiteBoxTask;
@@ -35,10 +41,16 @@ import svp.com.dontmissplaces.ui.model.TrackView;
 
 import static svp.com.dontmissplaces.ui.ActivityCommutator.ActivityOperationResult.HistoryTracks;
 
-public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,MainMenuActivity.ViewState> {
+public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,MainMenuActivity.ViewState>
+    implements OnLocationChangeListener {
+    private final String TAG ="MainMenuPresenter";
     private TrackTimer timer;
     private final Repository repository;
     private Track recordingTrack;
+
+    private GPSServiceProvider gpsService;
+    private Location prevLocation;
+
     private SessionTrack recordingSession;
     private MapViewTypes mapViewType;
 
@@ -94,6 +106,27 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         commutator.goTo(ActivityCommutator.ActivityOperationResult.SearchPlaces,bp);
     }
 
+    public void onMoveToMyLocation() {
+        state.MapCameraMoveTo(new Point2D(prevLocation));
+    }
+    public void permissionFineLocationReceived() {
+        if(prevLocation == null) {
+            try {
+                prevLocation = gpsService.getLocation();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+                Log.e(TAG,"",e);
+            }
+        }
+    }
+    @Override
+    public void OnLocationChange(Location location) {
+        if(prevLocation  == null){
+            state.MapCameraMoveTo(new Point2D(location));
+        }
+        prevLocation = location;
+    }
+
     @Override
     protected void incomingResultFrom(ActivityCommutator.ActivityOperationResult from, Intent data) {
         switch (from){
@@ -120,11 +153,23 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     }
     @Override
     protected void onAttachedView(MainMenuActivity view, Intent intent) {
-
+        gpsService = new GPSServiceProvider(state.getActivity());
+        if(state.getPermissions().checkPermissionFineLocation()) {
+            gpsService.setOnLocationChangeListener(this);
+            gpsService.startup(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d(TAG,"GPS service startup");
+                }
+            });
+        }
     }
 
     /** POI **/
     public void showPlaceInfoNearPoint(Point2D point) {
+        if(point.isEmpty()){
+            point = new Point2D(prevLocation);
+        }
         //for search nearest POI to point we should check found point this original
         showPlaceInfo(point, point);
     }
@@ -136,6 +181,9 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     }
 
     private void showPlaceInfo(final Point2D point, final Point2D originalPoint) {
+        PlaceProvider pp = new PlaceProvider(state.getActivity());
+        Place place = pp.getPlace(point.getLatLng());
+
         if(state.getPermissions().checkPermissionNetwork()){
             new PlaceByPoint(){
                 @Override
@@ -192,6 +240,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         state.getActivity();
         return mapViewType;
     }
+
 
 
 

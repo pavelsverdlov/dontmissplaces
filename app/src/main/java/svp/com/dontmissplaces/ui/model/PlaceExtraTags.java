@@ -14,7 +14,7 @@ public class PlaceExtraTags {
         JSONObject object;
         try {
             object = new JSONObject(extratags);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             object = new JSONObject();
         }

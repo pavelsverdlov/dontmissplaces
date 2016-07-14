@@ -223,12 +223,8 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
     }
 
     @Override
-    public Point2D getMyLocation() {
-        return gpsProvider.getMyLocation();
-    }
-
-    @Override
     public void moveTo(Point2D p) {
+        mapController.setZoom(16);
         mapController.animateTo(p.getGeoPoint());
     }
 
@@ -436,15 +432,15 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
                 create();
             }
             GeoPoint point = myLocationOverlay.getMyLocation();
-            if(point == null){
-                turnGPSOn();
-                return Point2D.empty();
+//            if(point == null){
+//                turnGPSOn1();
+//                return Point2D.empty();
 //                LocationManager locationManager = (LocationManager) activity.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
 //                Location loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 //                if(loc != null) {
 //                    point = new GeoPoint(loc.getLatitude(), loc.getLongitude());
 //                }
-            }
+//            }
             if (point == null) {//gps disable
                 shouldRecreate = true;
                 return Point2D.empty();

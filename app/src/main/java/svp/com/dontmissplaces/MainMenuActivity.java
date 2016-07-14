@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
 
 import org.osmdroid.util.BoundingBoxE6;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import svp.com.dontmissplaces.model.Map.Point2D;
 import svp.com.dontmissplaces.model.nominatim.PhraseProvider;
@@ -136,7 +138,18 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
                 }
             });
         }
-
+        public void MapCameraMoveTo(final Point2D p){
+            if(p.isEmpty()){
+                getToast( "GPS location disabled.").show();
+            }else {
+                view.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        view.mapView.moveTo(p);
+                    }
+                });
+            }
+        }
 
     }
 
@@ -146,7 +159,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     private PlaceInfoLayoutView placeInfoLayoutView;
 //    private OverMapBottomSheetBehavior behavior;
 //    private final int bottomPanelHeight = 224;
-
+    @Bind(R.id.select_place_move_to_location_btn) ImageButton moveToLocation;
 
 
     public MainMenuActivity() {
@@ -185,6 +198,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
         coordinatorLayout.findViewById(R.id.select_place_content_header_layout)
                 .setOnClickListener(this);
+        moveToLocation.setOnClickListener(this);
     }
 
     /**
@@ -194,18 +208,16 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.track_recording_show_place_info_btn:
-                showPlacesByCurrentLocation(v);
+                getPresenter().showPlaceInfoNearPoint(Point2D.empty());
                 break;
             case R.id.track_recording_start_btn:
-                startNewTrackSession();
+                getPresenter().startNewTrackSession();
                 break;
             case R.id.move_to_my_location:
-                Point2D p = mapView.getMyLocation();
-                if(p.isEmpty()){
-                    Toast.makeText(this, "GPS location disabled.",Toast.LENGTH_SHORT).show();
-                }else {
-                    mapView.moveTo(p);
-                }
+                getPresenter().onMoveToMyLocation();
+                break;
+            case R.id.select_place_move_to_location_btn:
+                mapView.moveTo(placeInfoLayoutView.getPlace().getPoint());
                 break;
         }
     }
@@ -311,6 +323,11 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
             return;
         }
         if (this.permissions.isFineLocationGranted(permissions, grantResults)) {
+            if(this.permissions.isFineLocationGranted()) {
+                getPresenter().permissionFineLocationReceived();
+            }else {
+                //TODO:
+            }
             mapView.enableMyLocation();
         } else {
             this.permissions.fineLocationPermissionDenied = true;
@@ -318,9 +335,6 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     }
 
     /** Start recording track btn  */
-    private void startNewTrackSession() {
-        getPresenter().startNewTrackSession();
-    }
     private void createTrackRecordingToolbarView() {
         recordingToolbarView = new TrackRecordingToolbarView(this);
         recordingToolbarView.show();
@@ -371,10 +385,6 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         getPresenter().showPlaceInfoNearPoint(p);
     }
 
-
-    private void showPlacesByCurrentLocation(View v) {
-        getPresenter().showPlaceInfoNearPoint(mapView.getMyLocation());
-    }
 
 
 

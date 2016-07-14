@@ -9,6 +9,7 @@ import java.util.Vector;
 
 import svp.com.dontmissplaces.db.Place;
 import svp.com.dontmissplaces.db.Repository;
+import svp.com.dontmissplaces.model.PlaceProvider;
 import svp.com.dontmissplaces.model.nominatim.SearchByText;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.activities.SearchPlacesActivity;
@@ -38,9 +39,16 @@ public class SearchPlacesPresenter extends CommutativePresenter<SearchPlacesActi
 
     public void startSearch(String newText) {
         String query = newText == null ? bundle.getQuery() : newText;
-        if(!query.isEmpty() && !processing.equals(query)){
+        if(!query.isEmpty() && !processing.equals(query) && query.length() > 5){
             processing = query;
 
+            PlaceProvider pp = new PlaceProvider(state.getActivity());
+            Vector<SearchPlacesActivity.PlaceSearchResult> places = new Vector<>() ;
+            for (Place p : pp.getPlace(newText)){
+                places.add(new SearchPlacesActivity.PlaceSearchResult(p));
+            }
+            state.addPlaces(places);
+            /*
             new SearchByText(){
                 @Override
                 protected void processing(ArrayList<Place> poi){
@@ -53,7 +61,7 @@ public class SearchPlacesPresenter extends CommutativePresenter<SearchPlacesActi
                     state.addPlaces(pv);
                 }
             }.execute(query);
-
+*/
             state.setSearchQuery(query);
         }
     }

@@ -35,8 +35,6 @@ public interface IMapView extends IActivityView {
 
     void stopTrackRecording();
 
-    Point2D getMyLocation();
-
     void setOnMapClickListener(OnMapClickListener listener);
     void drawMarker(IPOIView poi);
 

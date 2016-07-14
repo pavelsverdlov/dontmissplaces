@@ -243,7 +243,7 @@ public class GoogleMapView
     public void enableMyLocation() {
         if(permissions.isFineLocationGranted()) {
             mMap.setMyLocationEnabled(true);
-            getPresenter().permissionFineLocationReceived();
+//            getPresenter().permissionFineLocationReceived();
         }else {
             mMap.setMyLocationEnabled(false);
         }

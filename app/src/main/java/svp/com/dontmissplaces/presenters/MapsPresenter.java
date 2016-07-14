@@ -55,11 +55,11 @@ public class MapsPresenter extends Presenter<IMapView,IMapViewState> implements 
         }
     }
 
-    public void permissionFineLocationReceived(){
-        if(prevLocation == null) {
-           // prevLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        }
-    }
+//    public void permissionFineLocationReceived(){
+//        if(prevLocation == null) {
+//           // prevLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//        }
+//    }
 
     //TODO: move to google map view
     public void onMapReady(UiSettings mUiSettings) {

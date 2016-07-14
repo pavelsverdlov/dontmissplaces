@@ -1,30 +1,28 @@
 package svp.com.dontmissplaces.ui.model;
 
-import android.database.Cursor;
-import android.view.View;
-import android.widget.TextView;
-
-import com.svp.infrastructure.common.PermissionUtils;
-import com.svp.infrastructure.common.ViewExtensions;
-import com.svp.infrastructure.common.view.ICursorParcelable;
-
 import org.osmdroid.util.GeoPoint;
 
-import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.db.Place;
 import svp.com.dontmissplaces.model.Map.Point2D;
+import svp.com.dontmissplaces.model.Map.google.GPlaceAddressDetails;
+import svp.com.dontmissplaces.model.nominatim.PlaceAddressDetails;
 
 public class PlaceView implements IPOIView {
 
     protected Place place;
     private final Point2D originalPoint;
-    private PlaceAddressDetails addressDetails;
+    private IPlaceAddressDetails addressDetails;
     private PlaceExtraTags extraTags;
 
     public PlaceView(Place place, Point2D originalPoint) {
         this.place = place;
         this.originalPoint = originalPoint;
-        addressDetails = new PlaceAddressDetails(place.title);
+
+        if(place.nominatimId > 0) {
+            addressDetails = new PlaceAddressDetails(place.title);
+        }else{
+            addressDetails = new GPlaceAddressDetails(place);
+        }
         extraTags = new PlaceExtraTags(place.extratags);
     }
 

@@ -1,9 +1,11 @@
-package svp.com.dontmissplaces.ui.model;
+package svp.com.dontmissplaces.model.nominatim;
+
+import svp.com.dontmissplaces.ui.model.IPlaceAddressDetails;
 
 /*
 * Toilette Tour Eiffel, 19, Avenue Gustave Eiffel, Gros-Caillou, 7e, Paris, Île-de-France, France métropolitaine, 75007, France
 * */
-public class PlaceAddressDetails {
+public class PlaceAddressDetails implements IPlaceAddressDetails {
     private final String full;
     private final String[] array;
 

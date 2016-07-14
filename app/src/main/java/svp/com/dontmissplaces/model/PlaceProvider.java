@@ -10,12 +10,10 @@ import com.google.android.gms.maps.model.LatLng;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Vector;
 
 import svp.com.dontmissplaces.db.Place;
 
-/**
- * Created by Pasha on 5/31/2016.
- */
 public class PlaceProvider {
     private final Activity activity;
 
@@ -31,25 +29,43 @@ public class PlaceProvider {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Place place = new Place(latLng.longitude,latLng.latitude);
-
         if (addresses != null) {
-            Address returnedAddress = addresses.get(0);
-
-
-            place.city = addresses.get(0).getLocality();
-            String state = addresses.get(0).getAdminArea();
-            place.country = addresses.get(0).getCountryName();
-            String postalCode = addresses.get(0).getPostalCode();
-            place.title = addresses.get(0).getFeatureName();
-            place.address = addresses.get(0).getAddressLine(0);
-            StringBuilder strReturnedAddress = new StringBuilder("");
-
-            for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
-                strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
-            }
-            place.description = strReturnedAddress.toString();
+            return parceAddress(addresses.get(0));
         }
+        return null;
+    }
+    public Vector<Place> getPlace(String text) {
+        Geocoder geocoder = new Geocoder(activity, Locale.getDefault());
+        List<Address> addresses = null;
+        try {
+            addresses = geocoder.getFromLocationName(text,10);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Vector<Place> places = new Vector<>();
+        if (addresses != null) {
+            for (Address a : addresses){
+                places.add(parceAddress(a));
+            }
+        }
+        return places;
+    }
+
+    private Place parceAddress(Address address) {
+        Place place = new Place(address.getLongitude(),address.getLatitude());
+        place.city = address.getLocality();
+        String state = address.getAdminArea();
+        place.country = address.getCountryName();
+        String postalCode = address.getPostalCode();
+        place.title = address.getFeatureName();
+        place.address = address.getAddressLine(0);
+        StringBuilder strReturnedAddress = new StringBuilder("");
+
+        for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+            strReturnedAddress.append(address.getAddressLine(i)).append(" ");
+        }
+        place.description = strReturnedAddress.toString();
         return place;
     }
 }
