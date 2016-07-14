@@ -31,6 +31,7 @@ import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
 import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.bonuspack.utils.WebImageCache;
 
+import java.util.Date;
 import java.util.Vector;
 
 import butterknife.Bind;
@@ -260,6 +261,7 @@ public class SearchPlacesActivity extends AppCompatActivityView<SearchPlacesPres
         //  searchManager.triggerSearch();
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            long prevTime;
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -267,7 +269,15 @@ public class SearchPlacesActivity extends AppCompatActivityView<SearchPlacesPres
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                getPresenter().startSearch(newText);
+                long d = new Date().getTime();
+                if(prevTime == 0){
+                    prevTime = d;
+                }
+                long change = prevTime - d;
+                if(change > 100) {
+                    getPresenter().startSearch(newText);
+                }
+                prevTime = d;
                 return true;
             }
         });

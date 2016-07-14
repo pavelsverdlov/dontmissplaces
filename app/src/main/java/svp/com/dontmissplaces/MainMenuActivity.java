@@ -404,7 +404,9 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
             }
             @Override
             public boolean onQueryTextChange(String newText) {
-                getPresenter().openSearch(newText);
+                if(newText.length() > 5) {
+                    getPresenter().openSearch(newText);
+                }
 //                item.collapseActionView();
 //                searchView.setIconified(true);
                 return true;
