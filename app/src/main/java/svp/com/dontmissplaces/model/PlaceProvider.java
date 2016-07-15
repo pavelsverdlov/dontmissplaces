@@ -16,13 +16,16 @@ import svp.com.dontmissplaces.db.Place;
 
 public class PlaceProvider {
     private final Activity activity;
+    private final Geocoder geocoder;
 
     public PlaceProvider(Activity activity) {
         this.activity = activity;
+        Locale locale = Locale.getDefault();
+        geocoder = new Geocoder(activity, locale);
     }
 
     public Place getPlace(LatLng latLng) {
-        Geocoder geocoder = new Geocoder(activity, Locale.getDefault());
+
         List<Address> addresses = null;
         try {
             addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
@@ -35,7 +38,6 @@ public class PlaceProvider {
         return null;
     }
     public Vector<Place> getPlace(String text) {
-        Geocoder geocoder = new Geocoder(activity, Locale.getDefault());
         List<Address> addresses = null;
         try {
             addresses = geocoder.getFromLocationName(text,10);

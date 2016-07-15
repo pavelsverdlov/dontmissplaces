@@ -1,6 +1,8 @@
 package svp.com.dontmissplaces.ui;
 
-import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.Application;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -8,19 +10,14 @@ import android.os.Build;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import svp.com.dontmissplaces.App;
 import svp.com.dontmissplaces.ui.activities.CrashActivity;
 
-/**
- * Created by Pasha on 4/9/2016.
- */
 public class UncaughtExceptionHandler implements Thread.UncaughtExceptionHandler{
     private final String LINE_SEPARATOR = "\n";
-    private final Context context;
+    private final Application application;
 
-    public UncaughtExceptionHandler(Context context) {
-
-        this.context = context;
+    public UncaughtExceptionHandler(Application application) {
+        this.application = application;
     }
     public void uncaughtException(Thread thread, Throwable exception) {
         StringWriter stackTrace = new StringWriter();
@@ -56,14 +53,41 @@ public class UncaughtExceptionHandler implements Thread.UncaughtExceptionHandler
         errorReport.append(Build.VERSION.INCREMENTAL);
         errorReport.append(LINE_SEPARATOR);
 
+        Context context = application.getApplicationContext();
         String error = errorReport.toString();
-        Intent intent = new Intent(context, CrashActivity.class);
+
+        Intent intent = new Intent();//"svp.com.dontmissplaces.ui.activities.CrashActivity");//context, CrashActivity.class);//
+        intent.setClass(context, CrashActivity.class);
+        intent.setAction(CrashActivity.class.getName());
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(application.getBaseContext(), 0, intent, 0);
+
+        AlarmManager mgr = (AlarmManager)application.getSystemService(Context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 2000, pendingIntent);
+        System.exit(2);
+
+
+        /*
+
+        Intent intent = new Intent();//"svp.com.dontmissplaces.ui.activities.CrashActivity");//context, CrashActivity.class);//
+        intent.setClass(context, CrashActivity.class);
+        intent.setAction(CrashActivity.class.getName());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
 
         intent.putExtra(CrashActivity.ERROR_KEY, error);
-        context.startActivity(intent);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        android.os.Process.killProcess(android.os.Process.myPid());
-        System.exit(10);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(context, 22, intent, 0);
+        try {
+//            pendingIntent.send();
+//            application.startActivity(Intent.createChooser(intent,"An error has occurred! Send an error report?"));
+            context.startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+*/
+//        android.os.Process.killProcess(android.os.Process.myPid());
+//        System.exit(10);
     }
 
 }

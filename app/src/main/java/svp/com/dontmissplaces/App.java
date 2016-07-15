@@ -24,7 +24,7 @@ public class App extends Application {
     private final Repository repository;
 
     public App(){
-        Thread.setDefaultUncaughtExceptionHandler(new svp.com.dontmissplaces.ui.UncaughtExceptionHandler(this.getBaseContext()));
+        Thread.setDefaultUncaughtExceptionHandler(new svp.com.dontmissplaces.ui.UncaughtExceptionHandler(this));
         repository = new Repository(this);
     }
 
