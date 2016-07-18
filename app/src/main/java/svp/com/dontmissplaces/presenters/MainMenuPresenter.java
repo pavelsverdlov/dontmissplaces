@@ -55,12 +55,9 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     private SessionTrack recordingSession;
     private MapViewTypes mapViewType;
 
-    private final HashSet<BoundingBoxE6> seachedBoxes;
-
     public MainMenuPresenter(Repository repository) {
         this.repository = repository;
         mapViewType = MapViewTypes.Osmdroid;
-        seachedBoxes = new HashSet<>();
     }
 
     public void startNewTrackSession() {
@@ -110,8 +107,14 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     public void onMoveToMyLocation() {
         state.MapCameraMoveTo(prevLocation == null ? Point2D.empty() : new Point2D(prevLocation));
     }
-    public void pinPlace(IPOIView place) {
-//        repository.place.insert(place);
+    public void pinPlace(IPOIView poi) {
+        Place p = poi.getPlace();
+        poi.update(repository.place.insert(p));
+    }
+    public void beenInPlace(IPOIView poi) {
+        Place p = poi.getPlace();
+        p.setBeenHere();
+        poi.update(repository.place.insert(p));
     }
 
     public void permissionFineLocationReceived() {
@@ -226,7 +229,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
             datas.add(new PointsOfInterestInsiteBoxTask.InputData(box,phrase,50));
         }
 
-        if(datas.size() == 0 && !seachedBoxes.add(box)){
+        if(datas.size() == 0){
             return;
         }
 

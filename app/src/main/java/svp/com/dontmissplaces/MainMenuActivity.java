@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -159,8 +160,9 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     private PlaceInfoLayoutView placeInfoLayoutView;
 //    private OverMapBottomSheetBehavior behavior;
 //    private final int bottomPanelHeight = 224;
-    @Bind(R.id.select_place_move_to_location_btn) ImageButton moveToLocation;
+    @Bind(R.id.select_place_move_to_location_btn) Button moveToLocation;
     @Bind(R.id.select_place_person_pin) ImageButton personPin;
+    @Bind(R.id.select_place_beenhere_btn) ImageButton personBeenHere;
 
 
     public MainMenuActivity() {
@@ -201,7 +203,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
                 .setOnClickListener(this);
         moveToLocation.setOnClickListener(this);
         personPin.setOnClickListener(this);
-
+        personBeenHere.setOnClickListener(this);
     }
 
     /**
@@ -224,6 +226,9 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
                 break;
             case R.id.select_place_person_pin:
                 getPresenter().pinPlace(placeInfoLayoutView.getPlace());
+                break;
+            case R.id.select_place_beenhere_btn:
+                getPresenter().beenInPlace(placeInfoLayoutView.getPlace());
                 break;
         }
     }

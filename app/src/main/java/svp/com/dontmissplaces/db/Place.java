@@ -2,6 +2,8 @@ package svp.com.dontmissplaces.db;
 
 import android.database.Cursor;
 
+import com.svp.infrastructure.common.PermissionUtils;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,6 +37,8 @@ public class Place extends dto {
     public long creationTime;
     public String iconUrl;
 
+    public int beenHere;
+
 
     public Place(long id) {
         super(id);
@@ -47,6 +51,7 @@ public class Place extends dto {
         nominatimImportance = -1;
 
         latitude = longitude = -1;
+        beenHere = 0;
     }
     public Place(double longitude, double latitude) {
         this(-1);
@@ -55,6 +60,8 @@ public class Place extends dto {
     }
     public Place(JSONObject jPlace) throws JSONException {
         super(-1);
+        beenHere = 0;
+
         osmNodeId = jPlace.getLong("osm_id");
         osmType= jPlace.getString("osm_type");
         osmRank = jPlace.getDouble("place_rank");
@@ -103,6 +110,8 @@ public class Place extends dto {
         placeType = cursor.getInt(cursor.getColumnIndex(DatabaseStructure.Places.PLACETYPE));
         */
         creationTime = cursor.getLong(cursor.getColumnIndex(DatabaseStructure.Places.CREATION_TIME));
+
+        beenHere= cursor.getInt(cursor.getColumnIndex(DatabaseStructure.Places.BEEN_HERE));
     }
 
 
@@ -112,4 +121,7 @@ public class Place extends dto {
     }
 
 
+    public void setBeenHere() {
+        beenHere = 1;
+    }
 }

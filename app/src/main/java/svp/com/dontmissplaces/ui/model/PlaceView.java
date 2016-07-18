@@ -1,5 +1,7 @@
 package svp.com.dontmissplaces.ui.model;
 
+import android.graphics.Point;
+
 import org.osmdroid.util.GeoPoint;
 
 import svp.com.dontmissplaces.db.Place;
@@ -15,15 +17,8 @@ public class PlaceView implements IPOIView {
     private PlaceExtraTags extraTags;
 
     public PlaceView(Place place, Point2D originalPoint) {
-        this.place = place;
         this.originalPoint = originalPoint;
-
-        if(place.nominatimId > 0) {
-            addressDetails = new PlaceAddressDetails(place.title);
-        }else{
-            addressDetails = new GPlaceAddressDetails(place);
-        }
-        extraTags = new PlaceExtraTags(place.extratags);
+        update(place);
     }
 
     public String getName(){
@@ -46,6 +41,15 @@ public class PlaceView implements IPOIView {
     public GeoPoint getGeoPoint(){
         return new GeoPoint(place.latitude, place.longitude);
     }
+
+    @Override
+    public Place getPlace() { return place; }
+    @Override
+    public void update(Place place) {
+        _update(place);
+    }
+
+
     public String getAddress(){
         return addressDetails.getFullAddress();
     }
@@ -65,5 +69,15 @@ public class PlaceView implements IPOIView {
     }
 
 
+    private void _update(Place place){
+        this.place = place;
+
+        if(place.nominatimId > 0) {
+            addressDetails = new PlaceAddressDetails(place.title);
+        }else{
+            addressDetails = new GPlaceAddressDetails(place);
+        }
+        extraTags = new PlaceExtraTags(place.extratags);
+    }
 
 }

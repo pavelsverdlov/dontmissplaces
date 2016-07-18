@@ -5,6 +5,7 @@ import android.content.ClipboardManager;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,7 +29,8 @@ public class PlaceInfoLayoutView implements View.OnClickListener {
     @Bind(R.id.select_place_show_near_info) AppCompatTextView nearInfo;
     @Bind(R.id.select_place_show_title) AppCompatTextView title;
     @Bind(R.id.select_place_show_placetype) AppCompatTextView placetype;
-    @Bind(R.id.select_place_content_location) AppCompatTextView contentLocation;
+    @Bind(R.id.select_place_move_to_location_btn) Button moveToLocation;
+    //@Bind(R.id.select_place_content_location) AppCompatTextView contentLocation;
     @Bind(R.id.select_place_show_address) AppCompatTextView address;
     @Bind(R.id.select_place_header_layout) View placeInfoHeader;
     @Bind(R.id.main_action_btns_toolbar) View actiontoolbar;
@@ -103,7 +105,7 @@ public class PlaceInfoLayoutView implements View.OnClickListener {
 
         title.setText(name);
         placetype.setText(type);
-        contentLocation.setText(place.getLocationStringFormat());
+        moveToLocation.setText(place.getLocationStringFormat());
         address.setText(place.getAddress());
 
         contentview.post(new Runnable() {

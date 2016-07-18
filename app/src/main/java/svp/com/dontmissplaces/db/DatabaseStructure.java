@@ -117,7 +117,10 @@ public class DatabaseStructure {
                         "," + LATITUDE          + " " + LATITUDE_TYPE +
                         "," + LONGITUDE         + " " + LONGITUDE_TYPE +
                         "," + EXTRATAGS         + " " + EXTRATAGS_TYPE;
-        String CREATE_STATEMENT ="CREATE TABLE " + TABLE + "(" + CREATE_COLUMNS + ");";
+        String CREATE_STATEMENT ="CREATE TABLE " + TABLE + "(" +
+                CREATE_COLUMNS +
+                "," + BEEN_HERE + " " + BEEN_HERE_TYPE +
+                ");";
 
         String SELECT_ALL = "SELECT * FROM " + TABLE + ";";
         String DELETE_ALL = "DELETE FROM " + TABLE + ";";
@@ -197,6 +200,10 @@ public class DatabaseStructure {
 
         String CREATION_TIME = "creationtime";
         String CREATION_TIME_TYPE   = "INTEGER NOT NULL";
+
+        //user data
+        String BEEN_HERE = "been_here";
+        String BEEN_HERE_TYPE = _INTEGER_NOT_NULL;
     }
 
     public interface Base extends BaseColumns {

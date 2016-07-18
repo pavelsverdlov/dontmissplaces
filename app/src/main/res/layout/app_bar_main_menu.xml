@@ -191,21 +191,21 @@
         android:gravity="fill|fill_horizontal"
         android:orientation="horizontal">
 
-            <ImageButton
+            <Button
                 android:id="@+id/select_place_move_to_location_btn"
                 style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:scaleType="fitCenter"
-                android:src="@mipmap/ic_place_white_48dp" />
-            <TextView
-                android:id="@+id/select_place_content_location"
-                android:layout_weight="1"
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical|start"
-                />
+                android:background="@mipmap/ic_place_white_48dp" />
+            <!--<TextView-->
+                <!--android:id="@+id/select_place_content_location"-->
+                <!--android:layout_weight="1"-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:gravity="center_vertical|start"-->
+                <!--/>-->
         </LinearLayout>
         <!-- place info content-->
         <LinearLayout
