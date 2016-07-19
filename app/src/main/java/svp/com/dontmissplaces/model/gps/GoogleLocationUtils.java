@@ -53,22 +53,22 @@ public class GoogleLocationUtils {
      *
      * @param context the context
      */
-    public static String getGpsDisabledMessage(Context context) {
-        int id = ApiAdapterFactory.getApiAdapter().hasLocationMode() ? R.string.gps_disabled_location_mode
-                : R.string.gps_disabled;
-        return context.getString(id, getLocationSettingsName(context));
-    }
+//    public static String getGpsDisabledMessage(Context context) {
+//        int id = ApiAdapterFactory.getApiAdapter().hasLocationMode() ? R.string.gps_disabled_location_mode
+//                : R.string.gps_disabled;
+//        return context.getString(id, getLocationSettingsName(context));
+//    }
 
     /**
      * Gets the gps disabled message when my location button is pressed.
      *
      * @param context the context
      */
-    public static String getGpsDisabledMyLocationMessage(Context context) {
-        int id = ApiAdapterFactory.getApiAdapter().hasLocationMode() ? R.string.gps_disabled_my_location_location_mode
-                : R.string.gps_disabled_my_location;
-        return context.getString(id, getLocationSettingsName(context));
-    }
+//    public static String getGpsDisabledMyLocationMessage(Context context) {
+//        int id = ApiAdapterFactory.getApiAdapter().hasLocationMode() ? R.string.gps_disabled_my_location_location_mode
+//                : R.string.gps_disabled_my_location;
+//        return context.getString(id, getLocationSettingsName(context));
+//    }
 
     /**
      * Creates a new location settings intent.
@@ -106,11 +106,11 @@ public class GoogleLocationUtils {
      *
      * @param context the context
      */
-    private static String getLocationSettingsName(Context context) {
-        return context.getString(
-                useGoogleLocationSettings(context) ? R.string.gps_google_location_settings
-                        : R.string.gps_location_access);
-    }
+//    private static String getLocationSettingsName(Context context) {
+//        return context.getString(
+//                useGoogleLocationSettings(context) ? R.string.gps_google_location_settings
+//                        : R.string.gps_location_access);
+//    }
 
     /**
      * Returns true to use the google location settings.
