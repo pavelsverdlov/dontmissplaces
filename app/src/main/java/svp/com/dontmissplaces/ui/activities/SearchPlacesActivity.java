@@ -26,6 +26,8 @@ import com.svp.infrastructure.common.ViewExtensions;
 import com.svp.infrastructure.common.view.BaseCursorAdapter;
 import com.svp.infrastructure.common.view.ICursorParcelable;
 import com.svp.infrastructure.mvpvs.bundle.BundleProvider;
+import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
+import com.svp.infrastructure.mvpvs.commutate.ICommutativeElement;
 import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
 
 import org.osmdroid.bonuspack.location.POI;
@@ -45,7 +47,7 @@ import svp.com.dontmissplaces.ui.adapters.PlaceSearchAdapter;
 import svp.com.dontmissplaces.ui.model.PlaceView;
 
 public class SearchPlacesActivity extends AppCompatActivityView<SearchPlacesPresenter>
-        implements ActivityCommutator.ICommutativeElement, PlaceSearchAdapter.OnClickListener {
+        implements ICommutativeElement, PlaceSearchAdapter.OnClickListener {
 
     public static class SearchPlacesBundleProvider extends BundleProvider {
         private static final java.lang.String KEY = "QUERY_KEY";
@@ -298,7 +300,7 @@ public class SearchPlacesActivity extends AppCompatActivityView<SearchPlacesPres
     * Commutative
     * */
     @Override
-    public ActivityCommutator.ActivityOperationResult getOperation() {
+    public ActivityOperationItem getOperation() {
         return ActivityCommutator.ActivityOperationResult.SearchPlaces;
     }
 

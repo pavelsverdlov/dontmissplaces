@@ -25,6 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.svp.infrastructure.common.ViewExtensions;
+import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
+import com.svp.infrastructure.mvpvs.commutate.ICommutativeElement;
 import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
 
 import org.osmdroid.util.BoundingBoxE6;
@@ -49,14 +51,14 @@ import svp.com.dontmissplaces.ui.model.TrackView;
 //http://wptrafficanalyzer.in/blog/adding-google-places-autocomplete-api-as-custom-suggestions-in-android-search-dialog/
 public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         implements NavigationView.OnNavigationItemSelectedListener,
-        ActivityCommutator.ICommutativeElement,
+        ICommutativeElement,
         View.OnClickListener,
         OnMapClickListener {
 
     private static final String TAG = "MainMenuActivity";
 
     @Override
-    public ActivityCommutator.ActivityOperationResult getOperation() {
+    public ActivityOperationItem getOperation() {
         return ActivityCommutator.ActivityOperationResult.MainMenu;
     }
 

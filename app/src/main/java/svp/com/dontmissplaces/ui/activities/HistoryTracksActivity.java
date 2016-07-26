@@ -22,14 +22,16 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
+import com.svp.infrastructure.mvpvs.commutate.ICommutativeElement;
 import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
 
 import java.util.HashSet;
 
-public class HistoryTracksActivity extends AppCompatActivityView<HistoryTracksPresenter> implements ActivityCommutator.ICommutativeElement{
+public class HistoryTracksActivity extends AppCompatActivityView<HistoryTracksPresenter> implements ICommutativeElement {
 
     @Override
-    public ActivityCommutator.ActivityOperationResult getOperation() {
+    public ActivityOperationItem getOperation() {
         return ActivityCommutator.ActivityOperationResult.HistoryTracks;
     }
     @Override

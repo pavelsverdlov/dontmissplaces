@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.svp.infrastructure.mvpvs.bundle.BundleProvider;
 import com.svp.infrastructure.mvpvs.bundle.IBundleProvider;
+import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
@@ -136,28 +137,24 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     }
 
     @Override
-    protected void incomingResultFrom(ActivityCommutator.ActivityOperationResult from, Intent data) {
-        switch (from){
-            case HistoryTracks:
-                BaseBundleProvider bp = new BaseBundleProvider(data);
-                recordingTrack = bp.getTrack();
+    protected void incomingResultFrom(ActivityOperationItem from, Intent data) {
+        if(ActivityCommutator.ActivityOperationResult.HistoryTracks.is(from)){
+            BaseBundleProvider bp = new BaseBundleProvider(data);
+            recordingTrack = bp.getTrack();
 
-                Vector<SessionView> sessions = new Vector<>();
-                for (SessionTrack session : repository.track.getSessions(recordingTrack)){
-                    sessions.add(new SessionView(session,repository.track.getWaypoints(session)));
-                }
+            Vector<SessionView> sessions = new Vector<>();
+            for (SessionTrack session : repository.track.getSessions(recordingTrack)){
+                sessions.add(new SessionView(session,repository.track.getWaypoints(session)));
+            }
 
-                state.displayTrackOnMap(new TrackView(recordingTrack, sessions));
-                break;
-            case SearchPlaces:
-                SearchPlacesActivity.SearchPlacesBundleProvider sbp = new SearchPlacesActivity.SearchPlacesBundleProvider(data);
-                long id = sbp.getFoundPlaceId();
-                Place place = repository.poi.getPlaceById(id);
-                state.showPlaceInfo(new PlaceView(place, Point2D.empty()), Point2D.empty());
-                //state.showMarker();
-                break;
+            state.displayTrackOnMap(new TrackView(recordingTrack, sessions));
+        }else if(ActivityCommutator.ActivityOperationResult.SearchPlaces.is(from)){
+            SearchPlacesActivity.SearchPlacesBundleProvider sbp = new SearchPlacesActivity.SearchPlacesBundleProvider(data);
+            long id = sbp.getFoundPlaceId();
+            Place place = repository.poi.getPlaceById(id);
+            state.showPlaceInfo(new PlaceView(place, Point2D.empty()), Point2D.empty());
+            //state.showMarker();
         }
-
     }
     @Override
     protected void onAttachedView(MainMenuActivity view, Intent intent) {

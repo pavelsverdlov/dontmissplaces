@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.svp.infrastructure.mvpvs.bundle.IBundleProvider;
+import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
+import com.svp.infrastructure.mvpvs.commutate.ICommutativeElement;
 import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
 
 import butterknife.Bind;
@@ -22,10 +24,10 @@ import svp.com.dontmissplaces.ui.BaseBundleProvider;
 import com.svp.infrastructure.mvpvs.bundle.BundleProvider;
 
 public class SaveTrackActivity extends AppCompatActivityView<SaveTrackPresenter>
-    implements ActivityCommutator.ICommutativeElement{
+    implements ICommutativeElement {
 
     @Override
-    public ActivityCommutator.ActivityOperationResult getOperation() {
+    public ActivityOperationItem getOperation() {
         return ActivityCommutator.ActivityOperationResult.SaveTrack;
     }
 

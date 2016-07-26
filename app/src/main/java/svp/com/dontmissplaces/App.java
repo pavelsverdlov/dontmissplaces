@@ -4,6 +4,7 @@ package svp.com.dontmissplaces;
 import android.app.Application;
 import android.os.Bundle;
 
+import com.svp.infrastructure.mvpvs.Registrator;
 import com.svp.infrastructure.mvpvs.bundle.BundleContainer;
 import com.svp.infrastructure.mvpvs.bundle.IBundleProvider;
 import com.svp.infrastructure.mvpvs.presenter.IPresenter;
@@ -45,7 +46,7 @@ public class App extends Application {
             }
         });
 
-        register(OsmdroidMapView.class,
+        Registrator.register(OsmdroidMapView.class,
                 new PresenterContainer.IPresenterCreator() {
                     @Override
                     public IPresenter create() {
@@ -87,7 +88,7 @@ public class App extends Application {
             }
         });
 
-        register(HistoryTracksActivity.class,
+        Registrator.register(HistoryTracksActivity.class,
                 new PresenterContainer.IPresenterCreator() {
                     @Override
                     public IPresenter create() {
@@ -101,7 +102,7 @@ public class App extends Application {
                     }
                 });
 
-        register(SaveTrackActivity.class,
+        Registrator.register(SaveTrackActivity.class,
                 new PresenterContainer.IPresenterCreator() {
                     @Override
                     public IPresenter create() {
@@ -115,7 +116,7 @@ public class App extends Application {
                     }
                 });
 
-        register(SettingsActivity.class,
+        Registrator.register(SettingsActivity.class,
                 new PresenterContainer.IPresenterCreator() {
                     @Override
                     public IPresenter create() {
@@ -129,7 +130,7 @@ public class App extends Application {
                     }
                 });
 
-        register(SearchPlacesActivity.class,
+        Registrator.register(SearchPlacesActivity.class,
                 new PresenterContainer.IPresenterCreator() {
                     @Override
                     public IPresenter create() {
@@ -148,12 +149,6 @@ public class App extends Application {
         super.onCreate();
     }
 
-    private static <T extends IActivityView> void register(Class<?> _class,
-                                                           PresenterContainer.IPresenterCreator pcreator,
-                                                           ViewStateContainer.IViewStateCreator<T> stateCreator){
-        PresenterContainer.register(_class, pcreator);
-        ViewStateContainer.Register(_class, stateCreator);
-    }
 
     //refactor because this is too complicated
     private void registerBundleProviders(){
