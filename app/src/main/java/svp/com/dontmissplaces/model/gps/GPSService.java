@@ -7,13 +7,13 @@ import android.content.Intent;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -66,8 +66,8 @@ public class GPSService extends Service {
     private PendingIntent activityRecognitionPendingIntent;
     //OLD private ActivityRecognitionClient activityRecognitionClient;
     private GoogleApiClient activityRecognitionClient;
-    private PeriodicTaskExecutor voiceExecutor;
-    private PeriodicTaskExecutor splitExecutor;
+//    private PeriodicTaskExecutor voiceExecutor;
+//    private PeriodicTaskExecutor splitExecutor;
     //    private SharedPreferences sharedPreferences;
     private long recordingTrackId;
     private boolean recordingTrackPaused;
@@ -80,8 +80,8 @@ public class GPSService extends Service {
     private double weight;
 
     // The following variables are set when recording:
-    private TripStatisticsUpdater trackTripStatisticsUpdater;
-    private TripStatisticsUpdater markerTripStatisticsUpdater;
+//    private TripStatisticsUpdater trackTripStatisticsUpdater;
+//    private TripStatisticsUpdater markerTripStatisticsUpdater;
     private PowerManager.WakeLock wakeLock;
     private SensorManager sensorManager;
     private Location lastLocation;
@@ -94,14 +94,15 @@ public class GPSService extends Service {
         return binder;
     }
 
-    private IBinder binder = new IGPSService.Stub() {
-        @Override
-        public Location getLastLocation() throws RemoteException {
-            return null;
-        }
-    };
+    private ServiceBinder binder = new ServiceBinder(this);
+//    private IBinder binder = new IGPSService.Stub() {
+//        @Override
+//        public Location getLastLocation() throws RemoteException {
+//            return null;
+//        }
+//    };
 
-    private LocationListener locationListener = new LocationListener() {
+    private com.google.android.gms.location.LocationListener locationListener = new com.google.android.gms.location.LocationListener() {
         @Override
         public void onLocationChanged(final Location location) {
             if (myTracksLocationManager == null || executorService == null
@@ -218,18 +219,18 @@ public class GPSService extends Service {
 
         handler.removeCallbacks(registerLocationRunnable);
         unregisterLocationListener();
-
-        try {
-            splitExecutor.shutdown();
-        } finally {
-            splitExecutor = null;
-        }
-
-        try {
-            voiceExecutor.shutdown();
-        } finally {
-            voiceExecutor = null;
-        }
+//
+//        try {
+//            splitExecutor.shutdown();
+//        } finally {
+//            splitExecutor = null;
+//        }
+//
+//        try {
+//            voiceExecutor.shutdown();
+//        } finally {
+//            voiceExecutor = null;
+//        }
 
         if (activityRecognitionClient.isConnected()) {
             //OLD activityRecognitionClient.removeActivityUpdates(activityRecognitionPendingIntent);
@@ -257,8 +258,8 @@ public class GPSService extends Service {
         super.onDestroy();
     }
 
-    public boolean isRecording() {
-        return recordingTrackId != PreferencesUtils.RECORDING_TRACK_ID_DEFAULT;
+    public boolean isRecording(){
+        return true;
     }
     public boolean isPaused() {
         return recordingTrackPaused;
@@ -279,7 +280,7 @@ public class GPSService extends Service {
         if (intent != null && intent.getBooleanExtra(RESUME_TRACK_EXTRA_NAME, false)) {
             if (!shouldResumeTrack()) {
                 Log.i(TAG, "Stop resume track.");
-                updateRecordingState(PreferencesUtils.RECORDING_TRACK_ID_DEFAULT, true);
+//                updateRecordingState(PreferencesUtils.RECORDING_TRACK_ID_DEFAULT, true);
                 stopSelfResult(startId);
                 return;
             }
@@ -321,25 +322,10 @@ public class GPSService extends Service {
         return false;
     }
     private void resumeCurrentTrack() {
-        if (!isRecording() || !isPaused()) {
-            Log.d(TAG, "Ignore resumeCurrentTrack. Not recording or not paused.");
-            return;
-        }
-
-        // Update shared preferences
-        recordingTrackPaused = false;
-//        PreferencesUtils.setBoolean(this, R.string.recording_track_paused_key, false);
-
-        // Update database
-//        Track track = myTracksProviderUtils.getTrack(recordingTrackId);
-//        if (track != null) {
             Location resume = new Location(LocationManager.GPS_PROVIDER);
             resume.setLongitude(0);
             resume.setLatitude(RESUME_LATITUDE);
             resume.setTime(System.currentTimeMillis());
-//            insertLocation(track, resume, null);
-//        }
-
         startRecording(false);
     }
     private void startRecording(boolean trackStarted) {
@@ -351,12 +337,12 @@ public class GPSService extends Service {
         isIdle = false;
 
         startGps();
-        sendTrackBroadcast(trackStarted ? R.string.track_started_broadcast_action
-                : R.string.track_resumed_broadcast_action, recordingTrackId);
+        sendTrackBroadcast(trackStarted ? "track_started_broadcast_action"
+                : "track_resumed_broadcast_action", recordingTrackId);
 
         // Restore periodic tasks
-        voiceExecutor.restore();
-        splitExecutor.restore();
+//        voiceExecutor.restore();
+//        splitExecutor.restore();
     }
     private void startGps() {
         wakeLock = SystemUtils.acquireWakeLock(this, wakeLock);
@@ -366,8 +352,8 @@ public class GPSService extends Service {
     private void endRecording(boolean trackStopped, long trackId) {
 
         // Shutdown periodic tasks
-        voiceExecutor.shutdown();
-        splitExecutor.shutdown();
+//        voiceExecutor.shutdown();
+//        splitExecutor.shutdown();
 
         // Update instance variables
         if (sensorManager != null) {
@@ -388,8 +374,279 @@ public class GPSService extends Service {
             stopSelf();
         }
     }
-    
 
+    private void sendTrackBroadcast(String actionId, long trackId) {
+        Intent intent = new Intent().setAction(actionId)
+                .putExtra("track_id_broadcast_extra", trackId);
+        sendBroadcast(intent, "permission_notification_value");
+//        if (PreferencesUtils.getBoolean(
+//                this, R.string.allow_access_key, PreferencesUtils.ALLOW_ACCESS_DEFAULT)) {
+            sendBroadcast(intent, "broadcast_notifications_permission");
+//        }
+    }
+    private void onLocationChangedAsync(Location location) {
+        try {
+            if (!isRecording() || isPaused()) {
+                Log.w(TAG, "Ignore onLocationChangedAsync. Not recording or paused.");
+                return;
+            }
+
+//            Track track = myTracksProviderUtils.getTrack(recordingTrackId);
+//            if (track == null) {
+//                Log.w(TAG, "Ignore onLocationChangedAsync. No track.");
+//                return;
+//            }
+
+            if (!LocationUtils.isValidLocation(location)) {
+                Log.w(TAG, "Ignore onLocationChangedAsync. location is invalid.");
+                return;
+            }
+
+            if (!location.hasAccuracy() || location.getAccuracy() >= recordingGpsAccuracy) {
+                Log.d(TAG, "Ignore onLocationChangedAsync. Poor accuracy.");
+                return;
+            }
+
+            // Fix for phones that do not set the time field
+            if (location.getTime() == 0L) {
+                location.setTime(System.currentTimeMillis());
+            }
+
+            Location lastValidTrackPoint = lastLocation;//getLastValidTrackPointInCurrentSegment(track.getId());
+            long idleTime = 0L;
+            if (lastValidTrackPoint != null && location.getTime() > lastValidTrackPoint.getTime()) {
+                idleTime = location.getTime() - lastValidTrackPoint.getTime();
+            }
+            locationListenerPolicy.updateIdleTime(idleTime);
+            if (currentRecordingInterval != locationListenerPolicy.getDesiredPollingInterval()) {
+                registerLocationListener();
+            }
+
+//            SensorDataSet sensorDataSet = getSensorDataSet();
+//            if (sensorDataSet != null) {
+//                location = new MyTracksLocation(location, sensorDataSet);
+//            }
+
+            // Always insert the first segment location
+            if (!currentSegmentHasLocation) {
+//                insertLocation(track, location, null);
+                currentSegmentHasLocation = true;
+                lastLocation = location;
+                return;
+            }
+
+            if (!LocationUtils.isValidLocation(lastValidTrackPoint)) {
+                /*
+                 * Should not happen. The current segment should have a location. Just
+                 * insert the current location.
+                 */
+//                insertLocation(track, location, null);
+                lastLocation = location;
+                return;
+            }
+
+            double distanceToLastTrackLocation = location.distanceTo(lastValidTrackPoint);
+            if (distanceToLastTrackLocation > maxRecordingDistance) {
+//                insertLocation(track, lastLocation, lastValidTrackPoint);
+
+                Location pause = new Location(LocationManager.GPS_PROVIDER);
+                pause.setLongitude(0);
+                pause.setLatitude(PAUSE_LATITUDE);
+                pause.setTime(lastLocation.getTime());
+//                insertLocation(track, pause, null);
+//
+//                insertLocation(track, location, null);
+                isIdle = false;
+            } else if (/*sensorDataSet != null || */distanceToLastTrackLocation >= recordingDistanceInterval) {
+//                insertLocation(track, lastLocation, lastValidTrackPoint);
+//                insertLocation(track, location, null);
+                isIdle = false;
+            } else if (!isIdle && location.hasSpeed() && location.getSpeed() < MAX_NO_MOVEMENT_SPEED) {
+//                insertLocation(track, lastLocation, lastValidTrackPoint);
+//                insertLocation(track, location, null);
+                isIdle = true;
+            } else if (isIdle && location.hasSpeed() && location.getSpeed() >= MAX_NO_MOVEMENT_SPEED) {
+//                insertLocation(track, lastLocation, lastValidTrackPoint);
+//                insertLocation(track, location, null);
+                isIdle = false;
+            } else {
+                Log.d(TAG, "Not recording location, idle");
+            }
+            lastLocation = location;
+        } catch (Error e) {
+            Log.e(TAG, "Error in onLocationChangedAsync", e);
+            throw e;
+        } catch (RuntimeException e) {
+            Log.e(TAG, "RuntimeException in onLocationChangedAsync", e);
+            throw e;
+        }
+    }
+    private void registerLocationListener() {
+        if (myTracksLocationManager == null) {
+            Log.e(TAG, "locationManager is null.");
+            return;
+        }
+        try {
+            long interval = locationListenerPolicy.getDesiredPollingInterval();
+            myTracksLocationManager.requestLocationUpdates(
+                    interval, locationListenerPolicy.getMinDistance(), locationListener);
+            currentRecordingInterval = interval;
+        } catch (RuntimeException e) {
+            Log.e(TAG, "Could not register location listener.", e);
+        }
+    }
+    private void unregisterLocationListener() {
+        if (myTracksLocationManager == null) {
+            Log.e(TAG, "locationManager is null.");
+            return;
+        }
+        myTracksLocationManager.removeLocationUpdates(locationListener);
+    }
+    private void releaseWakeLock() {
+        if (wakeLock != null && wakeLock.isHeld()) {
+            wakeLock.release();
+            wakeLock = null;
+        }
+    }
+    private void showNotification(boolean isGpsStarted) {
+        if (isRecording()) {
+            if (isPaused()) {
+                stopForegroundService();
+            } else {
+//                Intent intent = IntentUtils.newIntent(this, TrackDetailActivity.class)
+//                        .putExtra(TrackDetailActivity.EXTRA_TRACK_ID, recordingTrackId);
+//                PendingIntent pendingIntent = TaskStackBuilder.create(this)
+//                        .addParentStack(TrackDetailActivity.class).addNextIntent(intent)
+//                        .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+//                startForegroundService(pendingIntent, R.string.track_record_notification);
+            }
+            return;
+        } else {
+            // Not recording
+            if (isGpsStarted) {
+//                Intent intent = IntentUtils.newIntent(this, TrackListActivity.class);
+//                PendingIntent pendingIntent = TaskStackBuilder.create(this)
+//                        .addNextIntent(intent).getPendingIntent(0, 0);
+//                startForegroundService(pendingIntent, R.string.gps_starting);
+            } else {
+                stopForegroundService();
+            }
+        }
+    }
+    private static class ServiceBinder extends IGPSService.Stub {
+        private DeathRecipient deathRecipient;
+        private GPSService gpsService;
+
+        public ServiceBinder(GPSService trackRecordingService) {
+            this.gpsService = trackRecordingService;
+        }
+
+        @Override
+        public boolean isBinderAlive() {
+            return gpsService != null;
+        }
+
+        @Override
+        public boolean pingBinder() {
+            return isBinderAlive();
+        }
+
+        @Override
+        public void linkToDeath(DeathRecipient recipient, int flags) {
+            deathRecipient = recipient;
+        }
+
+        @Override
+        public boolean unlinkToDeath(DeathRecipient recipient, int flags) {
+            if (!isBinderAlive()) {
+                return false;
+            }
+            deathRecipient = null;
+            return true;
+        }
+
+        public void startGps() {
+            if (!canAccess()) {
+                return;
+            }
+            if (!gpsService.isRecording()) {
+                gpsService.startGps();
+            }
+        }
+
+        public void stopGps() {
+            if (!canAccess()) {
+                return;
+            }
+            if (!gpsService.isRecording()) {
+                gpsService.stopGps(true);
+            }
+        }
+
+        public boolean isRecording() {
+            if (!canAccess()) {
+                return false;
+            }
+            return gpsService.isRecording();
+        }
+
+        public boolean isPaused() {
+            if (!canAccess()) {
+                return false;
+            }
+            return gpsService.isPaused();
+        }
+
+        public long getRecordingTrackId() {
+            if (!canAccess()) {
+                return -1L;
+            }
+            return gpsService.recordingTrackId;
+        }
+
+        public void insertTrackPoint(Location location) {
+            if (!canAccess()) {
+                return;
+            }
+            gpsService.locationListener.onLocationChanged(location);
+        }
+
+        /**
+         * Returns true if the RPC caller is from the same application or if the
+         * "Allow access" setting indicates that another app can invoke this
+         * service's RPCs.
+         */
+        private boolean canAccess() {
+            // As a precondition for access, must check if the service is available.
+            if (gpsService == null) {
+                throw new IllegalStateException("The track recording service has been detached!");
+            }
+            if (android.os.Process.myPid() == Binder.getCallingPid()) {
+                return true;
+            } else {
+//                return PreferencesUtils.getBoolean(gpsService, R.string.allow_access_key,
+//                        PreferencesUtils.ALLOW_ACCESS_DEFAULT);
+                return true;
+            }
+        }
+        /**
+         * Detaches from the track recording service. Clears the reference to the
+         * outer class to minimize the leak.
+         */
+        private void detachFromService() {
+            gpsService = null;
+            attachInterface(null, null);
+
+            if (deathRecipient != null) {
+                deathRecipient.binderDied();
+            }
+        }
+
+        @Override
+        public Location getLastLocation() throws RemoteException {
+            return gpsService.lastLocation;
+        }
+    }
 }
 /*
 public class GPSService extends Service {
