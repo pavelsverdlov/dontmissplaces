@@ -3,6 +3,8 @@ package svp.com.dontmissplaces.presenters;
 import android.content.Intent;
 import android.database.Cursor;
 
+import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
+
 import svp.com.dontmissplaces.db.Repository;
 import svp.com.dontmissplaces.db.Track;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
@@ -19,7 +21,7 @@ public class HistoryTracksPresenter extends CommutativePresenter<HistoryTracksAc
     }
 
     @Override
-    protected void incomingResultFrom(ActivityCommutator.ActivityOperationResult from, Intent data) {
+    protected void incomingResultFrom(ActivityOperationItem from, Intent data) {
 
     }
 

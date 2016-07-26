@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.database.MatrixCursor;
 import android.util.Log;
 
+import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
+
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -25,7 +27,7 @@ public class SearchPlacesPresenter extends CommutativePresenter<SearchPlacesActi
     }
 
     @Override
-    protected void incomingResultFrom(ActivityCommutator.ActivityOperationResult from, Intent data) {
+    protected void incomingResultFrom(ActivityOperationItem from, Intent data) {
 
     }
 

@@ -8,6 +8,7 @@ import svp.com.dontmissplaces.db.Track;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import com.svp.infrastructure.mvpvs.bundle.BundleProvider;
 import com.svp.infrastructure.mvpvs.bundle.IBundleProvider;
+import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 
 import svp.com.dontmissplaces.ui.BaseBundleProvider;
 import svp.com.dontmissplaces.ui.activities.SaveTrackActivity;
@@ -22,7 +23,7 @@ public class SaveTrackPresenter extends CommutativePresenter<SaveTrackActivity,S
     }
 
     @Override
-    protected void incomingResultFrom(ActivityCommutator.ActivityOperationResult from, Intent data) {
+    protected void incomingResultFrom(ActivityOperationItem from, Intent data) {
 
     }
     @Override
