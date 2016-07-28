@@ -33,6 +33,7 @@ public class SearchPlacesPresenter extends CommutativePresenter<SearchPlacesActi
 
     @Override
     protected void onAttachedView(SearchPlacesActivity view, Intent intent) {
+        super.onAttachedView(view,intent);
         bundle = new SearchPlacesActivity.SearchPlacesBundleProvider(intent);
     }
 

@@ -25,4 +25,8 @@ public abstract class CommutativePresenter
         return ActivityCommutator.ActivityOperationResult.get(code);
     }
 
+    @Override
+    protected void onAttachedView(V view,  Intent intent){
+        userSettings = new UserPreferenceSettings(state.getActivity());
+    }
 }

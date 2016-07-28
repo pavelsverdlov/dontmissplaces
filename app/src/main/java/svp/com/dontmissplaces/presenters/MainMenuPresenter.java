@@ -158,6 +158,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     }
     @Override
     protected void onAttachedView(MainMenuActivity view, Intent intent) {
+        super.onAttachedView(view,intent);
         gpsService = new GPSServiceProvider(state.getActivity());
         if(state.getPermissions().checkPermissionFineLocation()) {
             gpsService.setOnLocationChangeListener(this);

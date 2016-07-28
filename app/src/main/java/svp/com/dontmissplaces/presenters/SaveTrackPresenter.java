@@ -28,7 +28,7 @@ public class SaveTrackPresenter extends CommutativePresenter<SaveTrackActivity,S
     }
     @Override
     protected void onAttachedView(SaveTrackActivity view, Intent intent){
-//        super.onAttachedView(view);
+        super.onAttachedView(view, intent);
         BaseBundleProvider bundleProvider = new BaseBundleProvider(intent);
         track = bundleProvider.getTrack();
 
