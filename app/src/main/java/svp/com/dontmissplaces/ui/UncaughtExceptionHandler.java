@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -57,6 +58,9 @@ public class UncaughtExceptionHandler implements Thread.UncaughtExceptionHandler
         String error = errorReport.toString();
 
         Intent intent = new Intent();//"svp.com.dontmissplaces.ui.activities.CrashActivity");//context, CrashActivity.class);//
+        Bundle b = new Bundle();
+        b.putString(CrashActivity.ERROR_KEY,error);
+        intent.putExtras(b);
         intent.setClass(context, CrashActivity.class);
         intent.setAction(CrashActivity.class.getName());
 

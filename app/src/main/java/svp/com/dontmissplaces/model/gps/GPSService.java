@@ -155,6 +155,7 @@ public class GPSService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d(TAG,"GPS service create");
         executorService = Executors.newSingleThreadExecutor();
         context = this;
 //        myTracksProviderUtils = MyTracksProviderUtils.Factory.get(this);

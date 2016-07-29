@@ -21,6 +21,6 @@ public class CrashActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        text.setText(savedInstanceState.getString(ERROR_KEY));
+        text.setText(savedInstanceState == null ? "error" : savedInstanceState.getString(ERROR_KEY));
     }
 }

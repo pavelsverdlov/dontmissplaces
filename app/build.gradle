@@ -46,4 +46,5 @@ dependencies {
     compile 'com.github.MKergall:osmbonuspack:v5.8.1'
 
     compile project(':infrastructure')
+    compile project(':appmap')
 }

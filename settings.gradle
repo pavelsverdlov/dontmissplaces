@@ -1,1 +1,1 @@
-include ':app', ':infrastructure', ':dontmissstation'
+include ':app', ':infrastructure', ':dontmissstation', ':appmap'
