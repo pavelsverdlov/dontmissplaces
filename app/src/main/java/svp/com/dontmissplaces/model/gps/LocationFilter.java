@@ -1,6 +1,7 @@
 package svp.com.dontmissplaces.model.gps;
 
 import android.location.Location;
+import android.location.LocationManager;
 import android.util.Log;
 
 import java.util.LinkedList;
@@ -8,6 +9,12 @@ import java.util.Queue;
 import java.util.Vector;
 
 public class LocationFilter {
+    private static final int LOCATION_INTERVAL = 50000;
+    private static final float LOCATION_DISTANCE = 10f;
+    /**
+     * Anything faster than that (in meters per second) will be considered moving.
+     */
+    public static final double MAX_NO_MOVEMENT_SPEED = 0.224;
     /**
      * <code>MAX_REASONABLE_SPEED</code> is about 324 kilometer per hour or 201
      * mile per hour.
@@ -20,24 +27,44 @@ public class LocationFilter {
     private static final int MAX_REASONABLE_ALTITUDECHANGE = 200;
 
     public static final String TAG = "LocationFilter";
+    private final LocationListenerPolicy locationListenerPolicy;
     private float mMaxAcceptableAccuracy = 20;
     private final Vector<Location> mWeakLocations;
     private final Queue<Double> mAltitudes;
     boolean mSpeedSanityCheck;
     private Location previousLocation;
+    /**
+     * Location is ignored if its accurancy is less than (50m recommended) (10(excellent GPS) - 2000m(poor GPS))
+     * */
+    private final int recordingGpsAccuracy = 50;
+    /**
+     * a new segment is creted if the distance between two locations is greater than (200m recommended) (50-5000m)
+     * */
+    private final int maxRecordingDistance = 200;
+    public static final double PAUSE_LATITUDE = 100.0;
+    /**
+     * 10m between recorded locations (1-100m)
+     * */
+    private final int recordingDistanceInterval = 10;
+    private long currentRecordingInterval;
+    public boolean isIdle;
 
-    public LocationFilter(){
+    public LocationFilter(LocationListenerPolicy locationListenerPolicy){
+        this.locationListenerPolicy = locationListenerPolicy;
         mAltitudes = new LinkedList<Double>();
         mWeakLocations = new Vector<>();
         mSpeedSanityCheck = false;
+        currentRecordingInterval = locationListenerPolicy.getDesiredPollingInterval();
     }
 
     public Location getPrevLocation(){
         return previousLocation;
     }
-    public void addLocation(Location proposedLocation) {
+    public void addLocation2(Location proposedLocation) {
         previousLocation = proposedLocation;
     }
+
+
     public void addLocation1(Location proposedLocation) {
         if(previousLocation == null){
             previousLocation = proposedLocation;
@@ -113,7 +140,6 @@ public class LocationFilter {
             Log.e(TAG,"addLocation",ex);
         }
     }
-
     private Location addBadLocation(Location location) {
         mWeakLocations.add(location);
         if (mWeakLocations.size() < 3) {
@@ -163,4 +189,95 @@ public class LocationFilter {
         return sane;
     }
 
+    public void addLocation(Location location) {
+        try {
+
+            if (!LocationUtils.isValidLocation(location)) {
+                Log.w(TAG, "Ignore onLocationChangedAsync. location is invalid.");
+                return;
+            }
+
+            if (!location.hasAccuracy() || location.getAccuracy() >= recordingGpsAccuracy) {
+                Log.d(TAG, "Ignore onLocationChangedAsync. Poor accuracy.");
+                return;
+            }
+
+            // Fix for phones that do not set the time field
+            if (location.getTime() == 0L) {
+                location.setTime(System.currentTimeMillis());
+            }
+
+            Location lastValidTrackPoint = previousLocation;//getLastValidTrackPointInCurrentSegment(track.getId());
+            long idleTime = 0L;
+            if (lastValidTrackPoint != null && location.getTime() > lastValidTrackPoint.getTime()) {
+                idleTime = location.getTime() - lastValidTrackPoint.getTime();
+            }
+            locationListenerPolicy.updateIdleTime(idleTime);
+            if (currentRecordingInterval != locationListenerPolicy.getDesiredPollingInterval()) {
+                //TODO: registerLocationListener();
+            }
+
+//            SensorDataSet sensorDataSet = getSensorDataSet();
+//            if (sensorDataSet != null) {
+//                location = new MyTracksLocation(location, sensorDataSet);
+//            }
+
+            // Always insert the first segment location
+//            if (!currentSegmentHasLocation) {
+//                insertLocation(track, location, null);
+//                currentSegmentHasLocation = true;
+//                lastLocation = location;
+//                return;
+//            }
+
+            if (!LocationUtils.isValidLocation(lastValidTrackPoint)) {
+                /*
+                 * Should not happen. The current segment should have a location. Just
+                 * insert the current location.
+                 */
+//                insertLocation(track, location, null);
+                previousLocation = location;
+                return;
+            }
+
+            double distanceToLastTrackLocation = location.distanceTo(lastValidTrackPoint);
+            if (distanceToLastTrackLocation > maxRecordingDistance) {
+//                insertLocation(track, lastLocation, lastValidTrackPoint);
+
+                Location pause = new Location(LocationManager.GPS_PROVIDER);
+                pause.setLongitude(0);
+                pause.setLatitude(PAUSE_LATITUDE);
+                pause.setTime(previousLocation.getTime());
+//                insertLocation(track, pause, null);
+//
+//                insertLocation(track, location, null);
+                isIdle = false;
+            } else if (/*sensorDataSet != null || */distanceToLastTrackLocation >= recordingDistanceInterval) {
+//                insertLocation(track, lastLocation, lastValidTrackPoint);
+//                insertLocation(track, location, null);
+                isIdle = false;
+            } else if (!isIdle && location.hasSpeed() && location.getSpeed() < MAX_NO_MOVEMENT_SPEED) {
+//                insertLocation(track, lastLocation, lastValidTrackPoint);
+//                insertLocation(track, location, null);
+                isIdle = true;
+            } else if (isIdle && location.hasSpeed() && location.getSpeed() >= MAX_NO_MOVEMENT_SPEED) {
+//                insertLocation(track, lastLocation, lastValidTrackPoint);
+//                insertLocation(track, location, null);
+                isIdle = false;
+            } else {
+                Log.d(TAG, "Not recording location, idle");
+            }
+            previousLocation = location;
+        } catch (Error e) {
+            Log.e(TAG, "Error in onLocationChangedAsync", e);
+            throw e;
+        } catch (RuntimeException e) {
+            Log.e(TAG, "RuntimeException in onLocationChangedAsync", e);
+            throw e;
+        }
+    }
+
+    public void clear() {
+        previousLocation = null;
+    }
 }

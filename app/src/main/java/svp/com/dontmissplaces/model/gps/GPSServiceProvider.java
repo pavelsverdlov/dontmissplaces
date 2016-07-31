@@ -49,7 +49,7 @@ public class GPSServiceProvider {
                         synchronized (lock) {
                             serviceRemote = IGPSService.Stub.asInterface( service );
                             isRunning = true;
-                            timer = startTimer(1000);
+                            timer = startTimer(2000);
                         }
                         if(onServiceConnected != null ) {
                             onServiceConnected.run();

@@ -28,14 +28,14 @@ public interface ApiAdapter {
      *
      * @param editor the editor
      */
-    public void applyPreferenceChanges(SharedPreferences.Editor editor);
+//    public void applyPreferenceChanges(SharedPreferences.Editor editor);
 
     /**
      * Enables strict mode where supported, only if this is a development build.
      * <p>
      * Due to changes in API level 9.
      */
-    public void enableStrictMode();
+//    public void enableStrictMode();
 
     /**
      * Copies elements from an input byte array into a new byte array, from
@@ -49,28 +49,28 @@ public interface ApiAdapter {
      * @param end the end index
      * @return a new array containing elements from the input byte array.
      */
-    public byte[] copyByteArray(byte[] input, int start, int end);
+//    public byte[] copyByteArray(byte[] input, int start, int end);
 
     /**
      * Gets a {@link HttpTransport}.
      * <p>
      * Due to changes in API level 9.
      */
-    public HttpTransport getHttpTransport();
+//    public HttpTransport getHttpTransport();
 
     /**
      * Returns true if GeoCoder is present.
      * <p>
      * Due to changes in API level 9.
      */
-    public boolean isGeoCoderPresent();
+//    public boolean isGeoCoderPresent();
 
     /**
      * Returns true to revert menu icon color.
      * <p>
      * Due to changes in API level 9.
      */
-    public boolean revertMenuIconColor();
+//    public boolean revertMenuIconColor();
 
     /**
      * Gets a {@link BluetoothSocket}.
@@ -79,7 +79,7 @@ public interface ApiAdapter {
      *
      * @param bluetoothDevice
      */
-    public BluetoothSocket getBluetoothSocket(BluetoothDevice bluetoothDevice) throws IOException;
+//    public BluetoothSocket getBluetoothSocket(BluetoothDevice bluetoothDevice) throws IOException;
 
     /**
      * Hides the title. If the platform supports the action bar, do nothing.
@@ -91,7 +91,7 @@ public interface ApiAdapter {
      *
      * @param activity the activity
      */
-    public void hideTitle(Activity activity);
+//    public void hideTitle(Activity activity);
 
     /**
      * Configures the action bar with the Home button as an Up button. If the
@@ -101,7 +101,7 @@ public interface ApiAdapter {
      *
      * @param activity the activity
      */
-    public void configureActionBarHomeAsUp(Activity activity);
+//    public void configureActionBarHomeAsUp(Activity activity);
 
     /**
      * Configures the list view context menu.
@@ -135,7 +135,7 @@ public interface ApiAdapter {
      *
      * @param activity the activity
      */
-    public boolean handleSearchMenuSelection(Activity activity);
+//    public boolean handleSearchMenuSelection(Activity activity);
 
     /**
      * Adds all items to an array adapter.
@@ -145,14 +145,14 @@ public interface ApiAdapter {
      * @param arrayAdapter the array adapter
      * @param items list of items
      */
-    public <T> void addAllToArrayAdapter(ArrayAdapter<T> arrayAdapter, List<T> items);
+//    public <T> void addAllToArrayAdapter(ArrayAdapter<T> arrayAdapter, List<T> items);
 
     /**
      * Invalidates the menu.
      * <p>
      * Due to changes in API level 11.
      */
-    public void invalidMenu(Activity activity);
+//    public void invalidMenu(Activity activity);
 
     /**
      * Sets the tab background.
@@ -161,21 +161,21 @@ public interface ApiAdapter {
      *
      * @param tabWidget the tab widget
      */
-    public void setTabBackground(TabWidget tabWidget);
+//    public void setTabBackground(TabWidget tabWidget);
 
     /**
      * Returns true if has dialog title divider.
      * <p>
      * Due to changes in API level 11.
      */
-    public boolean hasDialogTitleDivider();
+//    public boolean hasDialogTitleDivider();
 
     /**
      * Sets title and subtitle.
      * <p>
      * Due to changes in API level 11;
      */
-    public void setTitleAndSubtitle(Activity activity, String title, String subtitle);
+//    public void setTitleAndSubtitle(Activity activity, String title, String subtitle);
 
     /**
      * Handles the search key press. Returns true if handled.
@@ -184,14 +184,14 @@ public interface ApiAdapter {
      *
      * @param menu the search menu
      */
-    public boolean handleSearchKey(MenuItem menu);
+//    public boolean handleSearchKey(MenuItem menu);
 
     /**
      * Returns true if Google Feedback is available.
      * <p>
      * Due to changes in ApI level 14.
      */
-    public boolean isGoogleFeedbackAvailable();
+//    public boolean isGoogleFeedbackAvailable();
 
     /**
      * Gets the app widget size.
@@ -201,7 +201,7 @@ public interface ApiAdapter {
      * @param appWidgetManager the app widget manager
      * @param appWidgetId the app widget id
      */
-    public int getAppWidgetSize(AppWidgetManager appWidgetManager, int appWidgetId);
+//    public int getAppWidgetSize(AppWidgetManager appWidgetManager, int appWidgetId);
 
     /**
      * Sets the app widget size.
@@ -212,7 +212,7 @@ public interface ApiAdapter {
      * @param appWidgetId the app widgit id
      * @param size the size
      */
-    public void setAppWidgetSize(AppWidgetManager appWidgetManager, int appWidgetId, int size);
+//    public void setAppWidgetSize(AppWidgetManager appWidgetManager, int appWidgetId, int size);
 
     /**
      * Removes the global layout listener.
@@ -222,8 +222,7 @@ public interface ApiAdapter {
      * @param observer the observer
      * @param listener the listener
      */
-    public void removeGlobalLayoutListener(
-            ViewTreeObserver observer, ViewTreeObserver.OnGlobalLayoutListener listener);
+//    public void removeGlobalLayoutListener(ViewTreeObserver observer, ViewTreeObserver.OnGlobalLayoutListener listener);
 
     /**
      * Returns true if has location mode.

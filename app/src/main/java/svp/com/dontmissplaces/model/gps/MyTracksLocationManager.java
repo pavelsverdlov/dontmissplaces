@@ -6,6 +6,8 @@ import android.database.ContentObserver;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.*;
+import android.util.Log;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -14,10 +16,13 @@ import com.google.android.gms.location.*;
 
 public class MyTracksLocationManager {
 
+    private final String TAG = "MyTracksLocationManager";
+
     private class GoogleSettingsObserver extends ContentObserver {
 
         public GoogleSettingsObserver(Handler handler) {
             super(handler);
+            Log.d(TAG,"GoogleSettingsObserver initialized");
         }
 
         @Override
@@ -89,6 +94,7 @@ public class MyTracksLocationManager {
         } else {
             locationClient = null;
         }
+        Log.d(TAG,"location client enabled=" + enableLocaitonClient);
 
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         contentResolver = context.getContentResolver();
@@ -98,6 +104,7 @@ public class MyTracksLocationManager {
 
         contentResolver.registerContentObserver(
                 GoogleLocationUtils.USE_LOCATION_FOR_SERVICES_URI, false, observer);
+        Log.d(TAG,"initialized");
     }
     public void close() {
         if (locationClient != null) {

@@ -1,6 +1,15 @@
 package svp.com.dontmissplaces.model.api;
 
+import android.annotation.TargetApi;
+import android.app.ActionBar;
+import android.app.Activity;
+import android.appwidget.AppWidgetManager;
+import android.appwidget.AppWidgetProviderInfo;
 import android.os.Build;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.ViewTreeObserver;
+import android.widget.SearchView;
 
 public class ApiAdapterFactory {
     private static ApiAdapter apiAdapter;
@@ -10,7 +19,7 @@ public class ApiAdapterFactory {
      */
     public static ApiAdapter getApiAdapter() {
         if (apiAdapter == null) {
-            //TODO: implement
+            apiAdapter = new Api19Adapter();
             /*
             if (Build.VERSION.SDK_INT >= 19) {
                 apiAdapter = new Api19Adapter();
@@ -32,5 +41,12 @@ public class ApiAdapterFactory {
             */
         }
         return apiAdapter;
+    }
+    @TargetApi(19)
+    public static class Api19Adapter implements ApiAdapter /*Api17Adapter */{
+
+        public boolean hasLocationMode() {
+            return true;
+        }
     }
 }
