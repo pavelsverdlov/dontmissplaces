@@ -1,4 +1,4 @@
-package svp.com.dontmissstation.ui.activities;
+package com.svp.infrastructure.common.preference;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

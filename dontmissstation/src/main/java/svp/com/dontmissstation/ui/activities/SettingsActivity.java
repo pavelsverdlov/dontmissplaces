@@ -20,6 +20,8 @@ import android.preference.RingtonePreference;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
+import com.svp.infrastructure.common.preference.AppCompatPreferenceActivity;
+
 import svp.com.dontmissstation.R;
 
 import java.util.List;

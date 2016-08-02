@@ -18,18 +18,19 @@ import com.svp.infrastructure.mvpvs.commutate.ICommutativeElement;
 import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
 
 import svp.com.dontmissstation.presenters.MainPresenter;
+import svp.com.dontmissstation.ui.activities.ActivityOperationResult;
 
 public class MainActivity extends AppCompatActivityView<MainPresenter>
         implements NavigationView.OnNavigationItemSelectedListener, ICommutativeElement{
 
     @Override
     public ActivityOperationItem getOperation() {
-        return null;
+        return ActivityOperationResult.Main;
     }
 
     @Override
     public Activity getActivity() {
-        return null;
+        return this;
     }
 
     public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<MainActivity> {
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
 
         @Override
         public Activity getActivity() {
-            return null;
+            return view;
         }
     }
 
