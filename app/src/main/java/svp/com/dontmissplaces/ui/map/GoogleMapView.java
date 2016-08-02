@@ -2,7 +2,6 @@ package svp.com.dontmissplaces.ui.map;
 
 import android.app.Activity;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
@@ -22,10 +21,10 @@ import com.svp.infrastructure.mvpvs.view.View;
 
 import java.util.Collection;
 
+import svp.app.map.OnMapClickListener;
 import svp.com.dontmissplaces.R;
-import svp.com.dontmissplaces.db.Place;
 import svp.com.dontmissplaces.model.Map.GoogleMapsPlaceService;
-import svp.com.dontmissplaces.model.Map.Point2D;
+import svp.app.map.model.Point2D;
 import svp.com.dontmissplaces.presenters.MapsPresenter;
 import svp.com.dontmissplaces.ui.ActivityPermissions;
 import svp.com.dontmissplaces.ui.model.IPOIView;
@@ -37,7 +36,7 @@ public class GoogleMapView
         implements OnMapReadyCallback,
         GoogleMap.OnMyLocationButtonClickListener,
         GoogleMap.OnMapClickListener,
-        IMapView {
+        IDNMPMapView {
     private final String TAG = "GoogleMapView";
     private OnMapClickListener listener;
 
@@ -254,12 +253,7 @@ public class GoogleMapView
     public void stopTrackRecording() {
         getPresenter().gpsStop();
     }
-    public void resumeTrackRecording() {
 
-    }
-    public void pauseTrackRecording() {
-
-    }
     public void showSessionsTrack(Collection<SessionView> sessions) {
         getPresenter().showSessionsTrack(sessions);
     }

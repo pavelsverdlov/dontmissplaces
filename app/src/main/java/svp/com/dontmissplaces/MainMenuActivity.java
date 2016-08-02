@@ -2,12 +2,10 @@ package svp.com.dontmissplaces;
 
 import android.app.Activity;
 import android.app.SearchManager;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,8 +19,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SearchView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.svp.infrastructure.common.ViewExtensions;
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
@@ -33,17 +29,15 @@ import org.osmdroid.util.BoundingBoxE6;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import svp.com.dontmissplaces.model.Map.Point2D;
-import svp.com.dontmissplaces.model.nominatim.PhraseProvider;
+import svp.app.map.model.Point2D;
 import svp.com.dontmissplaces.presenters.MainMenuPresenter;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.ActivityPermissions;
 import svp.com.dontmissplaces.ui.PlaceInfoLayoutView;
 import svp.com.dontmissplaces.ui.TrackRecordingToolbarView;
-import svp.com.dontmissplaces.ui.behaviors.OverMapBottomSheetBehavior;
 import svp.com.dontmissplaces.ui.map.GoogleMapView;
-import svp.com.dontmissplaces.ui.map.IMapView;
-import svp.com.dontmissplaces.ui.map.OnMapClickListener;
+import svp.com.dontmissplaces.ui.map.IDNMPMapView;
+import svp.app.map.OnMapClickListener;
 import svp.com.dontmissplaces.ui.map.OsmdroidMapView;
 import svp.com.dontmissplaces.ui.model.IPOIView;
 import svp.com.dontmissplaces.ui.model.SessionView;
@@ -156,7 +150,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
     }
 
-    private IMapView mapView;
+    private IDNMPMapView mapView;
     private final ActivityPermissions permissions;
     private TrackRecordingToolbarView recordingToolbarView;
     private PlaceInfoLayoutView placeInfoLayoutView;
@@ -356,13 +350,13 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
                     @Override
                     public void onPauseClick() {
                         getPresenter().pauseTrackRecording();
-                        mapView.pauseTrackRecording();
+//                        mapView.pauseTrackRecording();
                     }
 
                     @Override
                     public void onResumeClick() {
                         getPresenter().resumeTrackRecording();
-                        mapView.resumeTrackRecording();
+//                        mapView.resumeTrackRecording();
                     }
                 },
                 new View.OnClickListener() {

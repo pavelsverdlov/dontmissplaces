@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.Preference;
+import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
 public class PreferenceSettings {
@@ -36,6 +37,10 @@ public class PreferenceSettings {
         }
         Object val = pref.getAll().get(key);
         return val == null ? def : (T)val;
+    }
+
+    protected Preference getPreference(PreferenceFragment fragment, String key) {
+        return fragment.findPreference(key);
     }
 
     private SharedPreferences getter(){

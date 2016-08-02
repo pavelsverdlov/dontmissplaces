@@ -8,30 +8,20 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.svp.infrastructure.mvpvs.presenter.Presenter;
 
-import org.osmdroid.bonuspack.location.POI;
-import org.osmdroid.util.BoundingBoxE6;
-import org.osmdroid.util.GeoPoint;
-
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Vector;
 
-import svp.com.dontmissplaces.db.Place;
 import svp.com.dontmissplaces.db.Repository;
 import svp.com.dontmissplaces.db.Waypoint;
 import svp.com.dontmissplaces.model.gps.GPSServiceProvider;
 import svp.com.dontmissplaces.model.gps.OnLocationChangeListener;
-import svp.com.dontmissplaces.model.nominatim.PhraseProvider;
-import svp.com.dontmissplaces.model.nominatim.PointsOfInterestInsiteBoxTask;
-import svp.com.dontmissplaces.ui.map.GoogleMapView;
-import svp.com.dontmissplaces.ui.map.IMapView;
+import svp.com.dontmissplaces.ui.map.IDNMPMapView;
 import svp.com.dontmissplaces.ui.map.IMapViewState;
 import svp.com.dontmissplaces.ui.model.PolylineView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.utils.LocationEx;
 
-public class MapsPresenter extends Presenter<IMapView,IMapViewState> implements OnLocationChangeListener {
+public class MapsPresenter extends Presenter<IDNMPMapView,IMapViewState> implements OnLocationChangeListener {
     private static final String TAG = "MapsPresenter";
     private Location prevLocation;
     private Waypoint prevWaypoint;
@@ -44,11 +34,11 @@ public class MapsPresenter extends Presenter<IMapView,IMapViewState> implements 
     }
 
     @Override
-    protected void onDetachedView(IMapView view){
+    protected void onDetachedView(IDNMPMapView view){
         state.saveState();
     }
     @Override
-    protected void onAttachedView(IMapView view){
+    protected void onAttachedView(IDNMPMapView view){
         gpsService = new GPSServiceProvider(state.getActivity());
         if(state.checkPermissionFineLocation()) {
             gpsService.setOnLocationChangeListener(this);

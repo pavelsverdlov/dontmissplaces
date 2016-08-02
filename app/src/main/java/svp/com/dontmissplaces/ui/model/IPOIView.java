@@ -1,11 +1,9 @@
 package svp.com.dontmissplaces.ui.model;
 
-import com.svp.infrastructure.common.view.ICursorParcelable;
-
 import org.osmdroid.util.GeoPoint;
 
 import svp.com.dontmissplaces.db.Place;
-import svp.com.dontmissplaces.model.Map.Point2D;
+import svp.app.map.model.Point2D;
 
 public interface IPOIView  {
     String getName();

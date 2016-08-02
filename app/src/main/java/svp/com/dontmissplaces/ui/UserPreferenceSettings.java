@@ -7,7 +7,7 @@ import android.preference.PreferenceFragment;
 import com.svp.infrastructure.PreferenceSettings;
 
 import svp.com.dontmissplaces.R;
-import svp.com.dontmissplaces.ui.map.MapViewTypes;
+import svp.app.map.MapViewTypes;
 
 public class UserPreferenceSettings extends PreferenceSettings {
     public final String mapProviderKey;
@@ -34,7 +34,5 @@ public class UserPreferenceSettings extends PreferenceSettings {
     }
 
 
-    private Preference getPreference(PreferenceFragment fragment, String key) {
-        return fragment.findPreference(key);
-    }
+
 }

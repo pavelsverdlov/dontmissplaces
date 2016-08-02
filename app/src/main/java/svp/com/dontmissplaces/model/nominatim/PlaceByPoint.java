@@ -9,11 +9,10 @@ import org.json.JSONObject;
 import org.osmdroid.bonuspack.location.NominatimPOIProvider;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import svp.com.dontmissplaces.db.Place;
-import svp.com.dontmissplaces.model.Map.Point2D;
+import svp.app.map.model.Point2D;
 
 
 public abstract class PlaceByPoint extends AsyncTask<Point2D, Void, Void> {

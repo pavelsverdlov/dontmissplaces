@@ -9,13 +9,9 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.v4.view.MenuItemCompat;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -23,14 +19,11 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.svp.infrastructure.common.ViewExtensions;
-import com.svp.infrastructure.common.view.BaseCursorAdapter;
-import com.svp.infrastructure.common.view.ICursorParcelable;
 import com.svp.infrastructure.mvpvs.bundle.BundleProvider;
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 import com.svp.infrastructure.mvpvs.commutate.ICommutativeElement;
 import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
 
-import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.bonuspack.utils.WebImageCache;
 
 import java.util.Date;
@@ -40,7 +33,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.db.Place;
-import svp.com.dontmissplaces.model.Map.Point2D;
+import svp.app.map.model.Point2D;
 import svp.com.dontmissplaces.presenters.SearchPlacesPresenter;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.adapters.PlaceSearchAdapter;

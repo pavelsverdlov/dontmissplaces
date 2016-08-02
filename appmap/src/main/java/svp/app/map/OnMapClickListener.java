@@ -1,8 +1,8 @@
-package svp.com.dontmissplaces.ui.map;
+package svp.app.map;
 
 import org.osmdroid.util.BoundingBoxE6;
 
-import svp.com.dontmissplaces.model.Map.Point2D;
+import svp.app.map.model.Point2D;
 
 public interface OnMapClickListener {
     void onMapClick(Point2D point);

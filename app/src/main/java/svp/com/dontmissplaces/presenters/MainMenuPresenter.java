@@ -5,7 +5,6 @@ import android.location.Location;
 import android.os.RemoteException;
 import android.util.Log;
 
-import com.svp.infrastructure.mvpvs.bundle.BundleProvider;
 import com.svp.infrastructure.mvpvs.bundle.IBundleProvider;
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 
@@ -14,7 +13,6 @@ import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
@@ -25,8 +23,7 @@ import svp.com.dontmissplaces.db.Repository;
 import svp.com.dontmissplaces.db.SessionTrack;
 import svp.com.dontmissplaces.db.Track;
 import svp.com.dontmissplaces.db.Waypoint;
-import svp.com.dontmissplaces.model.Map.Point2D;
-import svp.com.dontmissplaces.model.PlaceProvider;
+import svp.app.map.model.Point2D;
 import svp.com.dontmissplaces.model.gps.GPSServiceProvider;
 import svp.com.dontmissplaces.model.gps.OnLocationChangeListener;
 import svp.com.dontmissplaces.model.nominatim.PhraseProvider;
@@ -35,7 +32,7 @@ import svp.com.dontmissplaces.model.nominatim.PointsOfInterestInsiteBoxTask;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.BaseBundleProvider;
 import svp.com.dontmissplaces.ui.activities.SearchPlacesActivity;
-import svp.com.dontmissplaces.ui.map.MapViewTypes;
+import svp.app.map.MapViewTypes;
 import svp.com.dontmissplaces.ui.model.IPOIView;
 import svp.com.dontmissplaces.ui.model.PlaceView;
 import svp.com.dontmissplaces.ui.model.SessionView;
@@ -243,7 +240,6 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
 
     public MapViewTypes getMapViewType() {
         mapViewType = userSettings.getMapProvider();
-        state.getActivity();
         return mapViewType;
     }
 

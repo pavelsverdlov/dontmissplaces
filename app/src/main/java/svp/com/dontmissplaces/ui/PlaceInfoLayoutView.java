@@ -6,7 +6,6 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -15,7 +14,6 @@ import com.svp.infrastructure.mvpvs.viewstate.IViewState;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import svp.com.dontmissplaces.R;
-import svp.com.dontmissplaces.model.Map.Point2D;
 import svp.com.dontmissplaces.model.nominatim.PhraseProvider;
 import svp.com.dontmissplaces.ui.model.IPOIView;
 

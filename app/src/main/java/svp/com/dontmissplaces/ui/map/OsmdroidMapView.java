@@ -1,11 +1,8 @@
 package svp.com.dontmissplaces.ui.map;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -41,15 +38,16 @@ import java.util.Collection;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import svp.app.map.OnMapClickListener;
 import svp.com.dontmissplaces.R;
-import svp.com.dontmissplaces.model.Map.Point2D;
+import svp.app.map.model.Point2D;
 import svp.com.dontmissplaces.presenters.MapsPresenter;
 import svp.com.dontmissplaces.ui.ActivityPermissions;
 import svp.com.dontmissplaces.ui.model.IPOIView;
 import svp.com.dontmissplaces.ui.model.PolylineView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 
-public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, MapEventsReceiver, MapListener, android.view.View.OnClickListener {
+public class OsmdroidMapView extends View<MapsPresenter> implements IDNMPMapView, MapEventsReceiver, MapListener, android.view.View.OnClickListener {
     private final Activity activity;
     private final ActivityPermissions permissions;
     private final MapView mapView;
@@ -169,7 +167,7 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
     }
 
     /**
-     * IMapView
+     * IDNMPMapView
      */
     @Override
     public void showSessionsTrack(Collection<SessionView> sessions) {
@@ -207,15 +205,6 @@ public class OsmdroidMapView extends View<MapsPresenter> implements IMapView, Ma
 
     }
 
-    @Override
-    public void pauseTrackRecording() {
-
-    }
-
-    @Override
-    public void resumeTrackRecording() {
-
-    }
 
     @Override
     public void stopTrackRecording() {

@@ -5,10 +5,11 @@ import android.content.Intent;
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 import com.svp.infrastructure.mvpvs.commutate.CommutativePresenter;
 
+import svp.app.map.MapViewTypes;
 import svp.com.dontmissstation.MainActivity;
 import svp.com.dontmissstation.db.Repository;
 
-public class MainPresenter extends CommutativePresenter<MainActivity,MainActivity.ViewState> {
+public class MainPresenter extends CommutativePreferencePresenter<MainActivity,MainActivity.ViewState> {
 
     public MainPresenter(Repository repository) {
 
@@ -27,5 +28,12 @@ public class MainPresenter extends CommutativePresenter<MainActivity,MainActivit
     @Override
     protected void onAttachedView(MainActivity view, Intent intent) {
 
+    }
+
+    /**
+     * Settings
+     * */
+    public MapViewTypes getMapViewType() {
+        return userSettings.getMapProvider();
     }
 }

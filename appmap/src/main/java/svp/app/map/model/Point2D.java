@@ -1,4 +1,4 @@
-package svp.com.dontmissplaces.model.Map;
+package svp.app.map.model;
 
 import android.location.Location;
 

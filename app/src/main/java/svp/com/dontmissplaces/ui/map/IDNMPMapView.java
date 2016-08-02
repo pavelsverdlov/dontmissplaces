@@ -1,42 +1,28 @@
 package svp.com.dontmissplaces.ui.map;
 
-import android.location.Location;
 import android.os.Bundle;
 
 import com.svp.infrastructure.mvpvs.view.IActivityView;
 
 import java.util.Collection;
-import java.util.Vector;
 
-import svp.com.dontmissplaces.db.Place;
-import svp.com.dontmissplaces.model.Map.Point2D;
+import svp.app.map.IMapView;
+import svp.app.map.OnMapClickListener;
+import svp.app.map.model.Point2D;
 import svp.com.dontmissplaces.ui.model.IPOIView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 
-public interface IMapView extends IActivityView {
+public interface IDNMPMapView extends IActivityView, IMapView {
 
     void showSessionsTrack(Collection<SessionView> sessions);
-
-    void onCreate(Bundle savedInstanceState);
-
-    void onStart();
-
-    void onStop();
-
-    void onResume();
 
     void enableMyLocation();
 
     void startTrackRecording(SessionView session);
 
-    void pauseTrackRecording();
-
-    void resumeTrackRecording();
+//    void pauseTrackRecording();
 
     void stopTrackRecording();
 
-    void setOnMapClickListener(OnMapClickListener listener);
     void drawMarker(IPOIView poi);
-
-    void moveTo(Point2D point);
 }

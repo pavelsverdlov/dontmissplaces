@@ -25,7 +25,7 @@ import android.support.v4.app.NavUtils;
 import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.presenters.SettingsPresenter;
 import svp.com.dontmissplaces.ui.UserPreferenceSettings;
-import svp.com.dontmissplaces.ui.map.MapViewTypes;
+import svp.app.map.MapViewTypes;
 
 import java.util.List;
 

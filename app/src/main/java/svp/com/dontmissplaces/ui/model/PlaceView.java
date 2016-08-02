@@ -1,11 +1,9 @@
 package svp.com.dontmissplaces.ui.model;
 
-import android.graphics.Point;
-
 import org.osmdroid.util.GeoPoint;
 
 import svp.com.dontmissplaces.db.Place;
-import svp.com.dontmissplaces.model.Map.Point2D;
+import svp.app.map.model.Point2D;
 import svp.com.dontmissplaces.model.Map.google.GPlaceAddressDetails;
 import svp.com.dontmissplaces.model.nominatim.PlaceAddressDetails;
 
