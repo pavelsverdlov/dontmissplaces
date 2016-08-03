@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="?attr/actionBarSize"
-            android:src="@drawable/ic_add_white_48dp"
+            android:src="@mipmap/ic_add_white_48dp"
             app:backgroundTint="@color/colorAccent"
             app:fabSize="mini" />
 
@@ -50,8 +50,8 @@
             android:id="@+id/map_zoom_minus_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/fab_margin"
-            android:src="@drawable/ic_remove_white_48dp"
+            android:layout_marginTop="@dimen/zoom_fabbtn_top_margin"
+            android:src="@mipmap/ic_remove_white_48dp"
             app:backgroundTint="@color/colorAccent"
             app:fabSize="mini" />
     </LinearLayout>
