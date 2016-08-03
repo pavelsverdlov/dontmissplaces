@@ -11,6 +11,17 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/appmap" />
+            <option value="$PROJECT_DIR$/dontmissstation" />
+            <option value="$PROJECT_DIR$/infrastructure" />
+          </set>
+        </option>
+        <option name="myModules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/appmap" />
+            <option value="$PROJECT_DIR$/dontmissstation" />
             <option value="$PROJECT_DIR$/infrastructure" />
           </set>
         </option>
