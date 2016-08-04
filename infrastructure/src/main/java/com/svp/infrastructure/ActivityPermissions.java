@@ -1,4 +1,4 @@
-package svp.com.dontmissplaces.ui;
+package com.svp.infrastructure;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -7,8 +7,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 
 import com.svp.infrastructure.common.PermissionUtils;
-
-import svp.com.dontmissplaces.MainMenuActivity;
 
 public class ActivityPermissions {
     /**

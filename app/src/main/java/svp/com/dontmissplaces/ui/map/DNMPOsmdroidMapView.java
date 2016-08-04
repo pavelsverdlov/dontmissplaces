@@ -1,31 +1,14 @@
 package svp.com.dontmissplaces.ui.map;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.svp.infrastructure.mvpvs.view.View;
 
 import org.osmdroid.api.IGeoPoint;
-import org.osmdroid.events.MapEventsReceiver;
-import org.osmdroid.events.MapListener;
-import org.osmdroid.events.ScrollEvent;
-import org.osmdroid.events.ZoomEvent;
-import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.util.BoundingBoxE6;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.overlay.Marker;
-import org.osmdroid.views.overlay.Overlay;
-import org.osmdroid.views.overlay.Polyline;
-import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import svp.app.map.OnMapClickListener;
@@ -33,7 +16,7 @@ import svp.app.map.OsmdroidMapView;
 import svp.com.dontmissplaces.R;
 import svp.app.map.model.Point2D;
 import svp.com.dontmissplaces.presenters.MapsPresenter;
-import svp.com.dontmissplaces.ui.ActivityPermissions;
+import com.svp.infrastructure.ActivityPermissions;
 import svp.app.map.model.IPOIView;
 import svp.com.dontmissplaces.ui.model.PolylineView;
 import svp.com.dontmissplaces.ui.model.SessionView;

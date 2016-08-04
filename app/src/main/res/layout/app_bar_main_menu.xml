@@ -28,7 +28,7 @@
     <include layout="@layout/content_main_map" />
 
     <include layout="@layout/mapzoomlayout" />
-   
+
     <LinearLayout
         android:id="@+id/select_place_scrolling_act_content_view"
         android:layout_width="match_parent"

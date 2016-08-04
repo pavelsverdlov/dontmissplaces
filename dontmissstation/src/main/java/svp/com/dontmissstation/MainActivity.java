@@ -2,6 +2,7 @@ package svp.com.dontmissstation;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -13,10 +14,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.svp.infrastructure.ActivityPermissions;
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 import com.svp.infrastructure.mvpvs.commutate.ICommutativeElement;
 import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
 
+import org.osmdroid.util.BoundingBoxE6;
+
+import svp.app.map.OnMapClickListener;
+import svp.app.map.OsmdroidMapView;
+import svp.app.map.model.Point2D;
 import svp.com.dontmissstation.presenters.MainPresenter;
 import svp.com.dontmissstation.ui.activities.ActivityOperationResult;
 
@@ -55,6 +62,12 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
         }
     }
 
+    private OsmdroidMapView mapView;
+    private final ActivityPermissions permissions;
+
+    public MainActivity(){
+        permissions = new ActivityPermissions(this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,14 +93,51 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        mapView = new OsmdroidMapView(getActivity(),R.id.osmdroid_map);
+
+        mapView.setOnMapClickListener(new OnMapClickListener() {
+            @Override
+            public void onMapClick(Point2D point) {
+
+            }
+
+            @Override
+            public void onZoom(int zoom, BoundingBoxE6 box) {
+
+            }
+
+            @Override
+            public void onScroll(int zoom, BoundingBoxE6 box) {
+
+            }
+
+            @Override
+            public void onMapLongClick(Point2D point) {
+
+            }
+        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
+        mapView.mapView.post(new Runnable() {
+            @Override
+            public void run() {
+                mapView.moveTo(new Point2D(48.859,2.296));
+            }
+        });
     }
 
+    @Override
+    protected void onResume() {
+        if (this.permissions.fineLocationPermissionDenied) {
+            this.permissions.showMissingPermissionError();// Permission was not granted, display error dialog.
+        }
+        mapView.onResume();
+        super.onResume();
+    }
 
     @Override
     public void onBackPressed() {
@@ -144,5 +194,23 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode != ActivityPermissions.LOCATION_PERMISSION_REQUEST_CODE) {
+            return;
+        }
+        if (this.permissions.isFineLocationGranted(permissions, grantResults)) {
+            if(this.permissions.isFineLocationGranted()) {
+
+            }else {
+
+            }
+
+        } else {
+            this.permissions.fineLocationPermissionDenied = true;
+        }
     }
 }

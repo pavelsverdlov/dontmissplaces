@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
 import svp.app.map.model.Point2D;
 import svp.com.dontmissplaces.presenters.MainMenuPresenter;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
-import svp.com.dontmissplaces.ui.ActivityPermissions;
+import com.svp.infrastructure.ActivityPermissions;
 import svp.com.dontmissplaces.ui.PlaceInfoLayoutView;
 import svp.com.dontmissplaces.ui.TrackRecordingToolbarView;
 import svp.com.dontmissplaces.ui.map.GoogleMapView;

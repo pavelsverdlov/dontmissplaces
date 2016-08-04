@@ -26,7 +26,7 @@ import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.model.Map.GoogleMapsPlaceService;
 import svp.app.map.model.Point2D;
 import svp.com.dontmissplaces.presenters.MapsPresenter;
-import svp.com.dontmissplaces.ui.ActivityPermissions;
+import com.svp.infrastructure.ActivityPermissions;
 import svp.app.map.model.IPOIView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.ui.model.PolylineView;
