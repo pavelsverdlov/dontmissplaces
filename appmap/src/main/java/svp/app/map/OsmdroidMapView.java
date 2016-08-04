@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 
+import com.svp.infrastructure.common.ViewExtensions;
+
 import org.osmdroid.api.IMapController;
 import org.osmdroid.events.DelayedMapListener;
 import org.osmdroid.events.MapEventsReceiver;
@@ -20,42 +22,41 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.MapEventsOverlay;
+import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Overlay;
+import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
-import svp.app.map.R;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
+import java.util.ArrayList;
+
+import svp.app.map.model.IPOIView;
 import svp.app.map.model.Point2D;
-public abstract class OsmdroidMapView implements IMapView, MapEventsReceiver, MapListener, android.view.View.OnClickListener {
+public class OsmdroidMapView implements IMapView, MapEventsReceiver, MapListener, android.view.View.OnClickListener {
     private final Activity activity;
-    private final MapView mapView;
-    private final IMapController mapController;
-    private final GpsLocationProvider gpsProvider;
+    public final MapView mapView;
+    public final IMapController mapController;
+    public final GpsLocationProvider gpsProvider;
     private final FolderOverlay poiMarkers;
     private final CompassOverlay compassOverlay;
 
-    private static final int d = svp.app.map.R.id.map_zoom_plus_fab;
 
     private OnMapClickListener clickListener;
 
     FloatingActionButton fabZoomPlus;
     FloatingActionButton fabZoomMinus;
-//    @Bind(svp.app.map.R.id.map_zoom_minus_fab)
-//    FloatingActionButton fabZoomMinus;
 
-    protected OsmdroidMapView(Activity activity, int mapResourceId) {
+    public OsmdroidMapView(Activity activity, int mapResourceId) {
         this.activity = activity;
 
-        int d = svp.app.map.R.id.map_zoom_plus_fab;
-
-        ButterKnife.bind(this, activity);
+        fabZoomPlus = ViewExtensions.findViewById(activity,R.id.map_zoom_plus_fab);
+        fabZoomMinus = ViewExtensions.findViewById(activity,R.id.map_zoom_minus_fab);
 
         mapView = (MapView) activity.findViewById(mapResourceId);
         mapView.setMapListener(new DelayedMapListener(this, 100));
-       // setMapViewSettings();
+        setMapViewSettings();
 
         compassOverlay = new CompassOverlay(activity, new InternalCompassOrientationProvider(activity),
                 mapView);
@@ -81,15 +82,175 @@ public abstract class OsmdroidMapView implements IMapView, MapEventsReceiver, Ma
 
     @Override
     public void onClick(android.view.View v) {
-//        switch (v.getId()) {
-//            case R.id.map_zoom_plus_fab:
-//                mapController.setZoom(mapView.getZoomLevel() + 1);
-//                break;
-//            case R.id.map_zoom_minus_fab:
-//                mapController.setZoom(mapView.getZoomLevel() - 1);
-//                break;
-//        }
+        int id = v.getId();
+        if(id ==  R.id.map_zoom_plus_fab){
+            mapController.setZoom(mapView.getZoomLevel() + 1);
+        }else if(id == R.id.map_zoom_minus_fab){
+            mapController.setZoom(mapView.getZoomLevel() - 1);
+        }
     }
+
+    /**
+     * IMapView
+     * */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {    }
+    @Override
+    public void onStart() { }
+    @Override
+    public void onStop() { }
+    @Override
+    public void onResume() { }
+    @Override
+    public void moveTo(Point2D p) {
+        mapController.setZoom(16);
+        mapController.animateTo(p.getGeoPoint());
+    }
+    @Override
+    public void setOnMapClickListener(OnMapClickListener listener) {
+        clickListener = listener;
+    }
+    public void drawMarker(IPOIView poi, int markerIdResource) {
+        if (poi != null) {
+            for (Overlay m : poiMarkers.getItems()) {
+                poiMarkers.remove(m);
+            }
+            Marker poiMarker = new Marker(mapView);
+            poiMarker.isFlat();
+//            poiMarker.setTitle(poi.getType());
+            poiMarker.setSnippet(poi.getName());
+            poiMarker.setIcon(activity.getResources().getDrawable(markerIdResource));
+            //poiMarker.setAnchor(Marker.NOT_SET, Marker.NOT_SET);
+            poiMarker.setPosition(poi.getGeoPoint());
+            poiMarkers.add(poiMarker);
+
+            mapView.postInvalidate();
+        }
+    }
+
+
+    /**
+     * Click handlers
+     */
+
+    @Override
+    public boolean singleTapConfirmedHelper(GeoPoint p) {
+        clickListener.onMapClick(new Point2D(p));
+        return false;
+    }
+
+    @Override
+    public boolean longPressHelper(GeoPoint p) {
+        clickListener.onMapLongClick(new Point2D(p));
+        return false;
+    }
+
+    /**
+     * Map listeners
+     */
+
+    @Override
+    public boolean onScroll(ScrollEvent event) {
+        int zoom = mapView.getZoomLevel();
+        BoundingBoxE6 box = mapView.getBoundingBox();
+        clickListener.onScroll(zoom, box);
+        return true;
+    }
+
+    @Override
+    public boolean onZoom(ZoomEvent event) {
+        int zoom = event.getZoomLevel();
+        BoundingBoxE6 box = mapView.getBoundingBox();
+
+        clickListener.onZoom(zoom, box);
+        return true;
+    }
+
+    /**
+     * My location handlers
+     */
+
+    private void setMapViewSettings() {
+        //get value from settings
+        String titleSourceType = "1";
+        OnlineTileSourceBase tileSource;
+        //TODO: refactor to enum
+        switch (titleSourceType) {
+            case "mapnik":
+                tileSource = TileSourceFactory.MAPNIK;
+                break;
+            case "cyclemap":
+                tileSource = TileSourceFactory.CYCLEMAP;
+                break;
+            case "osmpublictransport":
+                //show all rouds on top
+                tileSource = TileSourceFactory.PUBLIC_TRANSPORT;
+                break;
+            case "mapquestosm":
+                //mentro station on top most
+                tileSource = TileSourceFactory.MAPQUESTOSM;
+                break;
+            default:
+                tileSource = TileSourceFactory.DEFAULT_TILE_SOURCE;
+                break;
+        }
+
+        mapView.setTileSource(tileSource);
+        //set auto resize text titles on map
+        mapView.setTilesScaledToDpi(true);
+        mapView.setBuiltInZoomControls(false);
+        mapView.setMultiTouchControls(true);
+
+        mapView.setMinZoomLevel(3);
+        mapView.setMaxZoomLevel(18); // Latest OSM can go to 21!
+        mapView.getTileProvider().createTileCache();
+    }
+
+    private void drawLine(GeoPoint s, GeoPoint e) {
+        ArrayList<GeoPoint> pp = new ArrayList<GeoPoint>();
+        pp.add(s);
+        pp.add(e);
+        Polyline roadOverlay = new Polyline(activity);
+        roadOverlay.setColor(0x800000FF);
+        roadOverlay.setWidth(10);
+        roadOverlay.setPoints(pp);
+
+        mapView.getOverlays().add(roadOverlay);
+        mapView.invalidate();
+    }
+/*
+    private class MyItemizedIconOverlay extends ItemizedIconOverlay<OverlayItem> {
+        public MyItemizedIconOverlay(
+                List<OverlayItem> pList,
+                org.osmdroid.views.overlay.ItemizedIconOverlay.OnItemGestureListener<OverlayItem> pOnItemGestureListener,
+                ResourceProxy pResourceProxy) {
+            super(pList, pOnItemGestureListener, pResourceProxy);
+            // TODO Auto-generated constructor stub
+        }
+
+        @Override
+        public void draw(Canvas canvas, MapView mapview, boolean arg2) {
+            // TODO Auto-generated method stub
+            super.draw(canvas, mapview, arg2);
+
+            if (!overlayItemArray.isEmpty()) {
+
+                //overlayItemArray have only ONE element only, so I hard code to get(0)
+                IGeoPoint in = overlayItemArray.get(0).getPoint();
+
+                Point out = new Point();
+                mapview.getProjection().toPixels(in, out);
+
+                Bitmap bm = BitmapFactory.decodeResource(activity.getResources(), R.drawable.ic_done_white_24dp);
+                canvas.drawBitmap(bm,
+                        out.x - bm.getWidth() / 2,  //shift the bitmap center
+                        out.y - bm.getHeight() / 2,  //shift the bitmap center
+                        null);
+            }
+        }
+    }
+    */
+
 
     public class GpsLocationProvider {
         private MyLocationNewOverlay myLocationOverlay;

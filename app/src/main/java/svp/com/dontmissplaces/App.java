@@ -10,7 +10,6 @@ import com.svp.infrastructure.mvpvs.bundle.IBundleProvider;
 import com.svp.infrastructure.mvpvs.presenter.IPresenter;
 import com.svp.infrastructure.mvpvs.PresenterContainer;
 import com.svp.infrastructure.mvpvs.ViewStateContainer;
-import com.svp.infrastructure.mvpvs.view.IActivityView;
 import com.svp.infrastructure.mvpvs.viewstate.IViewState;
 
 import svp.com.dontmissplaces.db.Repository;
@@ -19,7 +18,7 @@ import svp.com.dontmissplaces.ui.BaseBundleProvider;
 import svp.com.dontmissplaces.ui.map.GoogleMapView;
 
 import svp.com.dontmissplaces.ui.activities.*;
-import svp.com.dontmissplaces.ui.map.OsmdroidMapView;
+import svp.com.dontmissplaces.ui.map.DNMPOsmdroidMapView;
 
 public class App extends Application {
     private final Repository repository;
@@ -46,17 +45,17 @@ public class App extends Application {
             }
         });
 
-        Registrator.register(OsmdroidMapView.class,
+        Registrator.register(DNMPOsmdroidMapView.class,
                 new PresenterContainer.IPresenterCreator() {
                     @Override
                     public IPresenter create() {
                         return new MapsPresenter(repository);
                     }
                 },
-                new ViewStateContainer.IViewStateCreator<OsmdroidMapView>() {
+                new ViewStateContainer.IViewStateCreator<DNMPOsmdroidMapView>() {
                     @Override
-                    public IViewState create(OsmdroidMapView view) {
-                        return new OsmdroidMapView.ViewState(view);
+                    public IViewState create(DNMPOsmdroidMapView view) {
+                        return new DNMPOsmdroidMapView.ViewState(view);
                     }
                 });
 

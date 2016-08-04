@@ -38,7 +38,7 @@ import svp.com.dontmissplaces.ui.TrackRecordingToolbarView;
 import svp.com.dontmissplaces.ui.map.GoogleMapView;
 import svp.com.dontmissplaces.ui.map.IDNMPMapView;
 import svp.app.map.OnMapClickListener;
-import svp.com.dontmissplaces.ui.map.OsmdroidMapView;
+import svp.com.dontmissplaces.ui.map.DNMPOsmdroidMapView;
 import svp.com.dontmissplaces.ui.model.IPOIView;
 import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.ui.model.TrackView;
@@ -237,7 +237,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
                 mapView = new GoogleMapView(this, permissions);
                 break;
             case Osmdroid:
-                mapView = new OsmdroidMapView(this, permissions);
+                mapView = new DNMPOsmdroidMapView(this, permissions);
                 break;
         }
 

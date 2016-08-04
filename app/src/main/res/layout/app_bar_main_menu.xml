@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:appmap="svp.app.map"
+    xmlns:android="http://schemas.android.com/apk/res/android"
 
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -25,37 +27,8 @@
 
     <include layout="@layout/content_main_map" />
 
-    <LinearLayout
-        android:id="@+id/floating_action_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_gravity="top|end"
-        android:layout_margin="4dp"
-        android:orientation="vertical"
-        app:layout_anchorGravity="top|end">
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/map_zoom_plus_fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="?attr/actionBarSize"
-            android:src="@mipmap/ic_add_white_48dp"
-            app:backgroundTint="@color/colorAccent"
-            app:fabSize="mini" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/map_zoom_minus_fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/zoom_fabbtn_top_margin"
-            android:src="@mipmap/ic_remove_white_48dp"
-            app:backgroundTint="@color/colorAccent"
-            app:fabSize="mini" />
-    </LinearLayout>
-
+    <include layout="@layout/mapzoomlayout" />
+   
     <LinearLayout
         android:id="@+id/select_place_scrolling_act_content_view"
         android:layout_width="match_parent"

@@ -1,4 +1,4 @@
-package svp.com.dontmissplaces.ui.model;
+package svp.app.map.model;
 
 import org.json.JSONException;
 import org.json.JSONObject;
