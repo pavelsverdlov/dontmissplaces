@@ -12,6 +12,8 @@ import android.util.Log;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import svp.app.map.android.gps.OnLocationChangeListener;
+
 public class GPSServiceProvider {
     private static final String TAG = "GPSServiceProvider";
     private TrackTimer timer;
@@ -49,7 +51,7 @@ public class GPSServiceProvider {
                         synchronized (lock) {
                             serviceRemote = IGPSService.Stub.asInterface( service );
                             isRunning = true;
-                            timer = startTimer(2000);
+                           // timer = startTimer(2000);
                         }
                         if(onServiceConnected != null ) {
                             onServiceConnected.run();

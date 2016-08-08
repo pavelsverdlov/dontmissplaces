@@ -1,4 +1,4 @@
-package svp.com.dontmissplaces.model.gps;
+package svp.app.map.android.gps;
 
 import android.location.Location;
 import android.location.LocationManager;
@@ -278,5 +278,6 @@ public class LocationFilter {
 
     public void clear() {
         previousLocation = null;
+        isIdle = false;
     }
 }

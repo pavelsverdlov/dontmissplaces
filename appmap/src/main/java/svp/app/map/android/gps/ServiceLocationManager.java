@@ -1,4 +1,4 @@
-package svp.com.dontmissplaces.model.gps;
+package svp.app.map.android.gps;
 
 import android.content.ContentResolver;
 import android.content.Context;

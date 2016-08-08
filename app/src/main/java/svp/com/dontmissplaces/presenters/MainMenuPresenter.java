@@ -25,7 +25,7 @@ import svp.com.dontmissplaces.db.Track;
 import svp.com.dontmissplaces.db.Waypoint;
 import svp.app.map.model.Point2D;
 import svp.com.dontmissplaces.model.gps.GPSServiceProvider;
-import svp.com.dontmissplaces.model.gps.OnLocationChangeListener;
+import svp.app.map.android.gps.OnLocationChangeListener;
 import svp.com.dontmissplaces.model.nominatim.PhraseProvider;
 import svp.com.dontmissplaces.model.nominatim.PlaceByPoint;
 import svp.com.dontmissplaces.model.nominatim.PointsOfInterestInsiteBoxTask;

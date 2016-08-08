@@ -26,6 +26,8 @@ import com.svp.infrastructure.common.SystemUtils;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import svp.app.map.android.gps.LocationFilter;
+import svp.app.map.android.gps.ServiceLocationManager;
 import svp.app.map.android.recognition.ActivityRecognitionIntentService;
 import svp.app.map.policy.AbsoluteLocationListenerPolicy;
 import svp.app.map.policy.LocationListenerPolicy;
@@ -40,7 +42,6 @@ public class GPSService extends Service {
      */
     public static final String RESUME_TRACK_EXTRA_NAME = "com.google.android.apps.mytracks.RESUME_TRACK";
     public static final double RESUME_LATITUDE = 200.0;
-    // private static final String TAG = TrackRecordingService.class.getSimpleName();
 
     // 1 second in milliseconds
     private static final long ONE_SECOND = (long) UnitConversions.S_TO_MS;
@@ -52,32 +53,16 @@ public class GPSService extends Service {
     // The following variables are set in onCreate:
     private ExecutorService executorService;
     private Context context;
-    //private MyTracksProviderUtils myTracksProviderUtils;
     private Handler handler;
     private ServiceLocationManager myTracksLocationManager;
     private PendingIntent activityRecognitionPendingIntent;
-    //OLD private ActivityRecognitionClient activityRecognitionClient;
     private GoogleApiClient activityRecognitionClient;
-//    private PeriodicTaskExecutor voiceExecutor;
-//    private PeriodicTaskExecutor splitExecutor;
-    //    private SharedPreferences sharedPreferences;
-    private long recordingTrackId;
-    private boolean recordingTrackPaused;
     private LocationListenerPolicy locationListenerPolicy;
-
-
-
-    private int autoResumeTrackTimeout;
-
-    private double weight;
-
     // The following variables are set when recording:
 //    private TripStatisticsUpdater trackTripStatisticsUpdater;
 //    private TripStatisticsUpdater markerTripStatisticsUpdater;
     private PowerManager.WakeLock wakeLock;
     private SensorManager sensorManager;
-    private boolean currentSegmentHasLocation;
-    private boolean isIdle; // true if idle
 
     @Nullable
     @Override
@@ -198,8 +183,6 @@ public class GPSService extends Service {
                 .addOnConnectionFailedListener(activityRecognitionFailedListener)
                 .build();
         activityRecognitionClient.connect();
-//        voiceExecutor = new PeriodicTaskExecutor(this, new AnnouncementPeriodicTaskFactory());
-//        splitExecutor = new PeriodicTaskExecutor(this, new SplitPeriodicTaskFactory());
 
         handler.post(registerLocationRunnable);
         Log.d(TAG,"initialized");
@@ -251,21 +234,8 @@ public class GPSService extends Service {
 
         handler.removeCallbacks(registerLocationRunnable);
         unregisterLocationListener();
-//
-//        try {
-//            splitExecutor.shutdown();
-//        } finally {
-//            splitExecutor = null;
-//        }
-//
-//        try {
-//            voiceExecutor.shutdown();
-//        } finally {
-//            voiceExecutor = null;
-//        }
 
         if (activityRecognitionClient.isConnected()) {
-            //OLD activityRecognitionClient.removeActivityUpdates(activityRecognitionPendingIntent);
             ActivityRecognition.ActivityRecognitionApi
                     .removeActivityUpdates(activityRecognitionClient, activityRecognitionPendingIntent);
         }
@@ -274,11 +244,9 @@ public class GPSService extends Service {
 
         myTracksLocationManager.close();
         myTracksLocationManager = null;
-//        myTracksProviderUtils = null;
 
-        //TODO: uncommit this
-//        binder.detachFromService();
-//        binder = null;
+        binder.detachFromService();
+        binder = null;
 
         // This should be the next to last operation
         releaseWakeLock();
@@ -295,7 +263,7 @@ public class GPSService extends Service {
         return true;
     }
     public boolean isPaused() {
-        return recordingTrackPaused;
+        return false;
     }
     protected void startForegroundService(PendingIntent pendingIntent, int messageId) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this).setContentIntent(
@@ -366,16 +334,10 @@ public class GPSService extends Service {
         // Update instance variables
         sensorManager = SensorManagerFactory.getSystemSensorManager(this);
         locationFilter.clear();
-        currentSegmentHasLocation = false;
-        isIdle = false;
 
         startGps();
-        sendTrackBroadcast(trackStarted ? "track_started_broadcast_action"
-                : "track_resumed_broadcast_action", recordingTrackId);
-
-        // Restore periodic tasks
-//        voiceExecutor.restore();
-//        splitExecutor.restore();
+        sendTrackBroadcast(trackStarted ? "track_started_broadcast_action" : "track_resumed_broadcast_action", 0);
+        Log.d(TAG, "start recording");
     }
     private void startGps() {
         Log.d(TAG, "startGps");
@@ -384,11 +346,6 @@ public class GPSService extends Service {
         showNotification(true);
     }
     private void endRecording(boolean trackStopped, long trackId) {
-
-        // Shutdown periodic tasks
-//        voiceExecutor.shutdown();
-//        splitExecutor.shutdown();
-
         // Update instance variables
         if (sensorManager != null) {
             SensorManagerFactory.releaseSystemSensorManager();
@@ -399,6 +356,7 @@ public class GPSService extends Service {
         sendTrackBroadcast(trackStopped ? "track_stopped_broadcast_action"
                 : "track_paused_broadcast_action", trackId);
         stopGps(trackStopped);
+        Log.d(TAG, "end recording");
     }
     private void stopGps(boolean stop) {
         unregisterLocationListener();
@@ -537,13 +495,6 @@ public class GPSService extends Service {
             return gpsService.isPaused();
         }
 
-        public long getRecordingTrackId() {
-            if (!canAccess()) {
-                return -1L;
-            }
-            return gpsService.recordingTrackId;
-        }
-
         public void insertTrackPoint(Location location) {
             if (!canAccess()) {
                 return;
@@ -588,101 +539,3 @@ public class GPSService extends Service {
         }
     }
 }
-/*
-public class GPSService extends Service {
-    private static final String TAG = "GPSService";
-    private static final int LOCATION_INTERVAL = 50000;
-    private static final float LOCATION_DISTANCE = 10f;
-
-    private ServiceLocationManager locationManager;
-    private final HashMap<String, LocationListener> listeners;
-    private final LocationFilter filter;
-
-    private boolean isNetworkProvider;
-    private boolean isGPSProvider;
-
-    public GPSService() {
-        filter = new LocationFilter();
-        listeners = new HashMap<>();
-        listeners.put(ServiceLocationManager.GPS_PROVIDER, new LocationListener(ServiceLocationManager.GPS_PROVIDER, filter));
-        listeners.put(ServiceLocationManager.NETWORK_PROVIDER, new LocationListener(ServiceLocationManager.NETWORK_PROVIDER, filter));
-    }
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return binder;
-    }
-
-    private IBinder binder = new IGPSService.Stub() {
-        @Override
-        public Location getLastLocation() throws RemoteException {
-            return filter.getPrevLocation();
-        }
-    };
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        if (locationManager == null) {
-            locationManager = (ServiceLocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-            locationManager.addGpsStatusListener(new GpsStatus.Listener() {
-                @Override
-                public void onGpsStatusChanged(int event) {
-                    Log.d(TAG,"onGpsStatusChanged: " + event);
-                }
-            });
-        }
-        isNetworkProvider = requestLocationUpdates(ServiceLocationManager.NETWORK_PROVIDER);
-        isGPSProvider = requestLocationUpdates(ServiceLocationManager.GPS_PROVIDER);
-
-        Log.d(TAG, "onCreate: GPSProvider = " + isGPSProvider);
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        // We want this service to continue running until it is explicitly
-        // stopped, so return sticky.
-        return START_STICKY;
-    }
-
-    @Override
-    public void onDestroy() {
-        Log.d(TAG, "onDestroy: ");
-        super.onDestroy();
-        locationManager.removeUpdates(listeners.get(ServiceLocationManager.GPS_PROVIDER));
-        locationManager.removeUpdates(listeners.get(ServiceLocationManager.NETWORK_PROVIDER));
-    }
-
-    private boolean requestLocationUpdates(String provider){
-        try {
-            if(!locationManager.isProviderEnabled(provider)){
-                Log.d(TAG, "requestLocationUpdates: " + provider + " disabled.");
-                return false;
-            }
-
-            Location last = locationManager.getLastKnownLocation(provider);
-            Log.d(TAG, "LastKnownLocation: " + (last == null ? "NULL" : last.toString()));
-            filter.addLocation(last);
-
-            locationManager.requestLocationUpdates(provider, LOCATION_INTERVAL, LOCATION_DISTANCE,
-                    listeners.get(provider));
-
-            Log.d(TAG, provider + " true");
-
-            return true;
-        } catch (java.lang.SecurityException ex) {
-            Log.i(TAG, "requestLocationUpdates: fail to request location update, ignore", ex);
-        } catch (IllegalArgumentException ex) {
-            Log.d(TAG, "requestLocationUpdates: gps provider does not exist " + ex.getMessage());
-        }
-        return false;
-    }
-    private boolean isNetworkConnected() {
-        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo info = connMgr.getActiveNetworkInfo();
-
-        return (info != null && info.isConnected());
-    }
-}
-*/

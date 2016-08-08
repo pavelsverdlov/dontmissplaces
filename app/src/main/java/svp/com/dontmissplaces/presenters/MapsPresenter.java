@@ -14,7 +14,7 @@ import java.util.Date;
 import svp.com.dontmissplaces.db.Repository;
 import svp.com.dontmissplaces.db.Waypoint;
 import svp.com.dontmissplaces.model.gps.GPSServiceProvider;
-import svp.com.dontmissplaces.model.gps.OnLocationChangeListener;
+import svp.app.map.android.gps.OnLocationChangeListener;
 import svp.com.dontmissplaces.ui.map.IDNMPMapView;
 import svp.com.dontmissplaces.ui.map.IMapViewState;
 import svp.com.dontmissplaces.ui.model.PolylineView;
