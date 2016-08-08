@@ -25,7 +25,6 @@ public class DNMPOsmdroidMapView extends View<MapsPresenter> implements IDNMPMap
     private final Activity activity;
     private final ActivityPermissions permissions;
 
-
 //    private final MapView mapView;
 //    private final IMapController mapController;
 //    private final GpsLocationProvider gpsProvider;

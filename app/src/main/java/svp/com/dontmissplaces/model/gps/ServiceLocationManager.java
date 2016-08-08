@@ -14,9 +14,11 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.*;
 
-public class MyTracksLocationManager {
+import svp.app.map.android.util.GoogleLocationUtils;
 
-    private final String TAG = "MyTracksLocationManager";
+public class ServiceLocationManager {
+
+    private final String TAG = "ServiceLocationManager";
 
     private class GoogleSettingsObserver extends ContentObserver {
 
@@ -42,12 +44,14 @@ public class MyTracksLocationManager {
                         requestLastLocation = null;
                     }
                     if (requestLocationUpdates != null && locationClient.isConnected()) {
-                        LocationRequest locationRequest = new LocationRequest().setPriority(
-                                LocationRequest.PRIORITY_HIGH_ACCURACY).setInterval(requestLocationUpdatesTime)
+                        LocationRequest locationRequest = new LocationRequest()
+                                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                                // set the interval in which you want to get locations
+                                .setInterval(requestLocationUpdatesTime)
+                                // if a location is available sooner you can get it (i.e. another app is using the location services)
                                 .setFastestInterval(requestLocationUpdatesTime)
                                 .setSmallestDisplacement(requestLocationUpdatesDistance);
-//                        locationClient.requestLocationUpdates(
-//                                locationRequest, requestLocationUpdates, handler.getLooper());
+
                         LocationServices.FusedLocationApi.requestLocationUpdates(
                                 locationClient, locationRequest,requestLocationUpdates, handler.getLooper());
                     }
@@ -69,7 +73,7 @@ public class MyTracksLocationManager {
     private final Handler handler;
 //    private final LocationClient locationClient;
     private GoogleApiClient locationClient;
-    private final LocationManager locationManager;
+    private final android.location.LocationManager locationManager;
     private final ContentResolver contentResolver;
     private final GoogleSettingsObserver observer;
 
@@ -79,12 +83,11 @@ public class MyTracksLocationManager {
     private float requestLocationUpdatesDistance;
     private long requestLocationUpdatesTime;
 
-    public MyTracksLocationManager(Context context, Looper looper, boolean enableLocaitonClient) {
+    public ServiceLocationManager(Context context, Looper looper, boolean enableLocationClient) {
         this.context = context;
         this.handler = new Handler(looper);
 
-        if (enableLocaitonClient) {
-//            locationClient = new LocationClient(context, connectionCallbacks, onConnectionFailedListener);
+        if (enableLocationClient) {
             locationClient = new GoogleApiClient.Builder(context)
                     .addApi(LocationServices.API)
                     .addConnectionCallbacks(connectionCallbacks)
@@ -94,9 +97,9 @@ public class MyTracksLocationManager {
         } else {
             locationClient = null;
         }
-        Log.d(TAG,"location client enabled=" + enableLocaitonClient);
+        Log.d(TAG,"location client enabled=" + enableLocationClient);
 
-        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (android.location.LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         contentResolver = context.getContentResolver();
         observer = new GoogleSettingsObserver(handler);
 
@@ -119,7 +122,7 @@ public class MyTracksLocationManager {
         if (!isAllowed()) {
             return false;
         }
-        String provider = LocationManager.GPS_PROVIDER;
+        String provider = android.location.LocationManager.GPS_PROVIDER;
         if (locationManager.getProvider(provider) == null) {
             return false;
         }
@@ -144,6 +147,7 @@ public class MyTracksLocationManager {
         handler.post(new Runnable() {
             @Override
             public void run() {
+                Log.d(TAG, "requestLocationUpdatesTime=" + minTime + " ,requestLocationUpdatesDistance=" + minDistance);
                 requestLocationUpdatesTime = minTime;
                 requestLocationUpdatesDistance = minDistance;
                 requestLocationUpdates = locationListener;

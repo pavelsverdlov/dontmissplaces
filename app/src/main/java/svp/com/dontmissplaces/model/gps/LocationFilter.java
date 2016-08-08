@@ -8,6 +8,9 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Vector;
 
+import svp.app.map.LocationUtils;
+import svp.app.map.policy.LocationListenerPolicy;
+
 public class LocationFilter {
     private static final int LOCATION_INTERVAL = 50000;
     private static final float LOCATION_DISTANCE = 10f;
@@ -108,7 +111,7 @@ public class LocationFilter {
                     Log.w(TAG, "A strange location was received on GPS, reset the GPS listeners");
                     stopListening();
                     mLocationManager.removeGpsStatusListener(mStatusListener);
-                    mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+                    mLocationManager = (ServiceLocationManager) this.getSystemService(Context.LOCATION_SERVICE);
                     sendRequestStatusUpdateMessage();
                     sendRequestLocationUpdatesMessage();
                 }
@@ -191,7 +194,6 @@ public class LocationFilter {
 
     public void addLocation(Location location) {
         try {
-
             if (!LocationUtils.isValidLocation(location)) {
                 Log.w(TAG, "Ignore onLocationChangedAsync. location is invalid.");
                 return;
@@ -215,6 +217,7 @@ public class LocationFilter {
             locationListenerPolicy.updateIdleTime(idleTime);
             if (currentRecordingInterval != locationListenerPolicy.getDesiredPollingInterval()) {
                 //TODO: registerLocationListener();
+                Log.d(TAG, "need register LocationListener");
             }
 
 //            SensorDataSet sensorDataSet = getSensorDataSet();
@@ -231,11 +234,7 @@ public class LocationFilter {
 //            }
 
             if (!LocationUtils.isValidLocation(lastValidTrackPoint)) {
-                /*
-                 * Should not happen. The current segment should have a location. Just
-                 * insert the current location.
-                 */
-//                insertLocation(track, location, null);
+                Log.d(TAG, "Should not happen. The current segment should have a location. Just insert the current location.");
                 previousLocation = location;
                 return;
             }

@@ -1,4 +1,4 @@
-package svp.com.dontmissplaces.model.gps;
+package svp.app.map.android.util;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -10,8 +10,7 @@ import android.net.Uri;
 import android.provider.Settings;
 import android.util.Log;
 
-import svp.com.dontmissplaces.R;
-import svp.com.dontmissplaces.model.api.ApiAdapterFactory;
+import svp.app.map.android.api.ApiAdapterFactory;
 
 public class GoogleLocationUtils {
     private static final String TAG = GoogleLocationUtils.class.getSimpleName();

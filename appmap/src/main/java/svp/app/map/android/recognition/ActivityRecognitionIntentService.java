@@ -1,4 +1,4 @@
-package svp.com.dontmissplaces.model.gps;
+package svp.app.map.android.recognition;
 
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
@@ -20,6 +20,9 @@ public class ActivityRecognitionIntentService extends IntentService {
         if (!ActivityRecognitionResult.hasResult(intent)) {
             return;
         }
+        // It contains a list of activities that a user may have been doing at a particular time.
+        // The activities are sorted by the most probable activity first.
+        // A confidence is associated with each activity which indicates how likely that activity is.
         ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
         DetectedActivity detectedActivity = result.getMostProbableActivity();
         if (detectedActivity == null) {
@@ -41,7 +44,6 @@ public class ActivityRecognitionIntentService extends IntentService {
 
 //        int currentType = PreferencesUtils.getInt(this, R.string.activity_recognition_type_key,
 //                PreferencesUtils.ACTIVITY_RECOGNITION_TYPE_DEFAULT);
-
 
 
         switch (detectedActivity.getType()) {

@@ -1,4 +1,4 @@
-package svp.com.dontmissplaces.model.gps;
+package com.svp.infrastructure.common;
 
 
 import android.annotation.SuppressLint;

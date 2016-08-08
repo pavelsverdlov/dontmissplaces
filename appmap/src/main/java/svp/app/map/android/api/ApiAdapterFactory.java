@@ -1,15 +1,6 @@
-package svp.com.dontmissplaces.model.api;
+package svp.app.map.android.api;
 
 import android.annotation.TargetApi;
-import android.app.ActionBar;
-import android.app.Activity;
-import android.appwidget.AppWidgetManager;
-import android.appwidget.AppWidgetProviderInfo;
-import android.os.Build;
-import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.ViewTreeObserver;
-import android.widget.SearchView;
 
 public class ApiAdapterFactory {
     private static ApiAdapter apiAdapter;

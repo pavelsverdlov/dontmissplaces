@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.hardware.SensorManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,28 +21,25 @@ import com.google.android.gms.common.api.*;
 import com.google.android.gms.location.ActivityRecognition;
 import com.google.android.gms.location.LocationServices;
 import com.svp.UnitConversions;
+import com.svp.infrastructure.common.SystemUtils;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import svp.app.map.android.recognition.ActivityRecognitionIntentService;
+import svp.app.map.policy.AbsoluteLocationListenerPolicy;
+import svp.app.map.policy.LocationListenerPolicy;
 import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.model.sensors.SensorManagerFactory;
 
 public class GPSService extends Service {
     private static final String TAG = "GPSService";
-
-
     /**
      * The name of extra intent property to indicate whether we want to resume a
      * previously recorded track.
      */
     public static final String RESUME_TRACK_EXTRA_NAME = "com.google.android.apps.mytracks.RESUME_TRACK";
-
-
     public static final double RESUME_LATITUDE = 200.0;
-
-
-
     // private static final String TAG = TrackRecordingService.class.getSimpleName();
 
     // 1 second in milliseconds
@@ -58,7 +54,7 @@ public class GPSService extends Service {
     private Context context;
     //private MyTracksProviderUtils myTracksProviderUtils;
     private Handler handler;
-    private MyTracksLocationManager myTracksLocationManager;
+    private ServiceLocationManager myTracksLocationManager;
     private PendingIntent activityRecognitionPendingIntent;
     //OLD private ActivityRecognitionClient activityRecognitionClient;
     private GoogleApiClient activityRecognitionClient;
@@ -189,7 +185,7 @@ public class GPSService extends Service {
         locationFilter = new LocationFilter(locationListenerPolicy);
 //        myTracksProviderUtils = MyTracksProviderUtils.Factory.get(this);
         handler = new Handler();
-        myTracksLocationManager = new MyTracksLocationManager(this, handler.getLooper(), true);
+        myTracksLocationManager = new ServiceLocationManager(this, handler.getLooper(), true);
 
         activityRecognitionPendingIntent = PendingIntent.getService(context, 0,
                 new Intent(context, ActivityRecognitionIntentService.class),
@@ -360,7 +356,7 @@ public class GPSService extends Service {
         return false;
     }
     private void resumeCurrentTrack() {
-            Location resume = new Location(LocationManager.GPS_PROVIDER);
+            Location resume = new Location(android.location.LocationManager.GPS_PROVIDER);
             resume.setLongitude(0);
             resume.setLatitude(RESUME_LATITUDE);
             resume.setTime(System.currentTimeMillis());
@@ -598,7 +594,7 @@ public class GPSService extends Service {
     private static final int LOCATION_INTERVAL = 50000;
     private static final float LOCATION_DISTANCE = 10f;
 
-    private LocationManager locationManager;
+    private ServiceLocationManager locationManager;
     private final HashMap<String, LocationListener> listeners;
     private final LocationFilter filter;
 
@@ -608,8 +604,8 @@ public class GPSService extends Service {
     public GPSService() {
         filter = new LocationFilter();
         listeners = new HashMap<>();
-        listeners.put(LocationManager.GPS_PROVIDER, new LocationListener(LocationManager.GPS_PROVIDER, filter));
-        listeners.put(LocationManager.NETWORK_PROVIDER, new LocationListener(LocationManager.NETWORK_PROVIDER, filter));
+        listeners.put(ServiceLocationManager.GPS_PROVIDER, new LocationListener(ServiceLocationManager.GPS_PROVIDER, filter));
+        listeners.put(ServiceLocationManager.NETWORK_PROVIDER, new LocationListener(ServiceLocationManager.NETWORK_PROVIDER, filter));
     }
 
     @Nullable
@@ -629,7 +625,7 @@ public class GPSService extends Service {
     public void onCreate() {
         super.onCreate();
         if (locationManager == null) {
-            locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+            locationManager = (ServiceLocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
             locationManager.addGpsStatusListener(new GpsStatus.Listener() {
                 @Override
                 public void onGpsStatusChanged(int event) {
@@ -637,8 +633,8 @@ public class GPSService extends Service {
                 }
             });
         }
-        isNetworkProvider = requestLocationUpdates(LocationManager.NETWORK_PROVIDER);
-        isGPSProvider = requestLocationUpdates(LocationManager.GPS_PROVIDER);
+        isNetworkProvider = requestLocationUpdates(ServiceLocationManager.NETWORK_PROVIDER);
+        isGPSProvider = requestLocationUpdates(ServiceLocationManager.GPS_PROVIDER);
 
         Log.d(TAG, "onCreate: GPSProvider = " + isGPSProvider);
     }
@@ -654,8 +650,8 @@ public class GPSService extends Service {
     public void onDestroy() {
         Log.d(TAG, "onDestroy: ");
         super.onDestroy();
-        locationManager.removeUpdates(listeners.get(LocationManager.GPS_PROVIDER));
-        locationManager.removeUpdates(listeners.get(LocationManager.NETWORK_PROVIDER));
+        locationManager.removeUpdates(listeners.get(ServiceLocationManager.GPS_PROVIDER));
+        locationManager.removeUpdates(listeners.get(ServiceLocationManager.NETWORK_PROVIDER));
     }
 
     private boolean requestLocationUpdates(String provider){

@@ -47,7 +47,7 @@ public class MapsPresenter extends Presenter<IDNMPMapView,IMapViewState> impleme
 
 //    public void permissionFineLocationReceived(){
 //        if(prevLocation == null) {
-//           // prevLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//           // prevLocation = mLocationManager.getLastKnownLocation(ServiceLocationManager.GPS_PROVIDER);
 //        }
 //    }
 

@@ -2,6 +2,7 @@ package svp.app.map;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -28,6 +29,8 @@ import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
+import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
+import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
@@ -325,6 +328,23 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver, MapListener
             gpsMyLocationProvider.startLocationProvider(myLocationOverlay);
             gpsMyLocationProvider.setLocationUpdateMinDistance(100);
             gpsMyLocationProvider.setLocationUpdateMinTime(milliSeconds);
+        }
+    }
+    public static class TestMy implements IMyLocationProvider{
+
+        @Override
+        public boolean startLocationProvider(IMyLocationConsumer myLocationConsumer) {
+            return false;
+        }
+
+        @Override
+        public void stopLocationProvider() {
+
+        }
+
+        @Override
+        public Location getLastKnownLocation() {
+            return null;
         }
     }
 }

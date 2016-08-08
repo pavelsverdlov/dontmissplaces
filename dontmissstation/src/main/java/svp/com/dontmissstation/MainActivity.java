@@ -93,8 +93,16 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         mapView = new OsmdroidMapView(getActivity(),R.id.osmdroid_map);
+
+        permissions.checkPermissionExternalStorage();
+        permissions.checkPermissionFineLocation();
 
         mapView.setOnMapClickListener(new OnMapClickListener() {
             @Override
@@ -117,11 +125,10 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
 
             }
         });
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+        mapView.onCreate(null);
+
+        mapView.onStart();
         mapView.mapView.post(new Runnable() {
             @Override
             public void run() {

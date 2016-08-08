@@ -1,20 +1,8 @@
-package svp.com.dontmissplaces.model.api;
+package svp.app.map.android.api;
 
-import android.app.Activity;
-import android.appwidget.AppWidgetManager;
-import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.SharedPreferences;
-import android.view.MenuItem;
-import android.view.ViewTreeObserver;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TabWidget;
 
 import com.squareup.okhttp.internal.http.HttpTransport;
-
-import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by Pasha on 7/18/2016.

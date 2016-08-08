@@ -1,4 +1,4 @@
-package svp.com.dontmissplaces.model.gps;
+package svp.app.map.policy;
 
 public class AbsoluteLocationListenerPolicy implements LocationListenerPolicy {
 
