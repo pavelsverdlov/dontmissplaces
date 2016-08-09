@@ -13,7 +13,7 @@ import java.util.Date;
 
 import svp.com.dontmissplaces.db.Repository;
 import svp.com.dontmissplaces.db.Waypoint;
-import svp.com.dontmissplaces.model.gps.GPSServiceProvider;
+import svp.app.map.android.gps.GPSServiceProvider;
 import svp.app.map.android.gps.OnLocationChangeListener;
 import svp.com.dontmissplaces.ui.map.IDNMPMapView;
 import svp.com.dontmissplaces.ui.map.IMapViewState;
@@ -26,7 +26,7 @@ public class MapsPresenter extends Presenter<IDNMPMapView,IMapViewState> impleme
     private Location prevLocation;
     private Waypoint prevWaypoint;
     private final Repository repository;
-    private GPSServiceProvider gpsService;
+    private GPSServiceProvider<svp.app.map.android.gps.GPSService> gpsService;
     private SessionView sessionTrack;
 
     public MapsPresenter(Repository repository) {
@@ -39,7 +39,7 @@ public class MapsPresenter extends Presenter<IDNMPMapView,IMapViewState> impleme
     }
     @Override
     protected void onAttachedView(IDNMPMapView view){
-        gpsService = new GPSServiceProvider(state.getActivity());
+        gpsService = new GPSServiceProvider(state.getActivity(), svp.app.map.android.gps.GPSService.class);
         if(state.checkPermissionFineLocation()) {
             gpsService.setOnLocationChangeListener(this);
         }

@@ -17,6 +17,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
 
+import svp.app.map.android.gps.GPSService;
 import svp.com.dontmissplaces.MainMenuActivity;
 import svp.com.dontmissplaces.db.Place;
 import svp.com.dontmissplaces.db.Repository;
@@ -24,7 +25,7 @@ import svp.com.dontmissplaces.db.SessionTrack;
 import svp.com.dontmissplaces.db.Track;
 import svp.com.dontmissplaces.db.Waypoint;
 import svp.app.map.model.Point2D;
-import svp.com.dontmissplaces.model.gps.GPSServiceProvider;
+import svp.app.map.android.gps.GPSServiceProvider;
 import svp.app.map.android.gps.OnLocationChangeListener;
 import svp.com.dontmissplaces.model.nominatim.PhraseProvider;
 import svp.com.dontmissplaces.model.nominatim.PlaceByPoint;
@@ -47,7 +48,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     private final Repository repository;
     private Track recordingTrack;
 
-    private GPSServiceProvider gpsService;
+    private GPSServiceProvider<svp.app.map.android.gps.GPSService> gpsService;
     private Location prevLocation;
 
     private SessionTrack recordingSession;
@@ -156,7 +157,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     @Override
     protected void onAttachedView(MainMenuActivity view, Intent intent) {
         super.onAttachedView(view,intent);
-        gpsService = new GPSServiceProvider(state.getActivity());
+        gpsService = new GPSServiceProvider(state.getActivity(), GPSService.class);
         if(state.getPermissions().checkPermissionFineLocation()) {
             gpsService.setOnLocationChangeListener(this);
             gpsService.startup(new Runnable() {

@@ -72,7 +72,7 @@
         </activity>
 
         <service
-            android:name=".model.gps.GPSService"
+            android:name="svp.app.map.android.gps.GPSService"
             android:enabled="true"
             android:process=":dmp_gps_service">
 

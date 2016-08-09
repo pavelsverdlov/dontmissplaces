@@ -1,4 +1,4 @@
-package svp.com.dontmissplaces.model.gps;
+package svp.app.map.android.gps;
 
 import android.app.PendingIntent;
 import android.app.Service;
@@ -26,13 +26,10 @@ import com.svp.infrastructure.common.SystemUtils;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import svp.app.map.android.gps.LocationFilter;
-import svp.app.map.android.gps.ServiceLocationManager;
 import svp.app.map.android.recognition.ActivityRecognitionIntentService;
 import svp.app.map.policy.AbsoluteLocationListenerPolicy;
 import svp.app.map.policy.LocationListenerPolicy;
-import svp.com.dontmissplaces.R;
-import svp.com.dontmissplaces.model.sensors.SensorManagerFactory;
+import svp.app.map.android.sensors.SensorManagerFactory;
 
 public class GPSService extends Service {
     private static final String TAG = "GPSService";
@@ -269,7 +266,7 @@ public class GPSService extends Service {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this).setContentIntent(
                 pendingIntent).setContentText(getString(messageId))
                 .setContentTitle("my_tracks_app_name").setOngoing(true)
-                .setSmallIcon(R.drawable.common_signin_btn_icon_disabled_light)
+                //.setSmallIcon(R.drawable.common_signin_btn_icon_disabled_light)
                 .setWhen(System.currentTimeMillis());
         startForeground(1, builder.build());
     }

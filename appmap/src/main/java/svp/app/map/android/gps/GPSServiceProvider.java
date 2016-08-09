@@ -1,4 +1,4 @@
-package svp.com.dontmissplaces.model.gps;
+package svp.app.map.android.gps;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -12,16 +12,15 @@ import android.util.Log;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import svp.app.map.android.gps.OnLocationChangeListener;
-
-public class GPSServiceProvider {
+public class GPSServiceProvider<TService extends GPSService> {
     private static final String TAG = "GPSServiceProvider";
+    private final Class<TService> serviceClass;
     private TrackTimer timer;
     private ServiceConnection serviceConnection;
     private OnLocationChangeListener listener;
 
-    public static Intent createServiceIntent(Context ctx){
-        return new Intent(ctx,GPSService.class);
+    public Intent createServiceIntent(Context ctx){
+        return new Intent(ctx,serviceClass);
     }
 
     public final Object lock;
@@ -29,7 +28,8 @@ public class GPSServiceProvider {
     private IGPSService serviceRemote;
     private final Context context;
 
-    public GPSServiceProvider(Context context) {
+    public GPSServiceProvider(Context context, Class<TService> serviceClass) {
+        this.serviceClass = serviceClass;
         lock = new Object();
         this.context = context;
         context.startService(createServiceIntent(context));

@@ -1,4 +1,4 @@
-package svp.com.dontmissplaces.model.sensors;
+package svp.app.map.android.sensors;
 
 import android.content.Context;
 import android.hardware.SensorManager;
