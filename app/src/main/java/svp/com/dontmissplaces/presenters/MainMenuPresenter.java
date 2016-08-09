@@ -169,7 +169,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         try {
             gps = GPSProvider.create(state.getActivity(),state.getPermissions(), new GPSLocationListener());
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG,"onAttachedView", e);
         }
     }
 

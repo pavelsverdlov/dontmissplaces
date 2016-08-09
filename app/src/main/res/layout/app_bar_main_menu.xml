@@ -158,20 +158,27 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/android_standard_toolbar_subtitle"
+        android:layout_height="@dimen/android_standard_headline"
         android:layout_gravity="fill|fill_horizontal"
         android:background="@color/colorItemSelected"
         android:gravity="fill|fill_horizontal"
         android:orientation="horizontal">
 
-            <Button
+            <ImageButton
                 android:id="@+id/select_place_move_to_location_btn"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:scaleType="fitCenter"
-                android:background="@mipmap/ic_place_white_48dp" />
+                android:scaleType="center"
+                android:src="@mipmap/ic_place_white_48dp" />
+            <TextView
+                android:id="@+id/select_place_content_location"
+                android:layout_weight="1"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|start"
+                />
             <!--<TextView-->
                 <!--android:id="@+id/select_place_content_location"-->
                 <!--android:layout_weight="1"-->

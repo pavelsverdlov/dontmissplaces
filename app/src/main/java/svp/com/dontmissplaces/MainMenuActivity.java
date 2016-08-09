@@ -156,7 +156,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     private PlaceInfoLayoutView placeInfoLayoutView;
 //    private OverMapBottomSheetBehavior behavior;
 //    private final int bottomPanelHeight = 224;
-    @Bind(R.id.select_place_move_to_location_btn) Button moveToLocation;
+    @Bind(R.id.select_place_move_to_location_btn) ImageButton moveToLocation;
     @Bind(R.id.select_place_person_pin) ImageButton personPin;
     @Bind(R.id.select_place_beenhere_btn) ImageButton personBeenHere;
 
