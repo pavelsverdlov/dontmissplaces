@@ -16,9 +16,9 @@ import java.util.Vector;
 public class GPSServiceProvider<TService extends GPSService> implements IGPSProvider{
     private static final String TAG = "GPSServiceProvider";
     private final Class<TService> serviceClass;
-    private TrackTimer timer;
+//    private TrackTimer timer;
     private ServiceConnection serviceConnection;
-    private Vector<OnLocationChangeListener> listeners;
+    private Vector<IGPSLocationListener> listeners;
 
     public Intent createServiceIntent(Context ctx){
         return new Intent(ctx,serviceClass);
@@ -43,8 +43,16 @@ public class GPSServiceProvider<TService extends GPSService> implements IGPSProv
     public void clearListeners(){
         listeners.clear();
     }
-    public void addOnLocationChangeListener(OnLocationChangeListener listener){
-        listeners.add(listener);
+    public void addOnLocationChangeListener(IGPSLocationListener listener){
+        if(serviceRemote == null) {
+            listeners.add(listener);
+        }else{
+            try {
+                serviceRemote.addLocationListener(listener);
+            } catch (RemoteException e) {
+                Log.e(TAG,"addOnLocationChangeListener",e);
+            }
+        }
     }
 
     public void startup(final Runnable onServiceConnected ){
@@ -54,6 +62,14 @@ public class GPSServiceProvider<TService extends GPSService> implements IGPSProv
                     public void onServiceConnected( ComponentName className, IBinder service ) {
                         synchronized (lock) {
                             serviceRemote = IGPSService.Stub.asInterface( service );
+                            for (IGPSLocationListener listener : listeners) {
+                                try {
+                                    serviceRemote.addLocationListener(listener);
+                                } catch (RemoteException e) {
+                                    Log.e(TAG,"onServiceConnected",e);
+                                }
+                            }
+                            listeners.clear();
                             isRunning = true;
                            // timer = startTimer(2000);
                         }
@@ -85,37 +101,37 @@ public class GPSServiceProvider<TService extends GPSService> implements IGPSProv
         }
     }
 
-    private TrackTimer startTimer(long intervalMillisec){
-        if(timer != null){
-            return timer;
-        }
-        return new TrackTimer(intervalMillisec);
-    }
-    private class TrackTimer extends TimerTask {
-        private long elapsedMses;
-        private TrackTimer(long intervalMillisec) {
-            Timer timer = new Timer();
-            timer.scheduleAtFixedRate(this, intervalMillisec, intervalMillisec);
-        }
-
-        public void stop() {
-            this.cancel();
-        }
-
-        @Override
-        public void run() {
-            if(listeners.isEmpty()){
-                return;
-            }
-            try {
-                Location l = serviceRemote.getLastLocation();
-                Log.d(TAG, "OnLocationChanged: " +  l);
-                for (OnLocationChangeListener listener : listeners) {
-                    listener.OnLocationChanged(l);
-                }
-            } catch (RemoteException ex) {
-                Log.e(TAG, "OnLocationChanged: ", ex);
-            }
-        }
-    }
+//    private TrackTimer startTimer(long intervalMillisec){
+//        if(timer != null){
+//            return timer;
+//        }
+//        return new TrackTimer(intervalMillisec);
+//    }
+//    private class TrackTimer extends TimerTask {
+//        private long elapsedMses;
+//        private TrackTimer(long intervalMillisec) {
+//            Timer timer = new Timer();
+//            timer.scheduleAtFixedRate(this, intervalMillisec, intervalMillisec);
+//        }
+//
+//        public void stop() {
+//            this.cancel();
+//        }
+//
+//        @Override
+//        public void run() {
+//            if(listeners.isEmpty()){
+//                return;
+//            }
+//            try {
+//                Location l = serviceRemote.getLastLocation();
+//                Log.d(TAG, "OnLocationChanged: " +  l);
+//                for (OnLocationChangeListener listener : listeners) {
+//                    listener.OnLocationChanged(l);
+//                }
+//            } catch (RemoteException ex) {
+//                Log.e(TAG, "OnLocationChanged: ", ex);
+//            }
+//        }
+//    }
 }

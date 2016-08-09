@@ -23,6 +23,7 @@ import com.google.android.gms.location.LocationServices;
 import com.svp.UnitConversions;
 import com.svp.infrastructure.common.SystemUtils;
 
+import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -60,6 +61,7 @@ public class GPSService extends Service {
 //    private TripStatisticsUpdater markerTripStatisticsUpdater;
     private PowerManager.WakeLock wakeLock;
     private SensorManager sensorManager;
+
 
     @Nullable
     @Override
@@ -533,6 +535,11 @@ public class GPSService extends Service {
         @Override
         public Location getLastLocation() throws RemoteException {
             return gpsService.locationFilter.getPrevLocation();
+        }
+
+        @Override
+        public void addLocationListener(IGPSLocationListener listener){
+            gpsService.locationFilter.addListener(listener);
         }
     }
 }

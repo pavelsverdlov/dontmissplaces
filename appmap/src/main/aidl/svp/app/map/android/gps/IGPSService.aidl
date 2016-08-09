@@ -1,8 +1,9 @@
 // IGPSService.aidl
 package svp.app.map.android.gps;
 
-// Declare any non-default types here with import statements
+import svp.app.map.android.gps.IGPSLocationListener;
 
 interface IGPSService {
     Location getLastLocation();
+    void addLocationListener(in IGPSLocationListener listener);
 }

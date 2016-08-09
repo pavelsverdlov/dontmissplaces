@@ -18,6 +18,7 @@ import java.util.TimerTask;
 import java.util.Vector;
 
 import svp.app.map.android.gps.GPSService;
+import svp.app.map.android.gps.IGPSLocationListener;
 import svp.app.map.android.gps.IGPSProvider;
 import svp.com.dontmissplaces.MainMenuActivity;
 import svp.com.dontmissplaces.db.Place;
@@ -166,8 +167,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     protected void onAttachedView(MainMenuActivity view, Intent intent) {
         super.onAttachedView(view,intent);
         try {
-            gps = GPSProvider.create(state.getActivity(),state.getPermissions());
-            //            gpsService.addOnLocationChangeListener(this);
+            gps = GPSProvider.create(state.getActivity(),state.getPermissions(), new GPSLocationListener());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -291,6 +291,13 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
 //            if(loc != null) {
 //                state.updateTrackDispance(loc.toString());
 //            }
+        }
+    }
+
+    public class GPSLocationListener extends IGPSLocationListener.Stub {
+        @Override
+        public void onLocationChanged(Location location) throws RemoteException {
+            OnLocationChanged(location);
         }
     }
 }

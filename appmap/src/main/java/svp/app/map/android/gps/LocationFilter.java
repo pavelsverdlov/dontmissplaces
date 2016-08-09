@@ -2,6 +2,7 @@ package svp.app.map.android.gps;
 
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.RemoteException;
 import android.util.Log;
 
 import java.util.LinkedList;
@@ -51,13 +52,24 @@ public class LocationFilter {
     private final int recordingDistanceInterval = 10;
     private long currentRecordingInterval;
     public boolean isIdle;
+    private final Vector<IGPSLocationListener> listeners;
 
     public LocationFilter(LocationListenerPolicy locationListenerPolicy){
+        this.listeners = new Vector<>();
         this.locationListenerPolicy = locationListenerPolicy;
         mAltitudes = new LinkedList<Double>();
         mWeakLocations = new Vector<>();
         mSpeedSanityCheck = false;
         currentRecordingInterval = locationListenerPolicy.getDesiredPollingInterval();
+    }
+
+    public void addListener(IGPSLocationListener listener){
+        listeners.add(listener);
+    }
+    public void invokeLocationChanged(Location location) throws RemoteException {
+        for (IGPSLocationListener listener : listeners){
+            listener.onLocationChanged(location);
+        }
     }
 
     public Location getPrevLocation(){
@@ -273,6 +285,14 @@ public class LocationFilter {
         } catch (RuntimeException e) {
             Log.e(TAG, "RuntimeException in onLocationChangedAsync", e);
             throw e;
+        }finally {
+            if(previousLocation != null){
+                try {
+                    invokeLocationChanged(previousLocation);
+                } catch (RemoteException e) {
+                    Log.e(TAG,"addLocation",e);
+                }
+            }
         }
     }
 
