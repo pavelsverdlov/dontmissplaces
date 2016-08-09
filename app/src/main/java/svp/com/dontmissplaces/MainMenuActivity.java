@@ -237,7 +237,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
                 mapView = new GoogleMapView(this, permissions);
                 break;
             case Osmdroid:
-                mapView = new DNMPOsmdroidMapView(this, permissions);
+                mapView = new DNMPOsmdroidMapView(this, permissions,getPresenter().gps);
                 break;
         }
 

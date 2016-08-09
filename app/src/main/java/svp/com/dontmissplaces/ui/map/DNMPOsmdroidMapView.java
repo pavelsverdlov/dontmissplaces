@@ -13,6 +13,7 @@ import java.util.Collection;
 
 import svp.app.map.OnMapClickListener;
 import svp.app.map.OsmdroidMapView;
+import svp.app.map.android.gps.IGPSProvider;
 import svp.com.dontmissplaces.R;
 import svp.app.map.model.Point2D;
 import svp.com.dontmissplaces.presenters.MapsPresenter;
@@ -99,10 +100,10 @@ public class DNMPOsmdroidMapView extends View<MapsPresenter> implements IDNMPMap
 
     private final OsmdroidMapView osmdroidMapView;
 
-    public DNMPOsmdroidMapView(Activity activity, ActivityPermissions permissions) {
+    public DNMPOsmdroidMapView(Activity activity, ActivityPermissions permissions,IGPSProvider gps) {
         this.activity = activity;
         this.permissions = permissions;
-        osmdroidMapView = new OsmdroidMapView(activity, R.id.osmdroid_map);
+        osmdroidMapView = new OsmdroidMapView(activity, R.id.osmdroid_map, gps);
 //
 //        ButterKnife.bind(this, activity);
 //

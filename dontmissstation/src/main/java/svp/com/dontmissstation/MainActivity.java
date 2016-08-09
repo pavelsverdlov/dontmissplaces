@@ -60,10 +60,16 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
         public Activity getActivity() {
             return view;
         }
+
+        public ActivityPermissions getPermissions() {
+            return view.permissions;
+        }
     }
 
     private OsmdroidMapView mapView;
     private final ActivityPermissions permissions;
+
+
 
     public MainActivity(){
         permissions = new ActivityPermissions(this);
@@ -99,7 +105,7 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
     protected void onStart() {
         super.onStart();
 
-        mapView = new OsmdroidMapView(getActivity(),R.id.osmdroid_map);
+        mapView = new OsmdroidMapView(getActivity(),R.id.osmdroid_map,getPresenter().gps);
 
         permissions.checkPermissionExternalStorage();
         permissions.checkPermissionFineLocation();

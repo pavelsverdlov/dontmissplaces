@@ -18,6 +18,7 @@ import java.util.TimerTask;
 import java.util.Vector;
 
 import svp.app.map.android.gps.GPSService;
+import svp.app.map.android.gps.IGPSProvider;
 import svp.com.dontmissplaces.MainMenuActivity;
 import svp.com.dontmissplaces.db.Place;
 import svp.com.dontmissplaces.db.Repository;
@@ -27,6 +28,7 @@ import svp.com.dontmissplaces.db.Waypoint;
 import svp.app.map.model.Point2D;
 import svp.app.map.android.gps.GPSServiceProvider;
 import svp.app.map.android.gps.OnLocationChangeListener;
+import svp.com.dontmissplaces.model.gps.GPSProvider;
 import svp.com.dontmissplaces.model.nominatim.PhraseProvider;
 import svp.com.dontmissplaces.model.nominatim.PlaceByPoint;
 import svp.com.dontmissplaces.model.nominatim.PointsOfInterestInsiteBoxTask;
@@ -48,7 +50,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     private final Repository repository;
     private Track recordingTrack;
 
-    private GPSServiceProvider<svp.app.map.android.gps.GPSService> gpsService;
+    public IGPSProvider gps;
     private Location prevLocation;
 
     private SessionTrack recordingSession;
@@ -104,7 +106,13 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     }
 
     public void onMoveToMyLocation() {
-        state.MapCameraMoveTo(prevLocation == null ? Point2D.empty() : new Point2D(prevLocation));
+        Point2D point = Point2D.empty();
+        try {
+            point = new Point2D(gps.getLocation());
+        } catch (Exception e) {
+            Log.e(TAG,"onMoveToMyLocation",e);
+        }
+        state.MapCameraMoveTo(point);
     }
     public void pinPlace(IPOIView poi) {
         Place p = poi.getPlace();
@@ -119,7 +127,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     public void permissionFineLocationReceived() {
         if(prevLocation == null) {
             try {
-                prevLocation = gpsService.getLocation();
+                prevLocation = gps.getLocation();
             } catch (RemoteException e) {
                 e.printStackTrace();
                 Log.e(TAG,"",e);
@@ -127,7 +135,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         }
     }
     @Override
-    public void OnLocationChange(Location location) {
+    public void OnLocationChanged(Location location) {
         if(prevLocation == null && location != null){
             state.MapCameraMoveTo(new Point2D(location));
         }
@@ -157,15 +165,11 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     @Override
     protected void onAttachedView(MainMenuActivity view, Intent intent) {
         super.onAttachedView(view,intent);
-        gpsService = new GPSServiceProvider(state.getActivity(), GPSService.class);
-        if(state.getPermissions().checkPermissionFineLocation()) {
-            gpsService.setOnLocationChangeListener(this);
-            gpsService.startup(new Runnable() {
-                @Override
-                public void run() {
-                    Log.d(TAG,"GPS service startup");
-                }
-            });
+        try {
+            gps = GPSProvider.create(state.getActivity(),state.getPermissions());
+            //            gpsService.addOnLocationChangeListener(this);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

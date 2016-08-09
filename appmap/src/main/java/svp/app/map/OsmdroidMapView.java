@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 
 import com.svp.infrastructure.common.ViewExtensions;
 
@@ -34,11 +36,17 @@ import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import svp.app.map.android.gps.IGPSProvider;
+import svp.app.map.android.gps.IGPSService;
+import svp.app.map.android.gps.OnLocationChangeListener;
 import svp.app.map.model.IPOIView;
 import svp.app.map.model.Point2D;
 public class OsmdroidMapView implements IMapView, MapEventsReceiver, MapListener, android.view.View.OnClickListener {
     private final Activity activity;
+    private final IGPSProvider gps;
     public final MapView mapView;
     public final IMapController mapController;
     public final GpsLocationProvider gpsProvider;
@@ -51,8 +59,9 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver, MapListener
     FloatingActionButton fabZoomPlus;
     FloatingActionButton fabZoomMinus;
 
-    public OsmdroidMapView(Activity activity, int mapResourceId) {
+    public OsmdroidMapView(Activity activity, int mapResourceId, IGPSProvider gps) {
         this.activity = activity;
+        this.gps = gps;
 
         fabZoomPlus = ViewExtensions.findViewById(activity,R.id.map_zoom_plus_fab);
         fabZoomMinus = ViewExtensions.findViewById(activity,R.id.map_zoom_minus_fab);
@@ -257,7 +266,7 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver, MapListener
 
     public class GpsLocationProvider {
         private MyLocationNewOverlay myLocationOverlay;
-        private GpsMyLocationProvider gpsMyLocationProvider;
+        private IMyLocationProvider gpsMyLocationProvider;
         private boolean shouldRecreate;
 
         public void turnGPSOn()
@@ -315,7 +324,7 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver, MapListener
             if(myLocationOverlay != null){
                 mapView.getOverlays().remove(myLocationOverlay);
             }
-            gpsMyLocationProvider = new GpsMyLocationProvider(activity);
+            gpsMyLocationProvider = new MyLocationProvider(gps,100);//GpsMyLocationProvider(activity);
             myLocationOverlay = new MyLocationNewOverlay(gpsMyLocationProvider, mapView);
             mapView.getOverlays().add(myLocationOverlay);
             shouldRecreate = false;
@@ -326,25 +335,56 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver, MapListener
             myLocationOverlay.setDrawAccuracyEnabled(true);
 
             gpsMyLocationProvider.startLocationProvider(myLocationOverlay);
-            gpsMyLocationProvider.setLocationUpdateMinDistance(100);
-            gpsMyLocationProvider.setLocationUpdateMinTime(milliSeconds);
+//            gpsMyLocationProvider.setLocationUpdateMinDistance(100);
+//            gpsMyLocationProvider.setLocationUpdateMinTime(milliSeconds);
         }
     }
-    public static class TestMy implements IMyLocationProvider{
+    public static class MyLocationProvider implements IMyLocationProvider{
+        IGPSProvider gps;
+        private final long updateMinTime;
+        private IMyLocationConsumer locationConsumer;
+        private TrackTimer timer;
 
+        public MyLocationProvider(IGPSProvider gps, long updateMinTime){
+            this.gps = gps;
+
+            this.updateMinTime = updateMinTime;
+        }
         @Override
         public boolean startLocationProvider(IMyLocationConsumer myLocationConsumer) {
-            return false;
+            locationConsumer = myLocationConsumer;
+            timer = new TrackTimer(updateMinTime);
+            return true;
         }
 
         @Override
         public void stopLocationProvider() {
-
+            timer.stop();
         }
 
         @Override
         public Location getLastKnownLocation() {
-            return null;
+            try {
+                return gps.getLocation();
+            } catch (Exception e) {
+                Log.e("MyLocationProvider","getLastKnownLocation",e);
+                return null;
+            }
+        }
+        private class TrackTimer extends TimerTask {
+            private TrackTimer(long intervalMillisec) {
+                Timer timer = new Timer();
+                timer.scheduleAtFixedRate(this, intervalMillisec, intervalMillisec);
+            }
+
+            public void stop() {
+                this.cancel();
+            }
+
+            @Override
+            public void run() {
+                locationConsumer.onLocationChanged(getLastKnownLocation(), MyLocationProvider.this);
+            }
         }
     }
 }

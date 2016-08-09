@@ -11,13 +11,14 @@ import android.util.Log;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Vector;
 
-public class GPSServiceProvider<TService extends GPSService> {
+public class GPSServiceProvider<TService extends GPSService> implements IGPSProvider{
     private static final String TAG = "GPSServiceProvider";
     private final Class<TService> serviceClass;
     private TrackTimer timer;
     private ServiceConnection serviceConnection;
-    private OnLocationChangeListener listener;
+    private Vector<OnLocationChangeListener> listeners;
 
     public Intent createServiceIntent(Context ctx){
         return new Intent(ctx,serviceClass);
@@ -29,6 +30,7 @@ public class GPSServiceProvider<TService extends GPSService> {
     private final Context context;
 
     public GPSServiceProvider(Context context, Class<TService> serviceClass) {
+        listeners = new Vector<>();
         this.serviceClass = serviceClass;
         lock = new Object();
         this.context = context;
@@ -38,9 +40,11 @@ public class GPSServiceProvider<TService extends GPSService> {
     public Location getLocation() throws RemoteException {
         return serviceRemote.getLastLocation();
     }
-
-    public void setOnLocationChangeListener(OnLocationChangeListener listener){
-        this.listener = listener;
+    public void clearListeners(){
+        listeners.clear();
+    }
+    public void addOnLocationChangeListener(OnLocationChangeListener listener){
+        listeners.add(listener);
     }
 
     public void startup(final Runnable onServiceConnected ){
@@ -100,15 +104,17 @@ public class GPSServiceProvider<TService extends GPSService> {
 
         @Override
         public void run() {
-            if(listener == null){
+            if(listeners.isEmpty()){
                 return;
             }
             try {
                 Location l = serviceRemote.getLastLocation();
-                Log.d(TAG, "OnLocationChange: " +  l);
-                listener.OnLocationChange(l);
+                Log.d(TAG, "OnLocationChanged: " +  l);
+                for (OnLocationChangeListener listener : listeners) {
+                    listener.OnLocationChanged(l);
+                }
             } catch (RemoteException ex) {
-                Log.e(TAG, "OnLocationChange: ", ex);
+                Log.e(TAG, "OnLocationChanged: ", ex);
             }
         }
     }

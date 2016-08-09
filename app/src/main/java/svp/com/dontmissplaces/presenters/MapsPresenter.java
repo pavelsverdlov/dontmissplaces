@@ -26,7 +26,6 @@ public class MapsPresenter extends Presenter<IDNMPMapView,IMapViewState> impleme
     private Location prevLocation;
     private Waypoint prevWaypoint;
     private final Repository repository;
-    private GPSServiceProvider<svp.app.map.android.gps.GPSService> gpsService;
     private SessionView sessionTrack;
 
     public MapsPresenter(Repository repository) {
@@ -39,17 +38,8 @@ public class MapsPresenter extends Presenter<IDNMPMapView,IMapViewState> impleme
     }
     @Override
     protected void onAttachedView(IDNMPMapView view){
-        gpsService = new GPSServiceProvider(state.getActivity(), svp.app.map.android.gps.GPSService.class);
-        if(state.checkPermissionFineLocation()) {
-            gpsService.setOnLocationChangeListener(this);
-        }
-    }
 
-//    public void permissionFineLocationReceived(){
-//        if(prevLocation == null) {
-//           // prevLocation = mLocationManager.getLastKnownLocation(ServiceLocationManager.GPS_PROVIDER);
-//        }
-//    }
+    }
 
     //TODO: move to google map view
     public void onMapReady(UiSettings mUiSettings) {
@@ -70,25 +60,17 @@ public class MapsPresenter extends Presenter<IDNMPMapView,IMapViewState> impleme
 
     public void gpsStart(SessionView session){
         this.sessionTrack = session;
-        gpsService.startup(new Runnable() {
-            @Override
-            public void run() {
-                Log.d(TAG,"GPS service startup");
-            }
-        });
         state.startLocationListening();
     }
     public void gpsStop() {
-        gpsService.shutdown();
-        Log.d(TAG,"GPS service shutdown");
         state.stopLocationListening();
     }
 
     @Override
-    public void OnLocationChange(Location location) {
+    public void OnLocationChanged(Location location) {
         Waypoint waypoint = null;
         try {
-            Log.d(TAG,"OnLocationChange " + location);
+            Log.d(TAG,"OnLocationChanged " + location);
 
             if(prevLocation == null){
                 return;
