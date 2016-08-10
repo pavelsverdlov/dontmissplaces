@@ -14,6 +14,7 @@ import com.svp.infrastructure.mvpvs.viewstate.IViewState;
 
 import svp.com.dontmissplaces.db.Repository;
 import svp.com.dontmissplaces.presenters.*;
+import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.BaseBundleProvider;
 import svp.com.dontmissplaces.ui.map.GoogleMapView;
 
@@ -144,6 +145,7 @@ public class App extends Application {
                 });
 
         registerBundleProviders();
+        ActivityCommutator.register();
 
         super.onCreate();
     }

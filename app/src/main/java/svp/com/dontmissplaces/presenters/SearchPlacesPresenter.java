@@ -42,7 +42,7 @@ public class SearchPlacesPresenter extends CommutativePresenter<SearchPlacesActi
 
     public void startSearch(String newText) {
         String query = newText == null ? bundle.getQuery() : newText;
-        if(!query.isEmpty() && !processing.equals(query) && query.length() > 5){
+        if(!query.isEmpty() && !processing.equals(query) && query.length() > 3){
             processing = query;
 
             PlaceProvider pp = new PlaceProvider(state.getActivity());
@@ -50,21 +50,23 @@ public class SearchPlacesPresenter extends CommutativePresenter<SearchPlacesActi
             for (Place p : pp.getPlace(newText)){
                 places.add(new SearchPlacesActivity.PlaceSearchResult(p));
             }
-            state.addPlaces(places);
-            /*
-            new SearchByText(){
-                @Override
-                protected void processing(ArrayList<Place> poi){
-                    //MatrixCursor cursor = new MatrixCursor(new String[] { SearchPlacesActivity.PlaceSearchResult.PLACE_KEY });
-                    Vector<SearchPlacesActivity.PlaceSearchResult> pv = new Vector<>();
-                    for (Place p : poi){
+
+            if(places.isEmpty()){
+                new SearchByText(){
+                    @Override
+                    protected void processing(ArrayList<Place> poi){
+                        //MatrixCursor cursor = new MatrixCursor(new String[] { SearchPlacesActivity.PlaceSearchResult.PLACE_KEY });
+                        Vector<SearchPlacesActivity.PlaceSearchResult> pv = new Vector<>();
+                        for (Place p : poi){
 //                        cursor.addRow(new Place[] { p });
-                        pv.add(new SearchPlacesActivity.PlaceSearchResult(p));
+                            pv.add(new SearchPlacesActivity.PlaceSearchResult(p));
+                        }
+                        state.addPlaces(pv);
                     }
-                    state.addPlaces(pv);
-                }
-            }.execute(query);
-*/
+                }.execute(query);
+            }else {
+                state.addPlaces(places);
+            }
             state.setSearchQuery(query);
         }
     }

@@ -41,7 +41,7 @@ public class PlaceProvider {
         List<Address> addresses = null;
         try {
             addresses = geocoder.getFromLocationName(text,10);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

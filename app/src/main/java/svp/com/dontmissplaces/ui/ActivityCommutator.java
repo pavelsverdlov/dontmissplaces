@@ -16,6 +16,7 @@ import svp.com.dontmissplaces.ui.activities.SearchPlacesActivity;
 import svp.com.dontmissplaces.ui.activities.SettingsActivity;
 
 public final class ActivityCommutator extends com.svp.infrastructure.mvpvs.commutate.ActivityCommutator{
+
     public ActivityCommutator(ICommutativeElement element) {
         super(element);
     }
@@ -47,8 +48,7 @@ public final class ActivityCommutator extends com.svp.infrastructure.mvpvs.commu
     }
 
 
-
-    static {
+    public static void register() {
         activities.put(ActivityOperationResult.MainMenu, MainMenuActivity.class);
         activities.put(ActivityOperationResult.HistoryTracks, HistoryTracksActivity.class);
         activities.put(ActivityOperationResult.SaveTrack, SaveTrackActivity.class);
