@@ -2,8 +2,11 @@ package svp.app.map;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -11,17 +14,22 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.svp.infrastructure.common.ViewExtensions;
 
 import svp.app.map.IMapView;
 import svp.app.map.OnMapClickListener;
 import svp.app.map.model.Point2D;
 
-public class GoogleMapView implements IMapView, OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraChangeListener {
+public class GoogleMapView implements IMapView, MapZoomController.IMapZoom, OnMapReadyCallback,
+        GoogleMap.OnMapClickListener,
+        GoogleMap.OnMapLongClickListener,
+        GoogleMap.OnCameraChangeListener {
     private final String TAG = "GoogleMapView";
     private final FragmentActivity activity;
     private final int gmResourceId;
     private GoogleMap map;
     private OnMapClickListener listener;
+    private MapZoomController zoomController;
 
     public GoogleMapView(FragmentActivity activity, int gmResourceId) {
         this.activity = activity;
@@ -33,6 +41,7 @@ public class GoogleMapView implements IMapView, OnMapReadyCallback, GoogleMap.On
         map = googleMap;
         map.setBuildingsEnabled(true);
         map.setIndoorEnabled(true);
+        map.setMyLocationEnabled(true);
 //        enableMyLocation();
 
 //        if(cameraPosition !=null){
@@ -96,6 +105,8 @@ public class GoogleMapView implements IMapView, OnMapReadyCallback, GoogleMap.On
         SupportMapFragment mapFragment = (SupportMapFragment)activity.getSupportFragmentManager()
                 .findFragmentById(gmResourceId);
         mapFragment.getMapAsync(this);
+
+        zoomController = new MapZoomController(activity,this);
     }
 
     @Override
@@ -119,14 +130,29 @@ public class GoogleMapView implements IMapView, OnMapReadyCallback, GoogleMap.On
     }
 
     @Override
-    public void moveTo(Point2D point) {
+    public void moveTo(final Point2D point) {
+        Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+//                CameraPosition prevcp = map.getCameraPosition();
 
-        CameraPosition prevcp = map.getCameraPosition();
-        CameraPosition cp = new CameraPosition(point.getLatLng(),prevcp.zoom,prevcp.tilt,prevcp.bearing);
+                CameraPosition cp =CameraPosition.fromLatLngZoom(point.getLatLng(),16);
+//                                CameraPosition cp = new CameraPosition(point.getLatLng(),prevcp.zoom,prevcp.tilt,prevcp.bearing);
         map.animateCamera(CameraUpdateFactory.newCameraPosition(cp));
-//        map.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+//                map.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+            }
+        });
+
     }
 
+    @Override
+    public void setZoom(float val) {
+        map.animateCamera( CameraUpdateFactory.zoomTo(val));
+    }
 
-
+    @Override
+    public float getZoom() {
+        return map.getCameraPosition().zoom;
+    }
 }

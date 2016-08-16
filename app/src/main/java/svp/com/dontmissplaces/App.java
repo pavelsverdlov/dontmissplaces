@@ -16,7 +16,7 @@ import svp.com.dontmissplaces.db.Repository;
 import svp.com.dontmissplaces.presenters.*;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.BaseBundleProvider;
-import svp.com.dontmissplaces.ui.map.GoogleMapView;
+import svp.com.dontmissplaces.ui.map.DNMPGoogleMapView;
 
 import svp.com.dontmissplaces.ui.activities.*;
 import svp.com.dontmissplaces.ui.map.DNMPOsmdroidMapView;
@@ -33,16 +33,16 @@ public class App extends Application {
     public void onCreate() {
         this.deleteDatabase(Repository.dbname);
         //map view
-        PresenterContainer.register(GoogleMapView.class, new PresenterContainer.IPresenterCreator() {
+        PresenterContainer.register(DNMPGoogleMapView.class, new PresenterContainer.IPresenterCreator() {
             @Override
             public IPresenter create() {
                 return new MapsPresenter(repository);
             }
         });
-        ViewStateContainer.Register(GoogleMapView.class, new ViewStateContainer.IViewStateCreator<GoogleMapView>() {
+        ViewStateContainer.Register(DNMPGoogleMapView.class, new ViewStateContainer.IViewStateCreator<DNMPGoogleMapView>() {
             @Override
-            public IViewState create(GoogleMapView view) {
-                return new GoogleMapView.ViewState(view);
+            public IViewState create(DNMPGoogleMapView view) {
+                return new DNMPGoogleMapView.ViewState(view);
             }
         });
 

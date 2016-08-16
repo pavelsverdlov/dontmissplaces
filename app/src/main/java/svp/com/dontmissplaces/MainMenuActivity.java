@@ -17,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -37,7 +36,7 @@ import svp.com.dontmissplaces.ui.ActivityCommutator;
 import com.svp.infrastructure.ActivityPermissions;
 import svp.com.dontmissplaces.ui.PlaceInfoLayoutView;
 import svp.com.dontmissplaces.ui.TrackRecordingToolbarView;
-import svp.com.dontmissplaces.ui.map.GoogleMapView;
+import svp.com.dontmissplaces.ui.map.DNMPGoogleMapView;
 import svp.com.dontmissplaces.ui.map.IDNMPMapView;
 import svp.app.map.OnMapClickListener;
 import svp.com.dontmissplaces.ui.map.DNMPOsmdroidMapView;
@@ -238,7 +237,7 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         switch (getPresenter().getMapViewType()) {
             case Google:
                 stub.setLayoutResource(R.layout.content_google_map);
-                mapView = new GoogleMapView(this, permissions);
+                mapView = new DNMPGoogleMapView(this, permissions);
                 break;
             case Osmdroid:
                 stub.setLayoutResource(R.layout.content_osm_map);
