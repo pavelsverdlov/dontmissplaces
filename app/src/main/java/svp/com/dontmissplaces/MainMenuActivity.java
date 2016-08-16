@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -229,22 +230,27 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
                 break;
         }
     }
-
+    private View mapLayout;
     @Override
     protected void onStart() {
         super.onStart();
-        final ViewStub stub = ViewExtensions.findViewById(this,R.id.layout_stub_map_switcher);
+
+        RelativeLayout layout = ViewExtensions.findViewById(this,R.id.layout_map_switcher);
+       // final ViewStub stub = ViewExtensions.findViewById(this,R.id.layout_stub_map_switcher);
+        layout.removeView(mapLayout);
         switch (getPresenter().getMapViewType()) {
             case Google:
-                stub.setLayoutResource(R.layout.content_google_map);
+                //TODO: after refresh activity is failed
+                mapLayout = this.getLayoutInflater().inflate(R.layout.content_google_map, layout, true);
+//                stub.setLayoutResource(R.layout.content_google_map);
                 mapView = new DNMPGoogleMapView(this, permissions);
                 break;
             case Osmdroid:
-                stub.setLayoutResource(R.layout.content_osm_map);
+//                stub.setLayoutResource(R.layout.content_osm_map);
                 mapView = new DNMPOsmdroidMapView(this, permissions,getPresenter().gps);
                 break;
         }
-        View view = stub.inflate();
+//        View view = stub.inflate();
         mapView.onCreate(null);
         mapView.setOnMapClickListener(MainMenuActivity.this);
 

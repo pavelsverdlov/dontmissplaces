@@ -131,18 +131,18 @@ public class GoogleMapView implements IMapView, MapZoomController.IMapZoom, OnMa
 
     @Override
     public void moveTo(final Point2D point) {
-        Handler handler = new Handler();
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
+//        Handler handler = new Handler();
+//        handler.post(new Runnable() {
+//            @Override
+//            public void run() {
 //                CameraPosition prevcp = map.getCameraPosition();
 
                 CameraPosition cp =CameraPosition.fromLatLngZoom(point.getLatLng(),16);
 //                                CameraPosition cp = new CameraPosition(point.getLatLng(),prevcp.zoom,prevcp.tilt,prevcp.bearing);
-        map.animateCamera(CameraUpdateFactory.newCameraPosition(cp));
+            map.animateCamera(CameraUpdateFactory.newCameraPosition(cp));
 //                map.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
-            }
-        });
+//            }
+//        });
 
     }
 
