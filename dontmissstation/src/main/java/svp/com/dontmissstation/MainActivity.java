@@ -2,6 +2,7 @@ package svp.com.dontmissstation;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -21,6 +22,8 @@ import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
 
 import org.osmdroid.util.BoundingBoxE6;
 
+import svp.app.map.GoogleMapView;
+import svp.app.map.IMapView;
 import svp.app.map.OnMapClickListener;
 import svp.app.map.OsmdroidMapView;
 import svp.app.map.model.Point2D;
@@ -66,7 +69,7 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
         }
     }
 
-    private OsmdroidMapView mapView;
+    private IMapView mapView;
     private final ActivityPermissions permissions;
 
 
@@ -105,7 +108,8 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
     protected void onStart() {
         super.onStart();
 
-        mapView = new OsmdroidMapView(getActivity(),R.id.osmdroid_map,getPresenter().gps);
+//        mapView = new OsmdroidMapView(getActivity(),R.id.osmdroid_map,getPresenter().gps);
+        mapView = new GoogleMapView(this,R.id.google_map);
 
         permissions.checkPermissionExternalStorage();
         permissions.checkPermissionFineLocation();
@@ -135,12 +139,21 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
         mapView.onCreate(null);
 
         mapView.onStart();
-        mapView.mapView.post(new Runnable() {
+
+        Handler uih = new Handler();
+        uih.post(new Runnable() {
             @Override
             public void run() {
                 mapView.moveTo(new Point2D(48.859,2.296));
             }
         });
+
+//        mapView.mapView.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                mapView.moveTo(new Point2D(48.859,2.296));
+//            }
+//        });
     }
 
     @Override

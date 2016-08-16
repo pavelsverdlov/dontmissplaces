@@ -8,8 +8,17 @@
     tools:context="svp.com.dontmissstation.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-    <org.osmdroid.views.MapView
-        android:id="@+id/osmdroid_map"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+    <!--<org.osmdroid.views.MapView-->
+        <!--android:id="@+id/osmdroid_map"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="fill_parent" />-->
+
+
+    <fragment
+        android:visibility="gone"
+        android:id="@+id/google_map"
+        android:fitsSystemWindows="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.google.android.gms.maps.SupportMapFragment"/>
 </RelativeLayout>
