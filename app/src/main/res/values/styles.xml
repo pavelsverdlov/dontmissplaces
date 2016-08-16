@@ -24,4 +24,13 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+
+    <style name="btn_textview" parent="android:Widget.TextView">
+        <item name="android:clickable">true</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/text_white</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/text_size_medium_btn</item>
+    </style>
 </resources>

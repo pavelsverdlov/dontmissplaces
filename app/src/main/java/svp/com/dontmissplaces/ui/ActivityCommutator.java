@@ -12,6 +12,7 @@ import java.util.HashMap;
 import svp.com.dontmissplaces.MainMenuActivity;
 import svp.com.dontmissplaces.ui.activities.HistoryTracksActivity;
 import svp.com.dontmissplaces.ui.activities.SaveTrackActivity;
+import svp.com.dontmissplaces.ui.activities.SavedPlacesActivity;
 import svp.com.dontmissplaces.ui.activities.SearchPlacesActivity;
 import svp.com.dontmissplaces.ui.activities.SettingsActivity;
 
@@ -28,6 +29,7 @@ public final class ActivityCommutator extends com.svp.infrastructure.mvpvs.commu
         public static final ActivityOperationItem SaveTrack= new ActivityOperationItem(3);
         public static final ActivityOperationItem Settings= new ActivityOperationItem(4);
         public static final ActivityOperationItem SearchPlaces= new ActivityOperationItem(5);
+        public static final ActivityOperationItem SavedPlaces= new ActivityOperationItem(6);
 
         public static ActivityOperationItem get(int resultCode) {
             switch (resultCode){
@@ -41,6 +43,8 @@ public final class ActivityCommutator extends com.svp.infrastructure.mvpvs.commu
                     return Settings;
                 case 5:
                     return SearchPlaces;
+                case 6:
+                    return SavedPlaces;
                 default:
                     return Undefined;
             }
@@ -54,6 +58,7 @@ public final class ActivityCommutator extends com.svp.infrastructure.mvpvs.commu
         activities.put(ActivityOperationResult.SaveTrack, SaveTrackActivity.class);
         activities.put(ActivityOperationResult.Settings, SettingsActivity.class);
         activities.put(ActivityOperationResult.SearchPlaces, SearchPlacesActivity.class);
+        activities.put(ActivityOperationResult.SavedPlaces, SavedPlacesActivity.class);
     }
 
 

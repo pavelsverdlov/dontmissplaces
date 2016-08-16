@@ -138,7 +138,7 @@ public class DatabaseStructure {
          *  "place_id":"75413380"
          */
         String NOMINATIM_PLACE_ID = "nominatim_place_id";
-        String NOMINATIM_PLACE_ID_TYPE = _INTEGER_NOT_NULL;
+        String NOMINATIM_PLACE_ID_TYPE = _INTEGER_TYPE;
         /*
         * "class":"historic"
         * */
@@ -165,10 +165,10 @@ public class DatabaseStructure {
          * a lake and similar other properties.
          * */
         String OSM_PLACE_RANK = "osm_place_rank";
-        String OSM_PLACE_RANK_TYPE   = _INTEGER_NOT_NULL;
+        String OSM_PLACE_RANK_TYPE   = _INTEGER_TYPE;
 
         String OSM_NODE_ID = "osmnodeid";
-        String OSM_NODE_ID_TYPE   = _INTEGER_NOT_NULL;
+        String OSM_NODE_ID_TYPE   = _INTEGER_TYPE;
 
         /**
          * example - "place_id" : "ChIJrTLr-GyuEmsRBfy61i59si0",
@@ -203,14 +203,16 @@ public class DatabaseStructure {
 
         //user data
         String BEEN_HERE = "been_here";
-        String BEEN_HERE_TYPE = _INTEGER_NOT_NULL;
+        String BEEN_HERE_TYPE = _INTEGER_TYPE;
     }
 
     public interface Base extends BaseColumns {
         String _ID_TYPE       = "INTEGER PRIMARY KEY AUTOINCREMENT";
         String _INTEGER_NOT_NULL = "INTEGER NOT NULL";
+        String _INTEGER_TYPE = "INTEGER";
         String _TEXT_TYPE = "TEXT";
-        String _REAL_TYPE = "REAL NOT NULL";
+        String _REAL_NOT_NULL = "REAL NOT NULL";
+        String _REAL_TYPE = "REAL";
     }
 
     public interface LocationColumns{

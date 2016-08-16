@@ -143,6 +143,19 @@ public class App extends Application {
                         return new SearchPlacesActivity.ViewState(view);
                     }
                 });
+        Registrator.register(SavedPlacesActivity.class,
+                new PresenterContainer.IPresenterCreator() {
+                    @Override
+                    public IPresenter create() {
+                        return new SavedPlacesPresenter(repository);
+                    }
+                },
+                new ViewStateContainer.IViewStateCreator<SavedPlacesActivity>() {
+                    @Override
+                    public IViewState create(SavedPlacesActivity view) {
+                        return new SavedPlacesActivity.ViewState(view);
+                    }
+                });
 
         registerBundleProviders();
         ActivityCommutator.register();

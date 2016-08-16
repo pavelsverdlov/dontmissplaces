@@ -16,9 +16,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.svp.infrastructure.common.ViewExtensions;
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
@@ -156,8 +158,8 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     private PlaceInfoLayoutView placeInfoLayoutView;
 //    private OverMapBottomSheetBehavior behavior;
 //    private final int bottomPanelHeight = 224;
-    @Bind(R.id.select_place_move_to_location_btn) ImageButton moveToLocation;
-    @Bind(R.id.select_place_person_pin) ImageButton personPin;
+    @Bind(R.id.select_place_move_to_location_btn) TextView moveToLocation;
+    @Bind(R.id.select_place_person_pin) TextView personPin;
     @Bind(R.id.select_place_beenhere_btn) ImageButton personBeenHere;
 
 
@@ -232,17 +234,20 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     @Override
     protected void onStart() {
         super.onStart();
+        final ViewStub stub = ViewExtensions.findViewById(this,R.id.layout_stub_map_switcher);
         switch (getPresenter().getMapViewType()) {
             case Google:
+                stub.setLayoutResource(R.layout.content_google_map);
                 mapView = new GoogleMapView(this, permissions);
                 break;
             case Osmdroid:
+                stub.setLayoutResource(R.layout.content_osm_map);
                 mapView = new DNMPOsmdroidMapView(this, permissions,getPresenter().gps);
                 break;
         }
-
+        View view = stub.inflate();
         mapView.onCreate(null);
-        mapView.setOnMapClickListener(this);
+        mapView.setOnMapClickListener(MainMenuActivity.this);
 
         mapView.onStart();
     }
@@ -309,9 +314,15 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_mainmenu_history_tracks) {
-            getPresenter().openHistoryTracks();
+        switch (id){
+            case R.id.nav_mainmenu_history_tracks:
+                getPresenter().openHistoryTracks();
+                break;
+            case R.id.nav_mainmenu_saved_places:
+                getPresenter().openSavedPlaces();
+                break;
         }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.content_main_map_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

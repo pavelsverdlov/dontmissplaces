@@ -25,7 +25,13 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main_map" />
+    <ViewStub
+        android:id="@+id/layout_stub_map_switcher"
+        android:inflatedId="@+id/message_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!--<include layout="@layout/content_google_map" />-->
 
     <include layout="@layout/mapzoomlayout" />
 
@@ -121,10 +127,12 @@
         <!-- action place btn -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/android_standard_toolbar_subtitle"
+            android:layout_height="@dimen/android_standard_list_item"
             android:layout_gravity="fill|fill_horizontal"
             android:background="@color/colorAccent"
             android:gravity="fill|fill_horizontal"
+            android:paddingTop="@dimen/android_standard_list_item_padding"
+            android:paddingBottom="@dimen/android_standard_list_item_padding"
             android:orientation="horizontal">
 
             <ImageButton
@@ -134,10 +142,11 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_beenhere_white_48dp" />
+                android:src="@drawable/ic_beenhere_white_48dp" >
+
+            </ImageButton>
 
             <ImageButton
-
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
@@ -145,47 +154,41 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_rate_review_white_48dp" />
 
-            <ImageButton
+            <TextView
                 android:id="@+id/select_place_person_pin"
-                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_person_pin_white_48dp" />
+                android:drawableTop="@drawable/ic_person_pin_white"
+                style="@style/btn_textview"
+                android:contentDescription="@string/btn_person_pin_white_text"
+                android:text="@string/btn_person_pin_white_text"/>
 
         </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/android_standard_headline"
-        android:layout_gravity="fill|fill_horizontal"
-        android:background="@color/colorItemSelected"
-        android:gravity="fill|fill_horizontal"
-        android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/select_place_move_to_location_btn"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:scaleType="center"
-                android:src="@mipmap/ic_place_white_48dp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill|fill_horizontal"
+            android:gravity="fill|fill_horizontal"
+            android:background="@color/colorAccent"
+            android:padding="@dimen/padding_8"
+            android:orientation="horizontal">
             <TextView
-                android:id="@+id/select_place_content_location"
+                android:id="@+id/select_place_move_to_location_btn"
                 android:layout_weight="1"
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical|start"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_marginStart="@dimen/dp_22"
+                android:layout_marginEnd="@dimen/dp_22"
+                android:drawableStart="@drawable/ic_place_white_24"
+                style="@style/btn_textview"
+                android:textStyle="normal"
                 />
-            <!--<TextView-->
-                <!--android:id="@+id/select_place_content_location"-->
-                <!--android:layout_weight="1"-->
-                <!--android:layout_width="fill_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:gravity="center_vertical|start"-->
-                <!--/>-->
         </LinearLayout>
         <!-- place info content-->
         <LinearLayout

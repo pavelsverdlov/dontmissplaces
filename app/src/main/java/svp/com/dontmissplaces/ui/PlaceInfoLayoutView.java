@@ -28,7 +28,7 @@ public class PlaceInfoLayoutView implements View.OnClickListener {
     @Bind(R.id.select_place_show_near_info) AppCompatTextView nearInfo;
     @Bind(R.id.select_place_show_title) AppCompatTextView title;
     @Bind(R.id.select_place_show_placetype) AppCompatTextView placetype;
-    @Bind(R.id.select_place_content_location) TextView moveToLocation;
+    @Bind(R.id.select_place_move_to_location_btn) TextView moveToLocation;
     //@Bind(R.id.select_place_content_location) AppCompatTextView contentLocation;
     @Bind(R.id.select_place_show_address) AppCompatTextView address;
     @Bind(R.id.select_place_header_layout) View placeInfoHeader;

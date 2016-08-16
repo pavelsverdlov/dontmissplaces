@@ -43,6 +43,7 @@ import svp.com.dontmissplaces.ui.model.SessionView;
 import svp.com.dontmissplaces.ui.model.TrackView;
 
 import static svp.com.dontmissplaces.ui.ActivityCommutator.ActivityOperationResult.HistoryTracks;
+import static svp.com.dontmissplaces.ui.ActivityCommutator.ActivityOperationResult.SavedPlaces;
 
 public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,MainMenuActivity.ViewState>
     implements OnLocationChangeListener {
@@ -104,6 +105,9 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     public void openSearch(String query) {
         IBundleProvider bp = new SearchPlacesActivity.SearchPlacesBundleProvider().putQuery(query);
         commutator.goTo(ActivityCommutator.ActivityOperationResult.SearchPlaces,bp);
+    }
+    public void openSavedPlaces() {
+        commutator.goTo(SavedPlaces);
     }
 
     public void onMoveToMyLocation() {
@@ -245,7 +249,8 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
 
     public MapViewTypes getMapViewType() {
         mapViewType = userSettings.getMapProvider();
-        return mapViewType;
+//        return mapViewType;
+        return MapViewTypes.Google;
     }
 
 

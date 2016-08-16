@@ -210,12 +210,16 @@ public class Repository extends SQLiteOpenHelper {
         public Vector<Place> getAll() {
             Vector<Place> places = new Vector<>();
             SQLiteDatabase sqldb = getReadableDatabase();
-            try(Cursor cursor = sqldb.rawQuery(Tracks.SELECT_ALL, null)){
+            try(Cursor cursor = sqldb.rawQuery(Places.SELECT_ALL, null)){
                 while (cursor.moveToNext()){
                     places.add(new Place(cursor));
                 }
             }
             return places;
+        }
+        public Cursor getCursorPlaces() {
+            SQLiteDatabase sqldb = getReadableDatabase();
+            return sqldb.rawQuery(Places.SELECT_ALL, null);
         }
     }
 
