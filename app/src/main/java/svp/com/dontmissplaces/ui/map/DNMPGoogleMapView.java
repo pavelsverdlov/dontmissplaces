@@ -123,7 +123,11 @@ public class DNMPGoogleMapView
     }
 
     @Override
-    public void drawMarker(IPOIView pois) {
+    public void drawMarker(IPOIView poi) {
+        mapView.drawMarker(poi,0);
+    }
+    @Override
+    public void drawMarker(IPOIView poi,int markerIdResource){
 
     }
 

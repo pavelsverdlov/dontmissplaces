@@ -188,9 +188,6 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         showPlaceInfo(point, point);
     }
     public void showPlaceInfoByPoint(final Point2D point) {
-//        PlaceProvider pp = new PlaceProvider(state.getActivity());
-//        Place p = pp.getPlace(point.getLatLng());
-//        place p = pp.getPlace(new LatLng(46.4708294,30.7043384))
         showPlaceInfo(point, Point2D.empty());
     }
 
@@ -228,12 +225,6 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
             if(pois.size() > 0) {
                 state.showPlaceInfo(new PlaceView(pois.get(0), originalPoint), point);
             }
-        }
-
-        if(state.getPermissions().checkPermissionNetwork()){
-
-        }else{
-
         }
     }
 

@@ -234,7 +234,6 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
     @Override
     protected void onStart() {
         super.onStart();
-
         RelativeLayout layout = ViewExtensions.findViewById(this,R.id.layout_map_switcher);
        // final ViewStub stub = ViewExtensions.findViewById(this,R.id.layout_stub_map_switcher);
         switch (getPresenter().getMapViewType()) {

@@ -199,11 +199,16 @@ public class DNMPOsmdroidMapView extends View<MapsPresenter> implements IDNMPMap
     }
 
     @Override
+    public void drawMarker(IPOIView poi, int markerIdResource) {
+        osmdroidMapView.drawMarker(poi,markerIdResource);
+    }
+
+    @Override
     public void setOnMapClickListener(OnMapClickListener listener) {
         osmdroidMapView.setOnMapClickListener(listener);
     }
 
     public void drawMarker(IPOIView poi) {
-        osmdroidMapView.drawMarker(poi,R.drawable.map_marker);
+        drawMarker(poi,R.drawable.map_marker);
     }
 }

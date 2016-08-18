@@ -19,6 +19,6 @@ public interface IDNMPMapView extends IActivityView, IMapView {
 //    void pauseTrackRecording();
 
     void stopTrackRecording();
-
     void drawMarker(IPOIView poi);
+
 }

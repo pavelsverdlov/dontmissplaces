@@ -1,6 +1,8 @@
 package svp.app.map;
 
 import android.os.Bundle;
+
+import svp.app.map.model.IPOIView;
 import svp.app.map.model.Point2D;
 
 public interface IMapView {
@@ -16,4 +18,6 @@ public interface IMapView {
     void setOnMapClickListener(OnMapClickListener listener);
 
     void moveTo(Point2D point);
+
+    void drawMarker(IPOIView poi,int markerIdResource);
 }

@@ -118,6 +118,7 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver, MapListener
         mapController.setZoom(16);
         mapController.animateTo(p.getGeoPoint());
     }
+
     @Override
     public void setOnMapClickListener(OnMapClickListener listener) {
         clickListener = listener;
