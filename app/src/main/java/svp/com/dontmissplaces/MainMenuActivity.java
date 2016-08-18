@@ -237,11 +237,12 @@ public class MainMenuActivity extends AppCompatActivityView<MainMenuPresenter>
 
         RelativeLayout layout = ViewExtensions.findViewById(this,R.id.layout_map_switcher);
        // final ViewStub stub = ViewExtensions.findViewById(this,R.id.layout_stub_map_switcher);
-        layout.removeView(mapLayout);
         switch (getPresenter().getMapViewType()) {
             case Google:
                 //TODO: after refresh activity is failed
-                mapLayout = this.getLayoutInflater().inflate(R.layout.content_google_map, layout, true);
+                if(mapLayout == null) {
+                    mapLayout = this.getLayoutInflater().inflate(R.layout.content_google_map, layout, true);
+                }
 //                stub.setLayoutResource(R.layout.content_google_map);
                 mapView = new DNMPGoogleMapView(this, permissions);
                 break;

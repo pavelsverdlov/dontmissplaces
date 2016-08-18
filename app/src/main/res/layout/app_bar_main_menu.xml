@@ -25,15 +25,14 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <ViewStub
-        android:id="@+id/layout_stub_map_switcher"
-        android:inflatedId="@+id/message_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <!--<ViewStub-->
+        <!--android:id="@+id/layout_stub_map_switcher"-->
+        <!--android:inflatedId="@+id/message_layout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent" />-->
 
     <RelativeLayout
         android:id="@+id/layout_map_switcher"
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

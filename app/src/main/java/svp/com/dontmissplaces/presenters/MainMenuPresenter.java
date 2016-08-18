@@ -21,6 +21,7 @@ import svp.app.map.android.gps.GPSService;
 import svp.app.map.android.gps.IGPSLocationListener;
 import svp.app.map.android.gps.IGPSProvider;
 import svp.com.dontmissplaces.MainMenuActivity;
+import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.db.Place;
 import svp.com.dontmissplaces.db.Repository;
 import svp.com.dontmissplaces.db.SessionTrack;
@@ -29,6 +30,7 @@ import svp.com.dontmissplaces.db.Waypoint;
 import svp.app.map.model.Point2D;
 import svp.app.map.android.gps.GPSServiceProvider;
 import svp.app.map.android.gps.OnLocationChangeListener;
+import svp.com.dontmissplaces.model.PlaceProvider;
 import svp.com.dontmissplaces.model.gps.GPSProvider;
 import svp.com.dontmissplaces.model.nominatim.PhraseProvider;
 import svp.com.dontmissplaces.model.nominatim.PlaceByPoint;
@@ -193,19 +195,26 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     }
 
     private void showPlaceInfo(final Point2D point, final Point2D originalPoint) {
-//        PlaceProvider pp = new PlaceProvider(state.getActivity());
-        //Place place = pp.getPlace(point.getLatLng());
-
-        if(state.getPermissions().checkPermissionNetwork()){
-            new PlaceByPoint(){
-                @Override
-                public void processing(ArrayList<Place> poi) {
-                    if(poi.size() > 0){
-                        state.showPlaceInfo(new PlaceView(poi.get(0),originalPoint), null);
-                        repository.poi.insertMany(poi);
-                    }
-                }
-            }.execute(point);
+        if(state.getPermissions().checkPermissionNetwork()) {
+            switch (getMapViewType()) {
+                case Google:
+                    PlaceProvider pp = new PlaceProvider(state.getActivity());
+                    Place place = pp.getPlace(point.getLatLng());
+                    state.showPlaceInfo(new PlaceView(place,originalPoint), null);
+                    repository.poi.insert(place);
+                    break;
+                case Osmdroid:
+                    new PlaceByPoint(){
+                        @Override
+                        public void processing(ArrayList<Place> poi) {
+                            if(poi.size() > 0){
+                                state.showPlaceInfo(new PlaceView(poi.get(0),originalPoint), null);
+                                repository.poi.insertMany(poi);
+                            }
+                        }
+                    }.execute(point);
+                    break;
+            }
         }else{
             int maxD = 100;
             GeoPoint p = point.getGeoPoint();
@@ -219,6 +228,12 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
             if(pois.size() > 0) {
                 state.showPlaceInfo(new PlaceView(pois.get(0), originalPoint), point);
             }
+        }
+
+        if(state.getPermissions().checkPermissionNetwork()){
+
+        }else{
+
         }
     }
 

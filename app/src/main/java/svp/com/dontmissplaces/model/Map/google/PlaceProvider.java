@@ -23,6 +23,8 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.util.Log;
 
+import svp.com.dontmissplaces.R;
+
 public class PlaceProvider extends ContentProvider {
 
     public static final String AUTHORITY = "in.wptrafficanalyzer.locationsearchdialogv2.PlaceProvider";
@@ -36,10 +38,14 @@ public class PlaceProvider extends ContentProvider {
     private static final int DETAILS = 3;
 
     // Obtain browser key from https://code.google.com/apis/console
-    String mKey = "key=YOUR_BROWSER_KEY";
+    private final String mKey;
 
     // Defines a set of uris allowed with this content provider
     private static final UriMatcher mUriMatcher = buildUriMatcher();
+
+    public PlaceProvider(String mKey) {
+        this.mKey = mKey;
+    }
 
     private static UriMatcher buildUriMatcher() {
 
