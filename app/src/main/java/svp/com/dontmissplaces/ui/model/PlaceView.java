@@ -19,7 +19,9 @@ public class PlaceView implements IPOIView {
         this.originalPoint = originalPoint;
         update(place);
     }
-
+    public IPlaceAddressDetails getAddressDetails(){
+        return addressDetails;
+    }
     public String getName(){
         return addressDetails.getName();
     }

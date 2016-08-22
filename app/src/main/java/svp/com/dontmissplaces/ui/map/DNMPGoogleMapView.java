@@ -5,26 +5,19 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.svp.infrastructure.mvpvs.view.View;
 
 import java.util.Collection;
+import java.util.UUID;
 
 import svp.app.map.GoogleMapView;
 import svp.app.map.OnMapClickListener;
 import svp.com.dontmissplaces.R;
-import svp.com.dontmissplaces.model.Map.GoogleMapsPlaceService;
 import svp.app.map.model.Point2D;
 import svp.com.dontmissplaces.presenters.MapsPresenter;
 import com.svp.infrastructure.ActivityPermissions;
@@ -122,13 +115,22 @@ public class DNMPGoogleMapView
         mapView.setOnMapClickListener(listener);
     }
 
+    private UUID markerId;
     @Override
     public void drawMarker(IPOIView poi) {
-        mapView.drawMarker(poi,0);
+        if(markerId != null){
+            mapView.removeMarker(markerId);
+        }
+        markerId = mapView.addMarker(poi,0);
     }
     @Override
-    public void drawMarker(IPOIView poi,int markerIdResource){
+    public UUID addMarker(IPOIView poi, int markerIdResource){
+        return mapView.addMarker(poi,markerIdResource);
+    }
 
+    @Override
+    public void removeMarker(UUID id) {
+        mapView.removeMarker(id);
     }
 
     public void enableMyLocation() {

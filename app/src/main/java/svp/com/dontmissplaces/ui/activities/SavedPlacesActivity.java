@@ -90,7 +90,7 @@ public class SavedPlacesActivity extends AppCompatActivityView<SavedPlacesPresen
             return cursorAdapter.getCount();
         }
     }
-    public static class SavedPlacesCursorAdapter extends BaseCursorAdapter<SavePlaceView> {
+    public class SavedPlacesCursorAdapter extends BaseCursorAdapter<SavePlaceView> {
         public SavedPlacesCursorAdapter(Context context, Cursor c) {
             super(context, c);
         }
@@ -107,7 +107,7 @@ public class SavedPlacesActivity extends AppCompatActivityView<SavedPlacesPresen
 
         @Override
         public void onItemClick(View view, SavePlaceView item) {
-
+            SavedPlacesActivity.this.getPresenter().placeSelected(item);
         }
     }
     public static class SavePlaceView extends PlaceView implements ICursorParcelable {

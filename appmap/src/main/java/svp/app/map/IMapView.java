@@ -2,6 +2,8 @@ package svp.app.map;
 
 import android.os.Bundle;
 
+import java.util.UUID;
+
 import svp.app.map.model.IPOIView;
 import svp.app.map.model.Point2D;
 
@@ -19,5 +21,6 @@ public interface IMapView {
 
     void moveTo(Point2D point);
 
-    void drawMarker(IPOIView poi,int markerIdResource);
+    UUID addMarker(IPOIView poi, int markerIdResource);
+    void removeMarker(UUID id);
 }

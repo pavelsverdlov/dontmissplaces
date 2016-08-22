@@ -65,4 +65,13 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_test_maps">Map</string>
+
+    <!--
+    Add new subway
+    -->
+    <string name="add_subway_city_country">Country</string>
+    <string name="add_subway_city_name">City</string>
+    <string name="add_subway_city_subway_lines">Lines</string>
+    <string name="add_subway_city_subway_add_new_line">Lines</string>
+
 </resources>

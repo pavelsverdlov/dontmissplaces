@@ -38,6 +38,7 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 
 import svp.app.map.android.gps.IGPSProvider;
 import svp.app.map.android.gps.IGPSService;
@@ -123,7 +124,7 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver, MapListener
     public void setOnMapClickListener(OnMapClickListener listener) {
         clickListener = listener;
     }
-    public void drawMarker(IPOIView poi, int markerIdResource) {
+    public UUID addMarker(IPOIView poi, int markerIdResource) {
         if (poi != null) {
             for (Overlay m : poiMarkers.getItems()) {
                 poiMarkers.remove(m);
@@ -139,6 +140,12 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver, MapListener
 
             mapView.postInvalidate();
         }
+        return UUID.randomUUID();
+    }
+
+    @Override
+    public void removeMarker(UUID id) {
+
     }
 
 

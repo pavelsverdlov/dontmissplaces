@@ -24,6 +24,9 @@ public class PlaceProvider {
         geocoder = new Geocoder(activity, locale);
     }
 
+    /**
+     * get only address building no place such cafe etc
+     * */
     public Place getPlace(LatLng latLng) {
 
         List<Address> addresses = null;

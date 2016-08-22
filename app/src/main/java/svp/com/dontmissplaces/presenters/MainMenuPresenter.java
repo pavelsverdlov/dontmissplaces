@@ -3,8 +3,17 @@ package svp.com.dontmissplaces.presenters;
 import android.content.Intent;
 import android.location.Location;
 import android.os.RemoteException;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.PlaceLikelihood;
+import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
+import com.google.android.gms.location.places.Places;
 import com.svp.infrastructure.mvpvs.bundle.IBundleProvider;
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 
@@ -37,6 +46,7 @@ import svp.com.dontmissplaces.model.nominatim.PlaceByPoint;
 import svp.com.dontmissplaces.model.nominatim.PointsOfInterestInsiteBoxTask;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.BaseBundleProvider;
+import svp.com.dontmissplaces.ui.activities.SavedPlacesActivity;
 import svp.com.dontmissplaces.ui.activities.SearchPlacesActivity;
 import svp.app.map.MapViewTypes;
 import svp.com.dontmissplaces.ui.model.IPOIView;
@@ -167,6 +177,11 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
             Place place = repository.poi.getPlaceById(id);
             state.showPlaceInfo(new PlaceView(place, Point2D.empty()), Point2D.empty());
             //state.showMarker();
+        } else if(ActivityCommutator.ActivityOperationResult.SavedPlaces.is(from)){
+            SavedPlacesPresenter.SavedPlacesBundleProvider spp = new SavedPlacesPresenter.SavedPlacesBundleProvider(data);
+            long id = spp.getSavedPlaceId();
+            Place place = repository.place.getById(id);
+            state.showPlaceInfo(new PlaceView(place, Point2D.empty()), Point2D.empty());
         }
     }
     @Override
@@ -193,25 +208,31 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
 
     private void showPlaceInfo(final Point2D point, final Point2D originalPoint) {
         if(state.getPermissions().checkPermissionNetwork()) {
+            new PlaceByPoint(){
+                @Override
+                public void processing(ArrayList<Place> poi) {
+                    if(poi.size() > 0){
+                        PlaceView place = new PlaceView(poi.get(0), originalPoint);
+                        state.showPlaceInfo(place, null);
+//                        PlaceProvider pp = new PlaceProvider(state.getActivity());
+//                        String address = place.getName()+ "," + place.getAddress();
+//                        Vector<Place> places = pp.getPlace(address);
+                        repository.poi.insertMany(poi);
+                    }
+                }
+            }.execute(point);
+            /*
             switch (getMapViewType()) {
                 case Google:
-                    PlaceProvider pp = new PlaceProvider(state.getActivity());
-                    Place place = pp.getPlace(point.getLatLng());
-                    state.showPlaceInfo(new PlaceView(place,originalPoint), null);
-                    repository.poi.insert(place);
+//                    PlaceProvider pp = new PlaceProvider(state.getActivity());
+//                    Place place = pp.getPlace(point.getLatLng());
+//                    state.showPlaceInfo(new PlaceView(place,originalPoint), null);
+//                    repository.poi.insert(place);
                     break;
                 case Osmdroid:
-                    new PlaceByPoint(){
-                        @Override
-                        public void processing(ArrayList<Place> poi) {
-                            if(poi.size() > 0){
-                                state.showPlaceInfo(new PlaceView(poi.get(0),originalPoint), null);
-                                repository.poi.insertMany(poi);
-                            }
-                        }
-                    }.execute(point);
                     break;
             }
+            */
         }else{
             int maxD = 100;
             GeoPoint p = point.getGeoPoint();

@@ -15,8 +15,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.svp.infrastructure.common.ViewExtensions;
+
+import java.util.HashMap;
+import java.util.UUID;
 
 import svp.app.map.IMapView;
 import svp.app.map.OnMapClickListener;
@@ -33,10 +37,12 @@ public class GoogleMapView implements IMapView, MapZoomController.IMapZoom, OnMa
     private GoogleMap map;
     private OnMapClickListener listener;
     private MapZoomController zoomController;
+    private final HashMap<UUID, Marker> markers;
 
     public GoogleMapView(FragmentActivity activity, int gmResourceId) {
         this.activity = activity;
         this.gmResourceId = gmResourceId;
+        markers = new HashMap<>();
     }
 
     @Override
@@ -139,8 +145,7 @@ public class GoogleMapView implements IMapView, MapZoomController.IMapZoom, OnMa
 //            @Override
 //            public void run() {
 //                CameraPosition prevcp = map.getCameraPosition();
-
-                CameraPosition cp =CameraPosition.fromLatLngZoom(point.getLatLng(),16);
+            CameraPosition cp = CameraPosition.fromLatLngZoom(point.getLatLng(),16);
 //                                CameraPosition cp = new CameraPosition(point.getLatLng(),prevcp.zoom,prevcp.tilt,prevcp.bearing);
             map.animateCamera(CameraUpdateFactory.newCameraPosition(cp));
 //                map.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
@@ -149,11 +154,27 @@ public class GoogleMapView implements IMapView, MapZoomController.IMapZoom, OnMa
 
     }
     @Override
-    public void drawMarker(IPOIView poi,int markerIdResource) {
-        map.addMarker(new MarkerOptions()
-                .position(poi.getPoint().getLatLng())
-                .icon(BitmapDescriptorFactory.defaultMarker())
-        );
+    public void removeMarker(UUID id){
+        if(markers.containsKey(id)){
+            markers.get(id).remove();
+        }
+    }
+    @Override
+    public UUID addMarker(final IPOIView poi, int markerIdResource) {
+//        Handler handler = new Handler();
+//        handler.post(new Runnable() {
+//            @Override
+//            public void run() {
+
+               Marker marker = map.addMarker(new MarkerOptions().snippet("dfdsfsd")
+                        .position(poi.getPoint().getLatLng())
+                        .icon(BitmapDescriptorFactory.defaultMarker())
+                );
+        UUID key = UUID.randomUUID();
+        markers.put(key,marker);
+//            }
+//        });
+        return key;
     }
 
     @Override

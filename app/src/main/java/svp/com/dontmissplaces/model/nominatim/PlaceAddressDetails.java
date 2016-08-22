@@ -15,7 +15,13 @@ public class PlaceAddressDetails implements IPlaceAddressDetails {
     }
 
     public String getFullAddress(){
-        return (getStreet() + " " +  array[1] +  ", " + array[array.length-1]).replace("  "," ").trim();
+        return (getStreet() + " "
+                + array[1].trim() + ", "
+                + array[array.length-4].trim() + ", "
+                + array[array.length-1].trim())
+        //.replace("  "," ")
+//        .trim()
+                ;
     }
 
     public String getName() {
@@ -26,4 +32,8 @@ public class PlaceAddressDetails implements IPlaceAddressDetails {
         return array[2].trim();
     }
 
+    @Override
+    public String toString(){
+        return full;
+    }
 }

@@ -221,6 +221,15 @@ public class Repository extends SQLiteOpenHelper {
             SQLiteDatabase sqldb = getReadableDatabase();
             return sqldb.rawQuery(Places.SELECT_ALL, null);
         }
+
+        public Place getById(long id) {
+            try(Cursor cursor = getCursorById(Places.TABLE,id)){
+                if (cursor == null){
+                    return null;
+                }
+                return new Place(cursor);
+            }
+        }
     }
 
     public class POIRepository {

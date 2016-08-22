@@ -10,6 +10,7 @@ import com.svp.infrastructure.mvpvs.view.View;
 import org.osmdroid.api.IGeoPoint;
 
 import java.util.Collection;
+import java.util.UUID;
 
 import svp.app.map.OnMapClickListener;
 import svp.app.map.OsmdroidMapView;
@@ -199,8 +200,13 @@ public class DNMPOsmdroidMapView extends View<MapsPresenter> implements IDNMPMap
     }
 
     @Override
-    public void drawMarker(IPOIView poi, int markerIdResource) {
-        osmdroidMapView.drawMarker(poi,markerIdResource);
+    public UUID addMarker(IPOIView poi, int markerIdResource) {
+        return osmdroidMapView.addMarker(poi,markerIdResource);
+    }
+
+    @Override
+    public void removeMarker(UUID id) {
+
     }
 
     @Override
@@ -209,6 +215,6 @@ public class DNMPOsmdroidMapView extends View<MapsPresenter> implements IDNMPMap
     }
 
     public void drawMarker(IPOIView poi) {
-        drawMarker(poi,R.drawable.map_marker);
+        addMarker(poi,R.drawable.map_marker);
     }
 }
