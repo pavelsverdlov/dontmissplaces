@@ -12,6 +12,7 @@ import svp.app.map.android.gps.GPSServiceProvider;
 import svp.app.map.android.gps.IGPSProvider;
 import svp.com.dontmissstation.MainActivity;
 import svp.com.dontmissstation.db.Repository;
+import svp.com.dontmissstation.ui.activities.ActivityOperationResult;
 
 public class MainPresenter extends CommutativePreferencePresenter<MainActivity,MainActivity.ViewState> {
 
@@ -22,10 +23,6 @@ public class MainPresenter extends CommutativePreferencePresenter<MainActivity,M
 
     }
 
-    @Override
-    protected ActivityOperationItem getOperation(int code) {
-        return null;
-    }
 
     @Override
     protected void incomingResultFrom(ActivityOperationItem from, Intent data) {
@@ -57,5 +54,9 @@ public class MainPresenter extends CommutativePreferencePresenter<MainActivity,M
      * */
     public MapViewTypes getMapViewType() {
         return userSettings.getMapProvider();
+    }
+
+    public void openAddNewSubway() {
+        commutator.goTo(ActivityOperationResult.AddNewSubway);
     }
 }

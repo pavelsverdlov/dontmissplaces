@@ -69,9 +69,10 @@
     <!--
     Add new subway
     -->
-    <string name="add_subway_city_country">Country</string>
-    <string name="add_subway_city_name">City</string>
+    <string name="add_subway_city_country">Country*</string>
+    <string name="add_subway_city_name">City*</string>
     <string name="add_subway_city_subway_lines">Lines</string>
-    <string name="add_subway_city_subway_add_new_line">Lines</string>
+    <string name="add_subway_city_subway_add_new_line">Add line</string>
+    <string name="title_activity_add_new_subway">AddNewSubwayActivity</string>
 
 </resources>

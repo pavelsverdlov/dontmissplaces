@@ -57,9 +57,9 @@ import svp.com.dontmissplaces.ui.model.TrackView;
 import static svp.com.dontmissplaces.ui.ActivityCommutator.ActivityOperationResult.HistoryTracks;
 import static svp.com.dontmissplaces.ui.ActivityCommutator.ActivityOperationResult.SavedPlaces;
 
-public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,MainMenuActivity.ViewState>
-    implements OnLocationChangeListener {
-    private final String TAG ="MainMenuPresenter";
+public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity, MainMenuActivity.ViewState>
+        implements OnLocationChangeListener {
+    private final String TAG = "MainMenuPresenter";
     private TrackTimer timer;
     private final Repository repository;
     private Track recordingTrack;
@@ -76,15 +76,15 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     }
 
     public void startNewTrackSession() {
-        if(timer != null){
+        if (timer != null) {
             timer.stop();
             timer = null;
         }
         timer = new TrackTimer(1000);
 
-        if(recordingTrack == null){
+        if (recordingTrack == null) {
             Date date = new Date();
-            recordingTrack = new Track(-1,date.toString(),date.getTime());
+            recordingTrack = new Track(-1, date.toString(), date.getTime());
         }
 
         timer.start();
@@ -92,11 +92,13 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         recordingTrack = repository.track.getOrInsertTrack(recordingTrack);
         recordingSession = repository.track.insertSession(recordingTrack);
 
-        state.startTrackRecording(new SessionView(recordingSession,new Vector<Waypoint>()));
+        state.startTrackRecording(new SessionView(recordingSession, new Vector<Waypoint>()));
     }
+
     public void pauseTrackRecording() {
         timer.pause();
     }
+
     public void stopTrackRecording() {
         timer.cancel();
         state.slideOutFabTrackRecordingToolbar();
@@ -104,6 +106,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         IBundleProvider bp = new BaseBundleProvider().putTrack(recordingTrack);
         commutator.goTo(ActivityCommutator.ActivityOperationResult.SaveTrack, bp);
     }
+
     public void resumeTrackRecording() {
         timer.resume();
     }
@@ -111,13 +114,16 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     public void openHistoryTracks() {
         commutator.goTo(HistoryTracks);
     }
+
     public void openSettings() {
         commutator.goTo(ActivityCommutator.ActivityOperationResult.Settings);
     }
+
     public void openSearch(String query) {
         IBundleProvider bp = new SearchPlacesActivity.SearchPlacesBundleProvider().putQuery(query);
-        commutator.goTo(ActivityCommutator.ActivityOperationResult.SearchPlaces,bp);
+        commutator.goTo(ActivityCommutator.ActivityOperationResult.SearchPlaces, bp);
     }
+
     public void openSavedPlaces() {
         commutator.goTo(SavedPlaces);
     }
@@ -127,14 +133,16 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
         try {
             point = new Point2D(gps.getLocation());
         } catch (Exception e) {
-            Log.e(TAG,"onMoveToMyLocation",e);
+            Log.e(TAG, "onMoveToMyLocation", e);
         }
         state.MapCameraMoveTo(point);
     }
+
     public void pinPlace(IPOIView poi) {
         Place p = poi.getPlace();
         poi.update(repository.place.insert(p));
     }
+
     public void beenInPlace(IPOIView poi) {
         Place p = poi.getPlace();
         p.setBeenHere();
@@ -142,18 +150,19 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     }
 
     public void permissionFineLocationReceived() {
-        if(prevLocation == null) {
+        if (prevLocation == null) {
             try {
                 prevLocation = gps.getLocation();
             } catch (RemoteException e) {
                 e.printStackTrace();
-                Log.e(TAG,"",e);
+                Log.e(TAG, "", e);
             }
         }
     }
+
     @Override
     public void OnLocationChanged(Location location) {
-        if(prevLocation == null && location != null){
+        if (prevLocation == null && location != null) {
             state.MapCameraMoveTo(new Point2D(location));
         }
         prevLocation = location;
@@ -161,57 +170,61 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
 
     @Override
     protected void incomingResultFrom(ActivityOperationItem from, Intent data) {
-        if(ActivityCommutator.ActivityOperationResult.HistoryTracks.is(from)){
+        if (ActivityCommutator.ActivityOperationResult.HistoryTracks.is(from)) {
             BaseBundleProvider bp = new BaseBundleProvider(data);
             recordingTrack = bp.getTrack();
 
             Vector<SessionView> sessions = new Vector<>();
-            for (SessionTrack session : repository.track.getSessions(recordingTrack)){
-                sessions.add(new SessionView(session,repository.track.getWaypoints(session)));
+            for (SessionTrack session : repository.track.getSessions(recordingTrack)) {
+                sessions.add(new SessionView(session, repository.track.getWaypoints(session)));
             }
 
             state.displayTrackOnMap(new TrackView(recordingTrack, sessions));
-        }else if(ActivityCommutator.ActivityOperationResult.SearchPlaces.is(from)){
+        } else if (ActivityCommutator.ActivityOperationResult.SearchPlaces.is(from)) {
             SearchPlacesActivity.SearchPlacesBundleProvider sbp = new SearchPlacesActivity.SearchPlacesBundleProvider(data);
             long id = sbp.getFoundPlaceId();
             Place place = repository.poi.getPlaceById(id);
             state.showPlaceInfo(new PlaceView(place, Point2D.empty()), Point2D.empty());
             //state.showMarker();
-        } else if(ActivityCommutator.ActivityOperationResult.SavedPlaces.is(from)){
+        } else if (ActivityCommutator.ActivityOperationResult.SavedPlaces.is(from)) {
             SavedPlacesPresenter.SavedPlacesBundleProvider spp = new SavedPlacesPresenter.SavedPlacesBundleProvider(data);
             long id = spp.getSavedPlaceId();
             Place place = repository.place.getById(id);
             state.showPlaceInfo(new PlaceView(place, Point2D.empty()), Point2D.empty());
         }
     }
+
     @Override
     protected void onAttachedView(MainMenuActivity view, Intent intent) {
-        super.onAttachedView(view,intent);
+        super.onAttachedView(view, intent);
         try {
-            gps = GPSProvider.create(state.getActivity(),state.getPermissions(), new GPSLocationListener());
+            gps = GPSProvider.create(state.getActivity(), state.getPermissions(), new GPSLocationListener());
         } catch (Exception e) {
-            Log.e(TAG,"onAttachedView", e);
+            Log.e(TAG, "onAttachedView", e);
         }
     }
 
-    /** POI **/
+    /**
+     * POI
+     **/
     public void showPlaceInfoNearPoint(Point2D point) {
-        if(point.isEmpty()){
+        if (point.isEmpty()) {
             point = new Point2D(prevLocation);
         }
         //for search nearest POI to point we should check found point this original
         showPlaceInfo(point, point);
     }
+
     public void showPlaceInfoByPoint(final Point2D point) {
         showPlaceInfo(point, Point2D.empty());
     }
 
     private void showPlaceInfo(final Point2D point, final Point2D originalPoint) {
-        if(state.getPermissions().checkPermissionNetwork()) {
-            new PlaceByPoint(){
+        if (state.getPermissions().checkPermissionNetwork()) {
+            new PlaceByPoint() {
                 @Override
                 public void processing(ArrayList<Place> poi) {
-                    if(poi.size() > 0){
+                    if (poi.size() > 0) {
                         PlaceView place = new PlaceView(poi.get(0), originalPoint);
                         state.showPlaceInfo(place, null);
 //                        PlaceProvider pp = new PlaceProvider(state.getActivity());
@@ -233,40 +246,40 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
                     break;
             }
             */
-        }else{
+        } else {
             int maxD = 100;
             GeoPoint p = point.getGeoPoint();
-            BoundingBoxE6 bb = new BoundingBoxE6(p.getLatitudeE6()+maxD,
-                    p.getLongitudeE6()+maxD,
-                    p.getLatitudeE6()-maxD,
-                    p.getLongitudeE6()-maxD);
+            BoundingBoxE6 bb = new BoundingBoxE6(p.getLatitudeE6() + maxD,
+                    p.getLongitudeE6() + maxD,
+                    p.getLatitudeE6() - maxD,
+                    p.getLongitudeE6() - maxD);
 
             Vector<Place> pois = repository.poi.get(bb);
 
-            if(pois.size() > 0) {
+            if (pois.size() > 0) {
                 state.showPlaceInfo(new PlaceView(pois.get(0), originalPoint), point);
             }
         }
     }
 
     public void searchPOI(int zoom, BoundingBoxE6 box) {
-        if(!state.getPermissions().checkPermissionNetwork()){
+        if (!state.getPermissions().checkPermissionNetwork()) {
             return;
         }
         PhraseProvider pp = new PhraseProvider();
 
         ArrayList<PointsOfInterestInsiteBoxTask.InputData> datas = new ArrayList<>();
-        for (String phrase : pp.getPhrases(zoom)){
-            datas.add(new PointsOfInterestInsiteBoxTask.InputData(box,phrase,50));
+        for (String phrase : pp.getPhrases(zoom)) {
+            datas.add(new PointsOfInterestInsiteBoxTask.InputData(box, phrase, 50));
         }
 
-        if(datas.size() == 0){
+        if (datas.size() == 0) {
             return;
         }
 
-        new PointsOfInterestInsiteBoxTask(){
+        new PointsOfInterestInsiteBoxTask() {
             @Override
-            protected void processing(ArrayList<Place> poi, InputData data){
+            protected void processing(ArrayList<Place> poi, InputData data) {
                 repository.poi.insertMany(poi);
             }
         }.execute(datas);
@@ -281,9 +294,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
     }
 
 
-
-
-    private class TrackTimer extends TimerTask{
+    private class TrackTimer extends TimerTask {
         private long elapsedMses;
         private long intervalMsec;
 
@@ -294,26 +305,27 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity,Mai
             intervalMsec = countDownInterval;
         }
 
-        public void start(){
+        public void start() {
             Timer timer = new Timer();
             timer.scheduleAtFixedRate(this, intervalMsec, intervalMsec);
         }
 
-        public void pause(){
+        public void pause() {
             isPause = true;
         }
+
         public void resume() {
             isPause = false;
         }
 
-        public void stop(){
+        public void stop() {
             isStop = true;
             this.cancel();
         }
 
         @Override
         public void run() {
-            if(isPause || isStop){
+            if (isPause || isStop) {
                 return;
             }
             elapsedMses += intervalMsec;

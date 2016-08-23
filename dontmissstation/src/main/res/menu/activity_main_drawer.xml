@@ -15,7 +15,7 @@
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Slideshow" />
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/main_activity_drawer_add_new_subway"
             android:icon="@drawable/ic_menu_manage"
             android:title="Add new subway" />
     </group>

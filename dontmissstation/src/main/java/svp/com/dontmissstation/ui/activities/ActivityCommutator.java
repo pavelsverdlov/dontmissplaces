@@ -1,5 +1,7 @@
 package svp.com.dontmissstation.ui.activities;
 
+import android.app.Activity;
+
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 import com.svp.infrastructure.mvpvs.commutate.ICommutativeElement;
 
@@ -11,7 +13,7 @@ public class ActivityCommutator extends com.svp.infrastructure.mvpvs.commutate.A
         super(element);
     }
 
-    public static void register(ActivityOperationItem key, Class<MainActivity> value) {
+    public static void register(ActivityOperationItem key, Class<?> value) {
         activities.put(key,value);
     }
 }

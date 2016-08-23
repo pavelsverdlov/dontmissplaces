@@ -25,7 +25,6 @@ import org.osmdroid.util.BoundingBoxE6;
 import svp.app.map.GoogleMapView;
 import svp.app.map.IMapView;
 import svp.app.map.OnMapClickListener;
-import svp.app.map.OsmdroidMapView;
 import svp.app.map.model.Point2D;
 import svp.com.dontmissstation.presenters.MainPresenter;
 import svp.com.dontmissstation.ui.activities.ActivityOperationResult;
@@ -184,15 +183,7 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -200,21 +191,10 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        switch (item.getItemId()){
+            case R.id.main_activity_drawer_add_new_subway:
+                getPresenter().openAddNewSubway();
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

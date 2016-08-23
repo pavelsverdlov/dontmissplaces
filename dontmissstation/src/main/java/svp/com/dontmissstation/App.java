@@ -11,8 +11,7 @@ import com.svp.infrastructure.mvpvs.viewstate.IViewState;
 import svp.com.dontmissstation.db.Repository;
 import svp.com.dontmissstation.presenters.*;
 import svp.com.dontmissstation.ui.UncaughtExceptionHandler;
-import svp.com.dontmissstation.ui.activities.ActivityCommutator;
-import svp.com.dontmissstation.ui.activities.ActivityOperationResult;
+import svp.com.dontmissstation.ui.activities.*;
 
 public class App extends Application {
     private final Repository repository;
@@ -26,7 +25,8 @@ public class App extends Application {
     public void onCreate() {
         this.deleteDatabase(Repository.dbname);
 
-        ActivityCommutator.register(ActivityOperationResult.Main,MainActivity.class);
+        ActivityCommutator.register(ActivityOperationResult.Main, MainActivity.class);
+        ActivityCommutator.register(ActivityOperationResult.AddNewSubway, AddNewSubwayActivity.class);
 
         Registrator.register(MainActivity.class,
                 new PresenterContainer.IPresenterCreator() {
@@ -39,6 +39,20 @@ public class App extends Application {
                     @Override
                     public IViewState create(MainActivity view) {
                         return new MainActivity.ViewState(view);
+                    }
+                });
+
+        Registrator.register(AddNewSubwayActivity.class,
+                new PresenterContainer.IPresenterCreator() {
+                    @Override
+                    public IPresenter create() {
+                        return new AddNewSubwayPresenter(repository);
+                    }
+                },
+                new ViewStateContainer.IViewStateCreator<AddNewSubwayActivity>() {
+                    @Override
+                    public IViewState create(AddNewSubwayActivity view) {
+                        return new AddNewSubwayActivity.ViewState(view);
                     }
                 });
 
