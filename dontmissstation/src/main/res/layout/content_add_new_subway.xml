@@ -23,12 +23,13 @@
     <android.support.v7.widget.AppCompatEditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:labelFor="@id/label_country" />
+        android:labelFor="@id/label_country"/>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/label_city"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="@dimen/padding_above_and_below_text"
         android:text="@string/add_subway_city_name" />
 
     <android.support.v7.widget.AppCompatEditText
