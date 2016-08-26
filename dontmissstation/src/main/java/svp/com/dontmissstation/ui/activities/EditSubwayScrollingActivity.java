@@ -118,6 +118,7 @@ public class EditSubwayScrollingActivity extends AppCompatActivityView<AddNewSub
         ButterKnife.bind(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
