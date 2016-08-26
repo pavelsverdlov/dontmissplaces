@@ -71,16 +71,19 @@
     -->
     <string name="add_subway_city_country">Country*</string>
     <string name="add_subway_city_name">City*</string>
-    <string name="add_subway_city_subway_lines">Lines</string>
-    <string name="add_subway_city_subway_add_new_line">Add line</string>
+    <string name="add_subway_lines">Lines</string>
+    <string name="add_subway_add_new_line">Add line</string>
     <string name="title_activity_add_new_subway">AddNewSubwayActivity</string>
     <string name="title_activity_add_subway_line">AddSubwayLineActivity</string>
-
 
     <!--
         Add subway line
     -->
     <string name="add_subway_line_name">Name*</string>
-    <string name="add_subway_line_color">Color*</string>
+    <string name="add_subway_line_color">Color</string>
+    <string name="add_subway_line_add_station">Add station</string>
+    <string name="add_subway_line_stations">Stations</string>
+
+    <string name="title_activity_edit_subway_scrolling">EditSubwayScrollingActivity</string>
 
 </resources>

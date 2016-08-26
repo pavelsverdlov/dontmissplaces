@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
@@ -23,15 +24,16 @@ import java.util.Vector;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import svp.com.dontmissstation.R;
-import svp.com.dontmissstation.presenters.AddSubwayLinePresenter;
+import svp.com.dontmissstation.presenters.AddNewSubwayPresenter;
 import svp.com.dontmissstation.ui.RecyclerViewEx;
-import svp.com.dontmissstation.ui.model.*;
+import svp.com.dontmissstation.ui.model.SubwayLineView;
+import svp.com.dontmissstation.ui.model.SubwayView;
 
-public class AddSubwayLineActivity extends AppCompatActivityView<AddSubwayLinePresenter> implements ICommutativeElement {
+public class EditSubwayScrollingActivity extends AppCompatActivityView<AddNewSubwayPresenter> implements ICommutativeElement, View.OnClickListener {
 
     @Override
     public ActivityOperationItem getOperation() {
-        return ActivityOperationResult.AddSubwayLine;
+        return ActivityOperationResult.AddNewSubway;
     }
 
     @Override
@@ -39,9 +41,9 @@ public class AddSubwayLineActivity extends AppCompatActivityView<AddSubwayLinePr
         return this;
     }
 
-    public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<AddSubwayLineActivity> {
+    public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<EditSubwayScrollingActivity> {
 
-        public ViewState(AddSubwayLineActivity view) {
+        public ViewState(EditSubwayScrollingActivity view) {
             super(view);
         }
 
@@ -65,9 +67,9 @@ public class AddSubwayLineActivity extends AppCompatActivityView<AddSubwayLinePr
 //        }
     }
 
-    public class StationsRecyclerAdapter extends RecyclerView.Adapter<StationsRecyclerAdapter.ViewHolder> {
+    public class SubwayLineRecyclerAdapter extends RecyclerView.Adapter<SubwayLineRecyclerAdapter.ViewHolder> {
         private final Context context;
-        private final Vector<StationView> lines;
+        private final Vector<SubwayLineView> lines;
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             public ViewHolder(View v) {
@@ -81,7 +83,7 @@ public class AddSubwayLineActivity extends AppCompatActivityView<AddSubwayLinePr
                         });
             }
         }
-        public StationsRecyclerAdapter(Context context, Collection<StationView> collection) {
+        public SubwayLineRecyclerAdapter(Context context, Collection<SubwayLineView> collection) {
             this.context = context;
             lines = new Vector<>(collection);
         }
@@ -102,15 +104,16 @@ public class AddSubwayLineActivity extends AppCompatActivityView<AddSubwayLinePr
         }
     }
 
-    @Bind(R.id.add_new_subway_actv_stations) RecyclerView subwayStationsRecyclerView;
+//    @Bind(R.id.add_new_subway_actv_addNewSubwayLine) Button addNewSubwayLineBtn;
+    @Bind(R.id.add_new_subway_actv_subwayLines) RecyclerView subwayLinesRecyclerView;
 
-    private StationsRecyclerAdapter stationsAdapter;
-    private SubwayLineView lineView;
+    private SubwayLineRecyclerAdapter linesAdapter;
+    private SubwayView subway;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_subway_line);
+        setContentView(R.layout.activity_edit_subway_scrolling);
 
         ButterKnife.bind(this);
 
@@ -127,15 +130,24 @@ public class AddSubwayLineActivity extends AppCompatActivityView<AddSubwayLinePr
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        RecyclerViewEx.setCustomSettings(subwayStationsRecyclerView,this);
+//        addNewSubwayLineBtn.setOnClickListener(this);
+
+        RecyclerViewEx.setCustomSettings(subwayLinesRecyclerView,this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.add_new_subway_actv_addNewSubwayLine:
+                getPresenter().openAddLineActivity();
+                break;
+        }
     }
 
     public void onStart(){
         super.onStart();
-        lineView = getPresenter().getLine();
-        stationsAdapter = new StationsRecyclerAdapter(this,lineView.getStations());
-        subwayStationsRecyclerView.setAdapter(stationsAdapter);
+        subway = getPresenter().getSubway();
+        linesAdapter = new SubwayLineRecyclerAdapter(this,subway.getLines());
+        subwayLinesRecyclerView.setAdapter(linesAdapter);
     }
-
-
 }

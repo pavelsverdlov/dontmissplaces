@@ -24,8 +24,7 @@
     <dimen name="padding_8">8dp</dimen>
     <dimen name="android_standard_actionBarSize_inverted">-56.0dp</dimen>
 
-    <dimen name="text_size_medium">20sp</dimen>
-    <dimen name="text_size_medium_btn">14sp</dimen>
+
 
 
     <dimen name="dp_22">22dp</dimen>

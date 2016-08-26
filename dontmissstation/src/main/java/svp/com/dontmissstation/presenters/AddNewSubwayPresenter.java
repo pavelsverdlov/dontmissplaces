@@ -5,9 +5,10 @@ import android.content.Intent;
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 
 import svp.com.dontmissstation.db.Repository;
-import svp.com.dontmissstation.ui.activities.AddNewSubwayActivity;
+import svp.com.dontmissstation.ui.activities.*;
+import svp.com.dontmissstation.ui.model.SubwayView;
 
-public class AddNewSubwayPresenter extends CommutativePreferencePresenter<AddNewSubwayActivity,AddNewSubwayActivity.ViewState> {
+public class AddNewSubwayPresenter extends CommutativePreferencePresenter<EditSubwayScrollingActivity,EditSubwayScrollingActivity.ViewState> {
 
 
     public AddNewSubwayPresenter(Repository repository) {
@@ -17,6 +18,14 @@ public class AddNewSubwayPresenter extends CommutativePreferencePresenter<AddNew
     @Override
     protected void incomingResultFrom(ActivityOperationItem from, Intent data) {
 
+    }
+
+    public void openAddLineActivity() {
+        commutator.goTo(ActivityOperationResult.AddSubwayLine);
+    }
+
+    public SubwayView getSubway() {
+        return new SubwayView();
     }
 
 //    public void placeSelected(SavedPlacesActivity.SavePlaceView item) {

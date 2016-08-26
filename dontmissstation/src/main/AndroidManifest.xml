@@ -53,6 +53,15 @@
         <activity
             android:name=".ui.activities.AddSubwayLineActivity"
             android:label="@string/title_activity_add_subway_line"
+            android:parentActivityName=".ui.activities.AddNewSubwayActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.AddNewSubwayActivity" />
+        </activity>
+        <activity
+            android:name=".ui.activities.EditSubwayScrollingActivity"
+            android:label="@string/title_activity_edit_subway_scrolling"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

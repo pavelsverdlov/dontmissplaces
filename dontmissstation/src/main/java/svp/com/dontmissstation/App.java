@@ -26,7 +26,8 @@ public class App extends Application {
         this.deleteDatabase(Repository.dbname);
 
         ActivityCommutator.register(ActivityOperationResult.Main, MainActivity.class);
-        ActivityCommutator.register(ActivityOperationResult.AddNewSubway, AddNewSubwayActivity.class);
+        ActivityCommutator.register(ActivityOperationResult.AddNewSubway, EditSubwayScrollingActivity.class);
+        ActivityCommutator.register(ActivityOperationResult.AddSubwayLine, AddSubwayLineActivity.class);
 
         Registrator.register(MainActivity.class,
                 new PresenterContainer.IPresenterCreator() {
@@ -42,17 +43,31 @@ public class App extends Application {
                     }
                 });
 
-        Registrator.register(AddNewSubwayActivity.class,
+        Registrator.register(EditSubwayScrollingActivity.class,
                 new PresenterContainer.IPresenterCreator() {
                     @Override
                     public IPresenter create() {
                         return new AddNewSubwayPresenter(repository);
                     }
                 },
-                new ViewStateContainer.IViewStateCreator<AddNewSubwayActivity>() {
+                new ViewStateContainer.IViewStateCreator<EditSubwayScrollingActivity>() {
                     @Override
-                    public IViewState create(AddNewSubwayActivity view) {
-                        return new AddNewSubwayActivity.ViewState(view);
+                    public IViewState create(EditSubwayScrollingActivity view) {
+                        return new EditSubwayScrollingActivity.ViewState(view);
+                    }
+                });
+
+        Registrator.register(AddSubwayLineActivity.class,
+                new PresenterContainer.IPresenterCreator() {
+                    @Override
+                    public IPresenter create() {
+                        return new AddSubwayLinePresenter(repository);
+                    }
+                },
+                new ViewStateContainer.IViewStateCreator<AddSubwayLineActivity>() {
+                    @Override
+                    public IViewState create(AddSubwayLineActivity view) {
+                        return new AddSubwayLineActivity.ViewState(view);
                     }
                 });
 
