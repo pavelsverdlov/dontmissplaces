@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -20,13 +21,18 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="snap|scroll|exitUntilCollapsed">
 
             <LinearLayout
+                android:layout_marginTop="72dp"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
                 app:layout_scrollFlags="scroll|enterAlways"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:scaleType="centerCrop"
+                app:layout_collapseMode="parallax">
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/label_country"
                     android:layout_width="match_parent"
@@ -34,6 +40,7 @@
                     android:text="@string/add_subway_city_country" />
 
                 <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/activity_edit_subway_country_edittext"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@id/label_country"/>
@@ -46,6 +53,7 @@
                     android:text="@string/add_subway_city_name" />
 
                 <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/activity_edit_subway_city_edittext"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@id/label_city" />
@@ -56,6 +64,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
+                app:layout_scrollFlags="scroll|enterAlways"
                 app:popupTheme="@style/AppTheme.PopupOverlay" >
             </android.support.v7.widget.Toolbar>
 

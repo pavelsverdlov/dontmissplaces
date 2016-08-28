@@ -3,6 +3,10 @@ package svp.com.dontmissstation.ui.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
@@ -106,6 +111,9 @@ public class EditSubwayScrollingActivity extends AppCompatActivityView<AddNewSub
 
 //    @Bind(R.id.add_new_subway_actv_addNewSubwayLine) Button addNewSubwayLineBtn;
     @Bind(R.id.add_new_subway_actv_subwayLines) RecyclerView subwayLinesRecyclerView;
+    @Bind(R.id.activity_edit_subway_country_edittext) EditText countryText;
+    @Bind(R.id.activity_edit_subway_city_edittext) EditText cityText;
+
 
     private SubwayLineRecyclerAdapter linesAdapter;
     private SubwayView subway;
@@ -117,9 +125,27 @@ public class EditSubwayScrollingActivity extends AppCompatActivityView<AddNewSub
 
         ButterKnife.bind(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        final CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+        collapsingToolbar.setTitle(" ");
+        AppBarLayout mAppBarLayout = (AppBarLayout)findViewById(R.id.app_bar);
+
+        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if(verticalOffset < -350){
+                    collapsingToolbar.setTitle(cityText.getText() + " " + countryText.getText());
+                } else {
+                    collapsingToolbar.setTitle(" ");
+                }
+            }
+        });
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -134,6 +160,20 @@ public class EditSubwayScrollingActivity extends AppCompatActivityView<AddNewSub
 //        addNewSubwayLineBtn.setOnClickListener(this);
 
         RecyclerViewEx.setCustomSettings(subwayLinesRecyclerView,this);
+    }
+
+    public static AppBarLayout.ScrollingViewBehavior from(View view) {
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        if (!(params instanceof CoordinatorLayout.LayoutParams)) {
+            throw new IllegalArgumentException("The view is not a child of CoordinatorLayout");
+        }
+        CoordinatorLayout.Behavior behavior = ((CoordinatorLayout.LayoutParams) params)
+                .getBehavior();
+        if (!(behavior instanceof AppBarLayout.ScrollingViewBehavior)) {
+            throw new IllegalArgumentException(
+                    "The view is not associated with BottomSheetBehavior");
+        }
+        return (AppBarLayout.ScrollingViewBehavior) behavior;
     }
 
     @Override
