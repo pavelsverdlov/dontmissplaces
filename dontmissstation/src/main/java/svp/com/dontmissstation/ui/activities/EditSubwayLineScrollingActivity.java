@@ -25,7 +25,7 @@ public class EditSubwayLineScrollingActivity extends EditScrollingActivity<EditS
 
     @Override
     public ActivityOperationItem getOperation() {
-        return ActivityOperationResult.AddSubwayLine;
+        return ActivityOperationResult.EditSubwayLine;
     }
 
     @Override
@@ -128,6 +128,11 @@ public class EditSubwayLineScrollingActivity extends EditScrollingActivity<EditS
     @Override
     public String getToolbarTitle() {
         return lineNameText.getText().length() == 0 ? "Subway line" : lineNameText.getText().toString();
+    }
+
+    @Override
+    public int getMaxCollapsingHeight() {
+        return 450;
     }
 
 

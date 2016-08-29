@@ -5,6 +5,7 @@ import android.content.Intent;
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 
 import svp.com.dontmissstation.db.Repository;
+import svp.com.dontmissstation.ui.activities.ActivityOperationResult;
 import svp.com.dontmissstation.ui.activities.EditSubwayLineScrollingActivity;
 import svp.com.dontmissstation.ui.model.SubwayLineView;
 
@@ -23,6 +24,6 @@ public class EditSubwayLinePresenter extends CommutativePreferencePresenter<Edit
     }
 
     public void openEditStationActivity() {
-
+        commutator.goTo(ActivityOperationResult.EditSubwayStation);
     }
 }

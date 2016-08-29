@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
-import com.svp.infrastructure.mvpvs.commutate.CommutativePresenter;
 
 import svp.app.map.MapViewTypes;
 import svp.app.map.android.gps.GPSService;
@@ -57,6 +56,6 @@ public class MainPresenter extends CommutativePreferencePresenter<MainActivity,M
     }
 
     public void openAddNewSubway() {
-        commutator.goTo(ActivityOperationResult.AddNewSubway);
+        commutator.goTo(ActivityOperationResult.EditNewSubway);
     }
 }

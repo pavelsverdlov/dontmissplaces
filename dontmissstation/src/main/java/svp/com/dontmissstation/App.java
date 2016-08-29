@@ -26,8 +26,9 @@ public class App extends Application {
         this.deleteDatabase(Repository.dbname);
 
         ActivityCommutator.register(ActivityOperationResult.Main, MainActivity.class);
-        ActivityCommutator.register(ActivityOperationResult.AddNewSubway, EditSubwayScrollingActivity.class);
-        ActivityCommutator.register(ActivityOperationResult.AddSubwayLine, EditSubwayLineScrollingActivity.class);
+        ActivityCommutator.register(ActivityOperationResult.EditNewSubway, EditSubwayScrollingActivity.class);
+        ActivityCommutator.register(ActivityOperationResult.EditSubwayLine, EditSubwayLineScrollingActivity.class);
+        ActivityCommutator.register(ActivityOperationResult.EditSubwayStation, EditSubwayStationActivity.class);
 
         Registrator.register(MainActivity.class,
                 new PresenterContainer.IPresenterCreator() {
@@ -68,6 +69,20 @@ public class App extends Application {
                     @Override
                     public IViewState create(EditSubwayLineScrollingActivity view) {
                         return new EditSubwayLineScrollingActivity.ViewState(view);
+                    }
+                });
+
+        Registrator.register(EditSubwayStationActivity.class,
+                new PresenterContainer.IPresenterCreator() {
+                    @Override
+                    public IPresenter create() {
+                        return new EditSubwayStationPresenter(repository);
+                    }
+                },
+                new ViewStateContainer.IViewStateCreator<EditSubwayStationActivity>() {
+                    @Override
+                    public IViewState create(EditSubwayStationActivity view) {
+                        return new EditSubwayStationActivity.ViewState(view);
                     }
                 });
 

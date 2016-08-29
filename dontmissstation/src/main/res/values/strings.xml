@@ -81,11 +81,19 @@
     -->
     <string name="add_subway_line_name">Name*</string>
     <string name="add_subway_line_color">Color</string>
+    <string name="add_subway_line_length">Length</string>
     <string name="add_subway_line_add_station">Add station</string>
     <string name="add_subway_line_stations">Stations</string>
+
+    <!--
+        Add subway station
+    -->
+    <string name="add_subway_station_name">Name*</string>
+
 
     <string name="title_activity_edit_subway_scrolling">EditSubwayScrollingActivity</string>
     <string name="title_activity_edit_subway_line_scrolling">EditSubwayLineScrollingActivity
     </string>
+    <string name="title_activity_edit_station">EditStationActivity</string>
 
 </resources>

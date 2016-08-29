@@ -59,6 +59,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="svp.com.dontmissstation.ui.activities.EditSubwayScrollingActivity" />
         </activity>
+        <activity
+            android:name=".ui.activities.EditSubwayStationActivity"
+            android:label="@string/title_activity_edit_station"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

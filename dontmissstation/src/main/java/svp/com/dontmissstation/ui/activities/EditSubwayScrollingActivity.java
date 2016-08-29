@@ -26,7 +26,7 @@ public class EditSubwayScrollingActivity extends EditScrollingActivity<EditSubwa
 
     @Override
     public ActivityOperationItem getOperation() {
-        return ActivityOperationResult.AddNewSubway;
+        return ActivityOperationResult.EditNewSubway;
     }
 
     @Override
@@ -119,6 +119,12 @@ public class EditSubwayScrollingActivity extends EditScrollingActivity<EditSubwa
         CharSequence country = countryText.getText().length() == 0 ? "country" : countryText.getText();
         return city + " " + country;
     }
+
+    @Override
+    public int getMaxCollapsingHeight() {
+        return 350;
+    }
+
     @Override
     public void onClickRoute(View v) {
         switch (v.getId()){

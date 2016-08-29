@@ -21,7 +21,7 @@ public class EditSubwayPresenter extends CommutativePreferencePresenter<EditSubw
     }
 
     public void openEditLineActivity() {
-        commutator.goTo(ActivityOperationResult.AddSubwayLine);
+        commutator.goTo(ActivityOperationResult.EditSubwayLine);
     }
 
     public SubwayView getSubway() {

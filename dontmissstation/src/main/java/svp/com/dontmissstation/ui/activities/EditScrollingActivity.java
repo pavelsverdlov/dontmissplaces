@@ -58,7 +58,7 @@ public abstract class EditScrollingActivity<P extends Presenter> extends AppComp
     }
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-        if(verticalOffset < -350){
+        if(verticalOffset < -getMaxCollapsingHeight()){
             collapsingToolbar.setTitle(getToolbarTitle());
         } else {
             collapsingToolbar.setTitle(" ");
@@ -91,4 +91,6 @@ public abstract class EditScrollingActivity<P extends Presenter> extends AppComp
     protected abstract void onClickRoute(View v);
 
     public abstract String getToolbarTitle();
+
+    public abstract int getMaxCollapsingHeight();
 }
