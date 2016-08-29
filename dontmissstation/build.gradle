@@ -27,5 +27,6 @@ dependencies {
     compile project(':appmap')
 
     compile 'com.github.QuadFlask:colorpicker:0.0.11'
+    compile 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:1.0.1'
 }
 

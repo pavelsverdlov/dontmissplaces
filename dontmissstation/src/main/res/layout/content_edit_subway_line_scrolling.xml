@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fitsSystemWindows="true"
+
+    android:id="@+id/activity_edit_subway_content"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="svp.com.dontmissstation.ui.activities.EditSubwayScrollingActivity"
+    tools:showIn="@layout/activity_edit_subway_scrolling">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text="@string/add_subway_line_stations" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/activity_edit_subway_scrolling_items_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textColor="@color/colorAccent"
+                android:text="(5)" />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/text_gray"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:clickable="true"
+        android:focusable="true"
+        android:id="@+id/actvity_edit_recycle_view"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

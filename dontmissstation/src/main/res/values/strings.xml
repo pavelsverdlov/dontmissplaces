@@ -85,5 +85,7 @@
     <string name="add_subway_line_stations">Stations</string>
 
     <string name="title_activity_edit_subway_scrolling">EditSubwayScrollingActivity</string>
+    <string name="title_activity_edit_subway_line_scrolling">EditSubwayLineScrollingActivity
+    </string>
 
 </resources>

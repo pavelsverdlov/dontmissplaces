@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 import com.svp.infrastructure.mvpvs.commutate.ICommutativeElement;
@@ -18,15 +17,15 @@ import java.util.Vector;
 
 import butterknife.Bind;
 import svp.com.dontmissstation.R;
-import svp.com.dontmissstation.presenters.EditSubwayPresenter;
+import svp.com.dontmissstation.presenters.*;
+import svp.com.dontmissstation.ui.model.StationView;
 import svp.com.dontmissstation.ui.model.SubwayLineView;
-import svp.com.dontmissstation.ui.model.SubwayView;
 
-public class EditSubwayScrollingActivity extends EditScrollingActivity<EditSubwayPresenter> implements ICommutativeElement {
+public class EditSubwayLineScrollingActivity extends EditScrollingActivity<EditSubwayLinePresenter> implements ICommutativeElement {
 
     @Override
     public ActivityOperationItem getOperation() {
-        return ActivityOperationResult.AddNewSubway;
+        return ActivityOperationResult.AddSubwayLine;
     }
 
     @Override
@@ -34,9 +33,9 @@ public class EditSubwayScrollingActivity extends EditScrollingActivity<EditSubwa
         return this;
     }
 
-    public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<EditSubwayScrollingActivity> {
+    public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<EditSubwayLineScrollingActivity> {
 
-        public ViewState(EditSubwayScrollingActivity view) {
+        public ViewState(EditSubwayLineScrollingActivity view) {
             super(view);
         }
 
@@ -57,30 +56,32 @@ public class EditSubwayScrollingActivity extends EditScrollingActivity<EditSubwa
 
     }
 
-    public class SubwayLineRecyclerAdapter extends RecyclerView.Adapter<SubwayLineRecyclerAdapter.ViewHolder> {
+    public class SubwayStationRecyclerAdapter extends RecyclerView.Adapter<SubwayStationRecyclerAdapter.ViewHolder> {
         private final Context context;
-        private final Vector<SubwayLineView> lines;
+        private final Vector<StationView> lines;
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             public ViewHolder(View v) {
                 super(v);
-                ((TextView)v.findViewById(R.id.activity_add_new_subway_line_template_startStation))
-                        .setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
+                v.setOnClickListener(EditSubwayLineScrollingActivity.this);
 
-                            }
-                        });
+//                ((TextView)v.findViewById(R.id.activity_add_new_subway_line_template_startStation))
+//                        .setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//
+//                            }
+//                        });
             }
         }
-        public SubwayLineRecyclerAdapter(Context context, Collection<SubwayLineView> collection) {
+        public SubwayStationRecyclerAdapter(Context context, Collection<StationView> collection) {
             this.context = context;
             lines = new Vector<>(collection);
         }
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.activity_add_new_subway_line_template, parent, false);
+                    .inflate(R.layout.subway_station_template, parent, false);
             ViewHolder vh = new ViewHolder(v);
             return vh;
         }
@@ -94,53 +95,49 @@ public class EditSubwayScrollingActivity extends EditScrollingActivity<EditSubwa
         }
     }
 
-    @Bind(R.id.activity_edit_subway_country_edittext) EditText countryText;
-    @Bind(R.id.activity_edit_subway_city_edittext) EditText cityText;
+    @Bind(R.id.activity_edit_subway_line_name_edittext) EditText lineNameText;
 
-    private SubwayLineRecyclerAdapter linesAdapter;
-    private SubwayView subway;
+    private SubwayLineView line;
+    private SubwayStationRecyclerAdapter linesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_edit_subway_scrolling);
+        setContentView(R.layout.activity_edit_subway_line_scrolling);
         super.onCreate(savedInstanceState);
     }
+
     @Override
-    protected void onAddClick(){
-        getPresenter().openEditLineActivity();
-    }
-    @Override
-    protected void onApplyChangesClick(){
+    protected void onApplyChangesClick() {
 
     }
+
     @Override
-    public String getToolbarTitle(){
-        CharSequence city = cityText.getText().length() == 0 ? "city" : cityText.getText();
-        CharSequence country = countryText.getText().length() == 0 ? "country" : countryText.getText();
-        return city + " " + country;
+    protected void onAddClick() {
+
     }
+
     @Override
-    public void onClickRoute(View v) {
+    protected void onClickRoute(View v) {
         switch (v.getId()){
-            case R.id.activity_edit_add_line_fab:
+            case R.id.station_template_card_view:
+                getPresenter().openEditStationActivity();
                 break;
         }
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+    public String getToolbarTitle() {
+        return lineNameText.getText().length() == 0 ? "Subway line" : lineNameText.getText().toString();
     }
+
 
     @Override
     public void onStart(){
         super.onStart();
-        subway = getPresenter().getSubway();
-        linesAdapter = new SubwayLineRecyclerAdapter(this,subway.getLines());
+        line = getPresenter().getLine();
+        linesAdapter = new SubwayStationRecyclerAdapter(this,line.getStations());
         setAdapter(linesAdapter);
     }
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
+
+
 }

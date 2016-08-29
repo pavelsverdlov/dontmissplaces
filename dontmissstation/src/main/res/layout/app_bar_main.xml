@@ -25,7 +25,7 @@
     <include layout="@layout/mapzoomlayout" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/activity_edit_apply_changes_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

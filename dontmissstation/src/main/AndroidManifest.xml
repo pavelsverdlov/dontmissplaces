@@ -42,24 +42,6 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".ui.activities.AddNewSubwayActivity"
-            android:label="@string/title_activity_add_new_subway"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="svp.com.dontmissstation.MainActivity" />
-        </activity>
-        <activity
-            android:name=".ui.activities.AddSubwayLineActivity"
-            android:label="@string/title_activity_add_subway_line"
-            android:parentActivityName=".ui.activities.AddNewSubwayActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.AddNewSubwayActivity" />
-        </activity>
-        <activity
             android:name=".ui.activities.EditSubwayScrollingActivity"
             android:label="@string/title_activity_edit_subway_scrolling"
             android:parentActivityName=".MainActivity"
@@ -67,6 +49,15 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="svp.com.dontmissstation.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ui.activities.EditSubwayLineScrollingActivity"
+            android:label="@string/title_activity_edit_subway_line_scrolling"
+            android:parentActivityName=".ui.activities.EditSubwayScrollingActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="svp.com.dontmissstation.ui.activities.EditSubwayScrollingActivity" />
         </activity>
     </application>
 

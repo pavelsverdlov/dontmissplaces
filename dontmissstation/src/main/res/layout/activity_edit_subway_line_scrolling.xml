@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:id="@+id/activity_edit_subway_main_layout"
-    tools:context="svp.com.dontmissstation.ui.activities.EditSubwayScrollingActivity">
+    tools:context="svp.com.dontmissstation.ui.activities.EditSubwayLineScrollingActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -34,30 +32,41 @@
                 android:orientation="vertical"
                 android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax">
-                <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/label_country"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/add_subway_city_country" />
-
-                <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/activity_edit_subway_country_edittext"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:labelFor="@id/label_country"/>
 
                 <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/label_city"
+                    android:id="@+id/label_line_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/android_standard_list_item_padding"
-                    android:text="@string/add_subway_city_name" />
+                    android:text="@string/add_subway_line_name" />
 
                 <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/activity_edit_subway_city_edittext"
+                    android:id="@+id/activity_edit_subway_line_name_edittext"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:labelFor="@id/label_city" />
+                    android:labelFor="@id/label_line_name"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="@dimen/android_standard_list_item_padding">
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/add_subway_line_color" />
+
+                    <Button
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
+                        android:layout_weight="1"
+                        android:layout_width="50dp"
+                        android:layout_height="20dp"
+                        android:background="@color/colorAccent"
+                        />
+                </LinearLayout>
+
             </LinearLayout>
 
             <android.support.v7.widget.Toolbar
@@ -73,7 +82,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_edit_subway_scrolling" />
+    <include layout="@layout/content_edit_subway_line_scrolling" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/activity_edit_apply_changes_fab"

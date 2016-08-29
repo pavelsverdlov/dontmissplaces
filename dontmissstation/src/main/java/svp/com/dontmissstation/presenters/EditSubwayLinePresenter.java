@@ -5,11 +5,11 @@ import android.content.Intent;
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 
 import svp.com.dontmissstation.db.Repository;
-import svp.com.dontmissstation.ui.activities.AddSubwayLineActivity;
+import svp.com.dontmissstation.ui.activities.EditSubwayLineScrollingActivity;
 import svp.com.dontmissstation.ui.model.SubwayLineView;
 
-public class AddSubwayLinePresenter extends CommutativePreferencePresenter<AddSubwayLineActivity,AddSubwayLineActivity.ViewState> {
-    public AddSubwayLinePresenter(Repository repository) {
+public class EditSubwayLinePresenter extends CommutativePreferencePresenter<EditSubwayLineScrollingActivity,EditSubwayLineScrollingActivity.ViewState> {
+    public EditSubwayLinePresenter(Repository repository) {
         super();
     }
 
@@ -20,5 +20,9 @@ public class AddSubwayLinePresenter extends CommutativePreferencePresenter<AddSu
 
     public SubwayLineView getLine() {
         return new SubwayLineView();
+    }
+
+    public void openEditStationActivity() {
+
     }
 }

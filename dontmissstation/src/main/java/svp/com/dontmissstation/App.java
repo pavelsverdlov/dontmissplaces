@@ -27,7 +27,7 @@ public class App extends Application {
 
         ActivityCommutator.register(ActivityOperationResult.Main, MainActivity.class);
         ActivityCommutator.register(ActivityOperationResult.AddNewSubway, EditSubwayScrollingActivity.class);
-        ActivityCommutator.register(ActivityOperationResult.AddSubwayLine, AddSubwayLineActivity.class);
+        ActivityCommutator.register(ActivityOperationResult.AddSubwayLine, EditSubwayLineScrollingActivity.class);
 
         Registrator.register(MainActivity.class,
                 new PresenterContainer.IPresenterCreator() {
@@ -47,7 +47,7 @@ public class App extends Application {
                 new PresenterContainer.IPresenterCreator() {
                     @Override
                     public IPresenter create() {
-                        return new AddNewSubwayPresenter(repository);
+                        return new EditSubwayPresenter(repository);
                     }
                 },
                 new ViewStateContainer.IViewStateCreator<EditSubwayScrollingActivity>() {
@@ -57,17 +57,17 @@ public class App extends Application {
                     }
                 });
 
-        Registrator.register(AddSubwayLineActivity.class,
+        Registrator.register(EditSubwayLineScrollingActivity.class,
                 new PresenterContainer.IPresenterCreator() {
                     @Override
                     public IPresenter create() {
-                        return new AddSubwayLinePresenter(repository);
+                        return new EditSubwayLinePresenter(repository);
                     }
                 },
-                new ViewStateContainer.IViewStateCreator<AddSubwayLineActivity>() {
+                new ViewStateContainer.IViewStateCreator<EditSubwayLineScrollingActivity>() {
                     @Override
-                    public IViewState create(AddSubwayLineActivity view) {
-                        return new AddSubwayLineActivity.ViewState(view);
+                    public IViewState create(EditSubwayLineScrollingActivity view) {
+                        return new EditSubwayLineScrollingActivity.ViewState(view);
                     }
                 });
 
