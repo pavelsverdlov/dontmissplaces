@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.svp.infrastructure.common.ViewExtensions;
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 import com.svp.infrastructure.mvpvs.commutate.ICommutativeElement;
 
@@ -62,15 +63,28 @@ public class EditSubwayScrollingActivity extends EditScrollingActivity<EditSubwa
         private final Vector<SubwayLineView> lines;
 
         public class ViewHolder extends RecyclerView.ViewHolder {
+            private final TextView endStation;
+            private final TextView startStation;
+            private final TextView lineName;
+            private int position;
             public ViewHolder(View v) {
                 super(v);
-                ((TextView)v.findViewById(R.id.activity_add_new_subway_line_template_startStation))
-                        .setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
+                startStation = ViewExtensions.findViewById(v,R.id.activity_add_new_subway_line_template_startStation);
+                endStation = ViewExtensions.findViewById(v,R.id.activity_add_new_subway_line_template_endStation);
+                lineName = ViewExtensions.findViewById(v,R.id.activity_add_new_subway_line_template_line_name);
+            }
 
-                            }
-                        });
+            public void bind(int position) {
+                this.position = position;
+                SubwayLineView line = lines.get(position);
+                startStation.setText(line.getStartStation().getName());
+                startStation.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        EditSubwayScrollingActivity.this.getPresenter()
+                                .openEditLineActivity(new SubwayLineView());
+                    }
+                });
             }
         }
         public SubwayLineRecyclerAdapter(Context context, Collection<SubwayLineView> collection) {
@@ -86,6 +100,7 @@ public class EditSubwayScrollingActivity extends EditScrollingActivity<EditSubwa
         }
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
+            holder.bind(position);
 //            holder.mTextView.setText(mDataset[position]);
         }
         @Override
@@ -107,7 +122,7 @@ public class EditSubwayScrollingActivity extends EditScrollingActivity<EditSubwa
     }
     @Override
     protected void onAddClick(){
-        getPresenter().openEditLineActivity();
+        getPresenter().openEditLineActivity(new SubwayLineView());
     }
     @Override
     protected void onApplyChangesClick(){
@@ -149,4 +164,6 @@ public class EditSubwayScrollingActivity extends EditScrollingActivity<EditSubwa
     protected void onDestroy() {
         super.onDestroy();
     }
+
+
 }

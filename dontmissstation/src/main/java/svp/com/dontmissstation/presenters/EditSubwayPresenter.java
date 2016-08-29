@@ -6,6 +6,7 @@ import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 
 import svp.com.dontmissstation.db.Repository;
 import svp.com.dontmissstation.ui.activities.*;
+import svp.com.dontmissstation.ui.model.SubwayLineView;
 import svp.com.dontmissstation.ui.model.SubwayView;
 
 public class EditSubwayPresenter extends CommutativePreferencePresenter<EditSubwayScrollingActivity,EditSubwayScrollingActivity.ViewState> {
@@ -20,7 +21,7 @@ public class EditSubwayPresenter extends CommutativePreferencePresenter<EditSubw
 
     }
 
-    public void openEditLineActivity() {
+    public void openEditLineActivity(SubwayLineView subwayLineView) {
         commutator.goTo(ActivityOperationResult.EditSubwayLine);
     }
 

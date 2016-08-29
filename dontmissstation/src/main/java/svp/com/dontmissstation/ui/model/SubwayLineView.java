@@ -27,4 +27,8 @@ public class SubwayLineView {
 
         return st;
     }
+
+    public StationView getStartStation() {
+        return new StationView();
+    }
 }
