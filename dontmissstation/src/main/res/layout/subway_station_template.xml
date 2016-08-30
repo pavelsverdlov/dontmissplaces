@@ -19,7 +19,7 @@
 
         <TextView
             android:layout_marginStart="@dimen/android_standard_list_item_padding"
-            android:id="@+id/activity_add_new_subway_line_template_startStation"
+            android:id="@+id/activity_add_new_subway_station_name_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_medium_btn"

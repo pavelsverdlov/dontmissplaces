@@ -8,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
+import com.svp.infrastructure.common.ViewExtensions;
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 import com.svp.infrastructure.mvpvs.commutate.ICommutativeElement;
 
@@ -58,25 +60,34 @@ public class EditSubwayLineScrollingActivity extends EditScrollingActivity<EditS
 
     public class SubwayStationRecyclerAdapter extends RecyclerView.Adapter<SubwayStationRecyclerAdapter.ViewHolder> {
         private final Context context;
-        private final Vector<StationView> lines;
+        private final Vector<StationView> stations;
 
         public class ViewHolder extends RecyclerView.ViewHolder {
+            private final TextView name;
+            private int position;
+
             public ViewHolder(View v) {
                 super(v);
-                v.setOnClickListener(EditSubwayLineScrollingActivity.this);
+                name = ViewExtensions.findViewById(v,R.id.activity_add_new_subway_station_name_textview);
+            }
 
-//                ((TextView)v.findViewById(R.id.activity_add_new_subway_line_template_startStation))
-//                        .setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//
-//                            }
-//                        });
+            public void bind(int p) {
+                this.position = p;
+                StationView station = stations.get(position);
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        EditSubwayLineScrollingActivity.this
+                                .getPresenter().openEditStationActivity(stations.get(position));
+                    }
+                });
+
+                name.setText(station.getName());
             }
         }
         public SubwayStationRecyclerAdapter(Context context, Collection<StationView> collection) {
             this.context = context;
-            lines = new Vector<>(collection);
+            stations = new Vector<>(collection);
         }
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -87,11 +98,11 @@ public class EditSubwayLineScrollingActivity extends EditScrollingActivity<EditS
         }
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-//            holder.mTextView.setText(mDataset[position]);
+            holder.bind(position);
         }
         @Override
         public int getItemCount() {
-            return lines.size();
+            return stations.size();
         }
     }
 
@@ -118,11 +129,7 @@ public class EditSubwayLineScrollingActivity extends EditScrollingActivity<EditS
 
     @Override
     protected void onClickRoute(View v) {
-        switch (v.getId()){
-            case R.id.station_template_card_view:
-                getPresenter().openEditStationActivity();
-                break;
-        }
+
     }
 
     @Override

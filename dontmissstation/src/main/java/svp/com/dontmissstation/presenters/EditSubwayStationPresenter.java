@@ -19,6 +19,6 @@ public class EditSubwayStationPresenter extends CommutativePreferencePresenter<E
     }
 
     public StationView getStation() {
-        return new StationView();
+        return null;
     }
 }

@@ -6,27 +6,45 @@ import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 
 import svp.com.dontmissstation.db.Repository;
 import svp.com.dontmissstation.ui.activities.*;
+import svp.com.dontmissstation.ui.model.StationView;
 import svp.com.dontmissstation.ui.model.SubwayLineView;
 import svp.com.dontmissstation.ui.model.SubwayView;
 
 public class EditSubwayPresenter extends CommutativePreferencePresenter<EditSubwayScrollingActivity,EditSubwayScrollingActivity.ViewState> {
-
+    private final Repository repository;
+    private SubwayView subway;
 
     public EditSubwayPresenter(Repository repository) {
-
+        this.repository = repository;
     }
 
     @Override
     protected void incomingResultFrom(ActivityOperationItem from, Intent data) {
-
+        initSubway(data);
+    }
+    @Override
+    protected void onAttachedView(EditSubwayScrollingActivity view,  Intent intent){
+        super.onAttachedView(view,intent);
+        initSubway(intent);
     }
 
-    public void openEditLineActivity(SubwayLineView subwayLineView) {
-        commutator.goTo(ActivityOperationResult.EditSubwayLine);
+    public void openEditLineActivity(SubwayLineView line) {
+        SubwayBundleProvider bundle = new SubwayBundleProvider();
+        commutator.goTo(ActivityOperationResult.EditSubwayLine,bundle.putLineId(line.getId()));
+    }
+    public void openEditStationActivity(StationView station) {
+        SubwayBundleProvider bundle = new SubwayBundleProvider();
+        commutator.goTo(ActivityOperationResult.EditSubwayStation,bundle.putStationId(station.getId()));
     }
 
     public SubwayView getSubway() {
-        return new SubwayView();
+        return subway;
+    }
+
+    private void initSubway(Intent data){
+        SubwayBundleProvider bundle = new SubwayBundleProvider(data);
+        long id = bundle.getSubwayId();
+        subway = repository.getSubwayById(id);
     }
 
 //    public void placeSelected(SavedPlacesActivity.SavePlaceView item) {

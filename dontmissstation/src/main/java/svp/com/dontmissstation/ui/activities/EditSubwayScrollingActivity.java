@@ -74,15 +74,28 @@ public class EditSubwayScrollingActivity extends EditScrollingActivity<EditSubwa
                 lineName = ViewExtensions.findViewById(v,R.id.activity_add_new_subway_line_template_line_name);
             }
 
-            public void bind(int position) {
-                this.position = position;
+            public void bind(int p) {
+                this.position = p;
                 SubwayLineView line = lines.get(position);
+
+                lineName.setText(line.getName());
+                lineName.setBackgroundColor(line.getColor());
+
                 startStation.setText(line.getStartStation().getName());
                 startStation.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         EditSubwayScrollingActivity.this.getPresenter()
-                                .openEditLineActivity(new SubwayLineView());
+                                .openEditStationActivity(lines.get(position).getStartStation());
+                    }
+                });
+
+                endStation.setText(line.getEndStation().getName());
+                endStation.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        EditSubwayScrollingActivity.this.getPresenter()
+                                .openEditStationActivity(lines.get(position).getEndStation());
                     }
                 });
             }
@@ -101,7 +114,6 @@ public class EditSubwayScrollingActivity extends EditScrollingActivity<EditSubwa
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             holder.bind(position);
-//            holder.mTextView.setText(mDataset[position]);
         }
         @Override
         public int getItemCount() {
@@ -122,7 +134,7 @@ public class EditSubwayScrollingActivity extends EditScrollingActivity<EditSubwa
     }
     @Override
     protected void onAddClick(){
-        getPresenter().openEditLineActivity(new SubwayLineView());
+        getPresenter().openEditLineActivity(null);
     }
     @Override
     protected void onApplyChangesClick(){
