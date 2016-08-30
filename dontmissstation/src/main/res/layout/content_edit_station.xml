@@ -26,4 +26,10 @@
         android:labelFor="@id/label_line_name"
         />
 
+    <Spinner
+        android:id="@+id/activity_edit_subway_station_lines"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
 </LinearLayout>
