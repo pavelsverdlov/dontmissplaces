@@ -42,7 +42,7 @@ public class SavedPlacesPresenter extends CommutativePresenter<SavedPlacesActivi
 
     @Override
     protected void incomingResultFrom(ActivityOperationItem from, Intent data) {
-
+        //activity_list_subways_recyclerView
     }
 
     public Cursor getSavedPlace() {

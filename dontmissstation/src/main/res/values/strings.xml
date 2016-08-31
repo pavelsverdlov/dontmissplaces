@@ -89,11 +89,14 @@
         Add subway station
     -->
     <string name="add_subway_station_name">Name*</string>
+    <string name="add_subway_station_longitude">Longitude*</string>
+    <string name="add_subway_station_latitude">Latitude*</string>
 
 
     <string name="title_activity_edit_subway_scrolling">EditSubwayScrollingActivity</string>
     <string name="title_activity_edit_subway_line_scrolling">EditSubwayLineScrollingActivity
     </string>
     <string name="title_activity_edit_station">EditStationActivity</string>
+    <string name="title_activity_list_subways">ListSubwaysActivity</string>
 
 </resources>

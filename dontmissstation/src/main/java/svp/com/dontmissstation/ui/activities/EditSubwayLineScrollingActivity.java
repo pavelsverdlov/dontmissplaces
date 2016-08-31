@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -20,7 +21,7 @@ import java.util.Vector;
 import butterknife.Bind;
 import svp.com.dontmissstation.R;
 import svp.com.dontmissstation.presenters.*;
-import svp.com.dontmissstation.ui.model.StationView;
+import svp.com.dontmissstation.ui.model.SubwayStationView;
 import svp.com.dontmissstation.ui.model.SubwayLineView;
 
 public class EditSubwayLineScrollingActivity extends EditScrollingActivity<EditSubwayLinePresenter> implements ICommutativeElement {
@@ -60,20 +61,22 @@ public class EditSubwayLineScrollingActivity extends EditScrollingActivity<EditS
 
     public class SubwayStationRecyclerAdapter extends RecyclerView.Adapter<SubwayStationRecyclerAdapter.ViewHolder> {
         private final Context context;
-        private final Vector<StationView> stations;
+        private final Vector<SubwayStationView> stations;
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             private final TextView name;
+            private final TextView lineView;
             private int position;
 
             public ViewHolder(View v) {
                 super(v);
                 name = ViewExtensions.findViewById(v,R.id.activity_add_new_subway_station_name_textview);
+                lineView = ViewExtensions.findViewById(v,R.id.activity_add_new_subway_line_template_line_name);
             }
 
             public void bind(int p) {
                 this.position = p;
-                StationView station = stations.get(position);
+                SubwayStationView station = stations.get(position);
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -83,9 +86,12 @@ public class EditSubwayLineScrollingActivity extends EditScrollingActivity<EditS
                 });
 
                 name.setText(station.getName());
+
+                lineView.setText(EditSubwayLineScrollingActivity.this.line.getName());
+                lineView.setBackgroundColor(EditSubwayLineScrollingActivity.this.line.getColor());
             }
         }
-        public SubwayStationRecyclerAdapter(Context context, Collection<StationView> collection) {
+        public SubwayStationRecyclerAdapter(Context context, Collection<SubwayStationView> collection) {
             this.context = context;
             stations = new Vector<>(collection);
         }
@@ -107,6 +113,7 @@ public class EditSubwayLineScrollingActivity extends EditScrollingActivity<EditS
     }
 
     @Bind(R.id.activity_edit_subway_line_name_edittext) EditText lineNameText;
+    @Bind(R.id.activity_edit_subway_line_change_color_dtn) Button changeColorBtn;
 
     private SubwayLineView line;
     private SubwayStationRecyclerAdapter linesAdapter;
@@ -149,6 +156,9 @@ public class EditSubwayLineScrollingActivity extends EditScrollingActivity<EditS
         line = getPresenter().getLine();
         linesAdapter = new SubwayStationRecyclerAdapter(this,line.getStations());
         setAdapter(linesAdapter);
+
+        lineNameText.setText(line.getName());
+        changeColorBtn.setBackgroundColor(line.getColor());
     }
 
 

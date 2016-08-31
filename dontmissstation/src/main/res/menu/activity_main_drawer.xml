@@ -3,9 +3,9 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/main_activity_drawer_add_subways"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Cities" />
+            android:title="Subways" />
         <item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/ic_menu_gallery"

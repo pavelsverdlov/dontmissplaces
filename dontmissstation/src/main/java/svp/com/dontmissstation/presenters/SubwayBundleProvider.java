@@ -40,4 +40,8 @@ public class SubwayBundleProvider extends BundleProvider {
     public long getSubwayLineId() {
         return bundle.getLong(LINE_ID_KEY);
     }
+
+    public long getSubwayStationId() {
+        return bundle.getLong(STATION_ID_KEY);
+    }
 }

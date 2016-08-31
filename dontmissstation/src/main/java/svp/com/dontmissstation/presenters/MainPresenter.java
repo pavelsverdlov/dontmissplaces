@@ -58,4 +58,8 @@ public class MainPresenter extends CommutativePreferencePresenter<MainActivity,M
     public void openAddNewSubway() {
         commutator.goTo(ActivityOperationResult.EditNewSubway);
     }
+
+    public void openListSubwaysActivity() {
+        
+    }
 }

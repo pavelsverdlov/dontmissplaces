@@ -62,6 +62,10 @@
         <activity
             android:name=".ui.activities.EditSubwayStationActivity"
             android:label="@string/title_activity_edit_station"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.activities.ListSubwaysActivity"
+            android:label="@string/title_activity_list_subways"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

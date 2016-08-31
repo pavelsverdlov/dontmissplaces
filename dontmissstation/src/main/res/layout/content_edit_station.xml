@@ -23,13 +23,47 @@
         android:id="@+id/activity_edit_subway_station_name_edittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:labelFor="@id/label_line_name"
+        android:labelFor="@id/label_station_name"
         />
 
     <Spinner
         android:id="@+id/activity_edit_subway_station_lines"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/label_station_latitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/add_subway_station_latitude" />
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/activity_edit_subway_station_latitude_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:labelFor="@id/label_station_latitude"
+        />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/label_station_longitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/add_subway_station_longitude" />
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/activity_edit_subway_station_longitude_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:labelFor="@id/label_station_longitude"
+        />
+    <Button
+        android:id="@+id/activity_edit_subway_station_pick_point_btn"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_gravity="end"
+        android:textColor="@color/text_white"
+        android:text="Pick on map"
+        android:background="@color/colorAccent"/>
+
 
 </LinearLayout>

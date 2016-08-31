@@ -6,7 +6,7 @@ import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 
 import svp.com.dontmissstation.db.Repository;
 import svp.com.dontmissstation.ui.activities.*;
-import svp.com.dontmissstation.ui.model.StationView;
+import svp.com.dontmissstation.ui.model.SubwayStationView;
 import svp.com.dontmissstation.ui.model.SubwayLineView;
 import svp.com.dontmissstation.ui.model.SubwayView;
 
@@ -32,7 +32,7 @@ public class EditSubwayPresenter extends CommutativePreferencePresenter<EditSubw
         SubwayBundleProvider bundle = new SubwayBundleProvider();
         commutator.goTo(ActivityOperationResult.EditSubwayLine,bundle.putLineId(line.getId()));
     }
-    public void openEditStationActivity(StationView station) {
+    public void openEditStationActivity(SubwayStationView station) {
         SubwayBundleProvider bundle = new SubwayBundleProvider();
         commutator.goTo(ActivityOperationResult.EditSubwayStation,bundle.putStationId(station.getId()));
     }

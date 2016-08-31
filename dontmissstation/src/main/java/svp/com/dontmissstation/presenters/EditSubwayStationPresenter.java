@@ -4,21 +4,44 @@ import android.content.Intent;
 
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 
+import java.util.Collection;
+import java.util.Vector;
+
 import svp.com.dontmissstation.db.Repository;
 import svp.com.dontmissstation.ui.activities.EditSubwayStationActivity;
-import svp.com.dontmissstation.ui.model.StationView;
+import svp.com.dontmissstation.ui.model.SubwayStationView;
+import svp.com.dontmissstation.ui.model.SubwayLineView;
 
 public class EditSubwayStationPresenter extends CommutativePreferencePresenter<EditSubwayStationActivity,EditSubwayStationActivity.ViewState> {
-    public EditSubwayStationPresenter(Repository repository) {
+    private final Repository repository;
+    private SubwayStationView station;
 
+    public EditSubwayStationPresenter(Repository repository) {
+        this.repository = repository;
     }
 
     @Override
     protected void incomingResultFrom(ActivityOperationItem from, Intent data) {
-
+        init(data);
     }
 
-    public StationView getStation() {
-        return null;
+    @Override
+    protected void onAttachedView(EditSubwayStationActivity view,  Intent intent){
+        super.onAttachedView(view,intent);
+        init(intent);
+    }
+
+    public SubwayStationView getStation() {
+        return station;
+    }
+
+    public Collection<SubwayLineView> getAvailableLines() {
+        return repository.getSubwayLinesBySubwayId(station.getOwnSubwayId());
+    }
+
+    private void init(Intent intent){
+        SubwayBundleProvider bundle = new SubwayBundleProvider(intent);
+        long id = bundle.getSubwayStationId();
+        station = repository.getSubwayStationById(id);
     }
 }

@@ -5,4 +5,5 @@
 
     <dimen name="text_size_medium">20sp</dimen>
     <dimen name="text_size_medium_btn">14sp</dimen>
+    <dimen name="text_size_medium_btn_12sp">12sp</dimen>
 </resources>

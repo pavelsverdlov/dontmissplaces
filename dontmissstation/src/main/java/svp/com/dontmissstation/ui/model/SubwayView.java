@@ -4,13 +4,20 @@ import java.util.Collection;
 import java.util.Vector;
 
 public class SubwayView {
+    private final String country;
+    private final String city;
     Vector<SubwayLineView> lines = new Vector<>();
 
+    public SubwayView(String country, String city) {
+        this.country = country;
+        this.city = city;
+    }
+
     public String getCity(){
-        return null;
+        return city;
     }
     public String getCountry(){
-        return null;
+        return country;
     }
 
     public Collection<SubwayLineView> getLines() {

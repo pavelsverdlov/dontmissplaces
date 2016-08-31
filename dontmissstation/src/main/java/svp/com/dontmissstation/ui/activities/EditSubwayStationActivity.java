@@ -7,8 +7,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 import com.svp.infrastructure.mvpvs.commutate.ICommutativeElement;
 import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
@@ -19,11 +24,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import svp.com.dontmissstation.R;
 import svp.com.dontmissstation.presenters.EditSubwayStationPresenter;
-import svp.com.dontmissstation.ui.model.StationView;
+import svp.com.dontmissstation.ui.model.SubwayStationView;
+import svp.com.dontmissstation.ui.model.SubwayLineView;
 
-public class EditSubwayStationActivity extends AppCompatActivityView<EditSubwayStationPresenter> implements ICommutativeElement {
-
-
+public class EditSubwayStationActivity extends AppCompatActivityView<EditSubwayStationPresenter> implements ICommutativeElement, View.OnClickListener {
 
     @Override
     public ActivityOperationItem getOperation() {
@@ -58,8 +62,12 @@ public class EditSubwayStationActivity extends AppCompatActivityView<EditSubwayS
     }
 
     @Bind(R.id.activity_edit_subway_station_lines) Spinner linesSpinner;
+    @Bind(R.id.activity_edit_subway_station_name_edittext) TextView nameView;
+//    activity_edit_subway_station_latitude_edittext
+//    activity_edit_subway_station_longitude_edittext
+    @Bind(R.id.activity_edit_subway_station_pick_point_btn) Button pickPointBtn;
 
-    private StationView station;
+    private SubwayStationView station;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,19 +87,29 @@ public class EditSubwayStationActivity extends AppCompatActivityView<EditSubwayS
                         .setAction("Action", null).show();
             }
         });
+        pickPointBtn.setOnClickListener(this);
+    }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.activity_edit_subway_station_pick_point_btn:
+
+                break;
+        }
     }
 
     @Override
     public void onStart(){
         super.onStart();
         station = getPresenter().getStation();
+
+        nameView.setText(station.getName());
+
         Vector<String> lines = new Vector<String>();
-        lines.add("U1");
-        lines.add("U2");
-        lines.add("U3");
-        // Specify the layout to use when the list of choices appears
-//        linesSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        linesSpinner.setAdapter(new ArrayAdapter<String>(this,0,lines));
+        for (SubwayLineView line : getPresenter().getAvailableLines()) {
+            lines.add(line.getName());
+        }
+        linesSpinner.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,lines));
     }
 }

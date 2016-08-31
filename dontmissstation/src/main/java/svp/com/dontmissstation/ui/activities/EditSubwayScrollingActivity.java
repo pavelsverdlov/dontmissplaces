@@ -3,6 +3,7 @@ package svp.com.dontmissstation.ui.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,12 +67,14 @@ public class EditSubwayScrollingActivity extends EditScrollingActivity<EditSubwa
             private final TextView endStation;
             private final TextView startStation;
             private final TextView lineName;
+            private final CardView lineView;
             private int position;
             public ViewHolder(View v) {
                 super(v);
                 startStation = ViewExtensions.findViewById(v,R.id.activity_add_new_subway_line_template_startStation);
                 endStation = ViewExtensions.findViewById(v,R.id.activity_add_new_subway_line_template_endStation);
                 lineName = ViewExtensions.findViewById(v,R.id.activity_add_new_subway_line_template_line_name);
+                lineView = ViewExtensions.findViewById(v,R.id.activity_add_new_subway_line_cardview);
             }
 
             public void bind(int p) {
@@ -96,6 +99,14 @@ public class EditSubwayScrollingActivity extends EditScrollingActivity<EditSubwa
                     public void onClick(View v) {
                         EditSubwayScrollingActivity.this.getPresenter()
                                 .openEditStationActivity(lines.get(position).getEndStation());
+                    }
+                });
+
+                lineView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        EditSubwayScrollingActivity.this.getPresenter()
+                                .openEditLineActivity(lines.get(position));
                     }
                 });
             }

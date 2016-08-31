@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.Vector;
 
 public class SubwayLineView extends SubwayElement{
-    private final Vector<StationView> stations;
+    private final Vector<SubwayStationView> stations;
     private String name;
     private int color;
 
@@ -22,18 +22,18 @@ public class SubwayLineView extends SubwayElement{
     }
     public int getColor(){ return color;  }
 
-    public Collection<StationView> getStations() {
+    public Collection<SubwayStationView> getStations() {
         return stations;
     }
-    public void addStation(StationView station){
+    public void addStation(SubwayStationView station){
         stations.add(station);
     }
 
-    public StationView getStartStation() {
+    public SubwayStationView getStartStation() {
         return stations.get(0);
     }
 
-    public StationView getEndStation() {
+    public SubwayStationView getEndStation() {
         return stations.get(stations.size()-1);
     }
 
