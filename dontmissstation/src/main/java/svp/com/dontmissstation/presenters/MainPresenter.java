@@ -12,20 +12,25 @@ import svp.app.map.android.gps.IGPSProvider;
 import svp.com.dontmissstation.MainActivity;
 import svp.com.dontmissstation.db.Repository;
 import svp.com.dontmissstation.ui.activities.ActivityOperationResult;
+import svp.com.dontmissstation.ui.model.SubwayView;
 
 public class MainPresenter extends CommutativePreferencePresenter<MainActivity,MainActivity.ViewState> {
 
     private static final String TAG = "";
+    private final Repository repository;
     public IGPSProvider gps;
 
     public MainPresenter(Repository repository) {
 
+        this.repository = repository;
     }
 
 
     @Override
     protected void incomingResultFrom(ActivityOperationItem from, Intent data) {
+        if(ActivityOperationResult.ListSubways.is(from)){
 
+        }
     }
 
     @Override
@@ -43,6 +48,10 @@ public class MainPresenter extends CommutativePreferencePresenter<MainActivity,M
                 }
             });
             gps = gpsp;
+
+            SubwayBundleProvider bundle = new SubwayBundleProvider(intent);
+            long id = bundle.getSubwayId();
+            SubwayView subway = repository.getSubwayById(id);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -60,6 +69,6 @@ public class MainPresenter extends CommutativePreferencePresenter<MainActivity,M
     }
 
     public void openListSubwaysActivity() {
-        
+        commutator.goTo(ActivityOperationResult.ListSubways);
     }
 }

@@ -17,7 +17,7 @@ public class Repository {
     private final SubwayView subway;
 
     public Repository(Context app) {
-        subway = new SubwayView("Austria","Viena");
+        subway = new SubwayView(1,"Austria","Vienna");
         subway.addLine(create(0,UUID.randomUUID().toString().substring(0,1), "#009688"));
         subway.addLine(create(1,UUID.randomUUID().toString().substring(0,1), "#4CAF50"));
         subway.addLine(create(2,UUID.randomUUID().toString().substring(0,1), "#CDDC39"));
@@ -70,5 +70,11 @@ public class Repository {
 
     public Collection<SubwayLineView> getSubwayLinesBySubwayId(long subwayId) {
         return subway.getLines();
+    }
+
+    public Vector<SubwayView> getSubways() {
+        Vector<SubwayView> s = new Vector<>();
+        s.add(subway);
+        return s;
     }
 }

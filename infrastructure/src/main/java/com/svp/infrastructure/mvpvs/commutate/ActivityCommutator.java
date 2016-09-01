@@ -22,8 +22,12 @@ public class ActivityCommutator {
             bundleProvider.putInto(intent);
         }
 
+        if(activity.getParent() != null){
+            activity.getParent().setResult(element.getOperation().toInt(),intent);
+        }
         activity.setResult(element.getOperation().toInt(),intent);
         activity.finish();
+//        activity.onBackPressed();
     }
 
     protected static final HashMap<ActivityOperationItem,Class<?>> activities;

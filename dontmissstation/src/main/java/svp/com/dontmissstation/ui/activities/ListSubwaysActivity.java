@@ -3,15 +3,16 @@ package svp.com.dontmissstation.ui.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.svp.infrastructure.common.ViewExtensions;
@@ -21,22 +22,25 @@ import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 import com.svp.infrastructure.mvpvs.commutate.ICommutativeElement;
 import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
 
+import java.util.Collection;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import svp.com.dontmissstation.R;
 import svp.com.dontmissstation.presenters.ListSubwaysPresenter;
 import svp.com.dontmissstation.ui.RecyclerViewEx;
+import svp.com.dontmissstation.ui.model.SubwayLineView;
 import svp.com.dontmissstation.ui.model.SubwayView;
 
 public class ListSubwaysActivity extends AppCompatActivityView<ListSubwaysPresenter> implements ICommutativeElement {
     @Override
     public ActivityOperationItem getOperation() {
-        return null;
+        return ActivityOperationResult.ListSubways;
     }
 
     @Override
     public Activity getActivity() {
-        return null;
+        return this;
     }
 
     public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<ListSubwaysActivity> {
@@ -83,13 +87,13 @@ public class ListSubwaysActivity extends AppCompatActivityView<ListSubwaysPresen
         }
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            cursorAdapter.getCursor().moveToPosition(position);
+           // cursorAdapter.getCursor().moveToPosition(position);
             cursorAdapter.bindView(holder.itemView, context, cursorAdapter.getCursor());
 
         }
         @Override
         public int getItemCount() {
-            return cursorAdapter.getCount();
+            return 1;//cursorAdapter.getCount();
         }
     }
     public class SavedPlacesCursorAdapter extends BaseCursorAdapter<SubwayCursorView> {
@@ -99,12 +103,12 @@ public class ListSubwaysActivity extends AppCompatActivityView<ListSubwaysPresen
 
         @Override
         public ICursorParcelable createParcelableObject() {
-            return new SubwayCursorView();
+            return new SubwayCursorView(ListSubwaysActivity.this.getPresenter().getSubways().get(0));
         }
 
         @Override
         public View getView(LayoutInflater inflater, ViewGroup parent) {
-            return inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+            return inflater.inflate(R.layout.activity_list_subways_subway_item_template, parent, false);
         }
 
         @Override
@@ -113,20 +117,46 @@ public class ListSubwaysActivity extends AppCompatActivityView<ListSubwaysPresen
         }
     }
     public static class SubwayCursorView implements ICursorParcelable {
+        private final SubwayView subway;
         private TextView title;
-        @Override
+        private LinearLayout linesLayout;
+        private View view;
+
+        public SubwayCursorView(SubwayView subwayView) {
+            this.subway = subwayView;
+        }
+
         public void parse(Cursor cursor) {
          //   this.update(new Place(cursor));
-            title.setText("11");
+            title.setText(subway.getCity() + " " + subway.getCountry());
+
+            for (SubwayLineView line : subway.getLines()) {
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                layoutParams.setMarginStart(10);
+                layoutParams.setMarginEnd(10);
+
+                TextView tv = new TextView(view.getContext());
+                tv.setText(line.getName());
+               // tv.setTextColor(line.getColor());
+                tv.setTextSize(16);
+                tv.setPadding(15,5,15,5);
+                tv.setBackgroundColor(line.getColor());
+
+                linesLayout.addView(tv, layoutParams);
+            }
         }
 
         @Override
         public void initView(View view) {
-            title = ViewExtensions.findViewById(view, R.id.text1);
+            this.view = view;
+            title = ViewExtensions.findViewById(view, R.id.activity_list_subways_subway_item_template_subway_name);
+            linesLayout= ViewExtensions.findViewById(view,R.id.activity_list_subways_subway_item_template_subway_lines);
         }
 
         public SubwayView getSubway() {
-            return null;
+            return subway;
         }
     }
 
@@ -156,7 +186,7 @@ public class ListSubwaysActivity extends AppCompatActivityView<ListSubwaysPresen
     @Override
     public void onStart() {
         super.onStart();
-        RecyclerCursorAdapter mAdapter = new RecyclerCursorAdapter(this, getPresenter().getSavedPlace());
+        RecyclerCursorAdapter mAdapter = new RecyclerCursorAdapter(this,null);
         recyclerView.setAdapter(mAdapter);
     }
 

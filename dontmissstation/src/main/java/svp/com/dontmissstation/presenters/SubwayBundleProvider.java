@@ -23,6 +23,11 @@ public class SubwayBundleProvider extends BundleProvider {
         super(b);
     }
 
+    public IBundleProvider putSubwayId(long id) {
+        bundle.putLong(SUBWAY_ID_KEY,id);
+        return this;
+    }
+
     public IBundleProvider putLineId(long id) {
         bundle.putLong(LINE_ID_KEY,id);
         return this;
