@@ -27,7 +27,6 @@ public class ActivityCommutator {
         }
         activity.setResult(element.getOperation().toInt(),intent);
         activity.finish();
-//        activity.onBackPressed();
     }
 
     protected static final HashMap<ActivityOperationItem,Class<?>> activities;

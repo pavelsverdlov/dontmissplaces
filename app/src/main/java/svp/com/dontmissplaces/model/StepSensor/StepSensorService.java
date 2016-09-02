@@ -189,7 +189,7 @@ public class StepSensorService {
                 // Calculate steps taken based on first counter value received.
                 mSteps = (int) event.values[0] - mCounterSteps;
 
-                // Add the number of steps previously taken, otherwise the counter would start at 0.
+                // draw the number of steps previously taken, otherwise the counter would start at 0.
                 // This is needed to keep the counter consistent across rotation changes.
                 mSteps = mSteps + mPreviousCounterSteps;
 

@@ -1,5 +1,6 @@
 package com.svp.infrastructure.mvpvs.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -50,6 +51,12 @@ public class AppCompatActivityView<P extends Presenter> extends AppCompatActivit
     protected void onStop(){
         getPresenter().detachView(this);
         super.onStop();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        getPresenter().onActivityResult(requestCode, resultCode, data);
     }
 
 //    protected final <B extends IBundleProvider> B getBundle(){

@@ -15,6 +15,7 @@ import java.util.UUID;
 import svp.app.map.OnMapClickListener;
 import svp.app.map.OsmdroidMapView;
 import svp.app.map.android.gps.IGPSProvider;
+import svp.app.map.model.IMapPolyline;
 import svp.com.dontmissplaces.R;
 import svp.app.map.model.Point2D;
 import svp.com.dontmissplaces.presenters.MapsPresenter;
@@ -125,9 +126,9 @@ public class DNMPOsmdroidMapView extends View<MapsPresenter> implements IDNMPMap
 //
 //        mapController.setZoom(12);
 //
-//        mapView.getOverlays().add(mapEventsOverlay);
-//        mapView.getOverlays().add(compassOverlay);
-//        mapView.getOverlays().add(poiMarkers);
+//        mapView.getOverlays().draw(mapEventsOverlay);
+//        mapView.getOverlays().draw(compassOverlay);
+//        mapView.getOverlays().draw(poiMarkers);
 //        mapView.invalidate();
 //
 //        fabZoomPlus.setOnClickListener(this);
@@ -207,6 +208,11 @@ public class DNMPOsmdroidMapView extends View<MapsPresenter> implements IDNMPMap
     @Override
     public void removeMarker(UUID id) {
 
+    }
+
+    @Override
+    public IMapPolyline createPolyline() {
+        return null;
     }
 
     @Override

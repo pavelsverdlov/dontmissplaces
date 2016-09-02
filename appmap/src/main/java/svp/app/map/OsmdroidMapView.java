@@ -43,6 +43,7 @@ import java.util.UUID;
 import svp.app.map.android.gps.IGPSProvider;
 import svp.app.map.android.gps.IGPSService;
 import svp.app.map.android.gps.OnLocationChangeListener;
+import svp.app.map.model.IMapPolyline;
 import svp.app.map.model.IPOIView;
 import svp.app.map.model.Point2D;
 public class OsmdroidMapView implements IMapView, MapEventsReceiver, MapListener, android.view.View.OnClickListener {
@@ -146,6 +147,11 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver, MapListener
     @Override
     public void removeMarker(UUID id) {
 
+    }
+
+    @Override
+    public IMapPolyline createPolyline() {
+        return null;
     }
 
 

@@ -24,6 +24,8 @@ import java.util.UUID;
 
 import svp.app.map.IMapView;
 import svp.app.map.OnMapClickListener;
+import svp.app.map.android.GMapPolyline;
+import svp.app.map.model.IMapPolyline;
 import svp.app.map.model.IPOIView;
 import svp.app.map.model.Point2D;
 
@@ -86,7 +88,7 @@ public class GoogleMapView implements IMapView, MapZoomController.IMapZoom, OnMa
 //        });
 //        map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(51.5, -0.1)));
 //        map.addPolyline(new PolylineOptions()
-//                .add(new LatLng(51.5, -0.1), new LatLng(40.7, -74.0))
+//                .draw(new LatLng(51.5, -0.1), new LatLng(40.7, -74.0))
 //                .width(5)
 //                .color(Color.RED));
     }
@@ -159,6 +161,12 @@ public class GoogleMapView implements IMapView, MapZoomController.IMapZoom, OnMa
             markers.get(id).remove();
         }
     }
+
+    @Override
+    public IMapPolyline createPolyline() {
+        return new GMapPolyline(map);
+    }
+
     @Override
     public UUID addMarker(final IPOIView poi, int markerIdResource) {
 //        Handler handler = new Handler();
@@ -185,5 +193,9 @@ public class GoogleMapView implements IMapView, MapZoomController.IMapZoom, OnMa
     @Override
     public float getZoom() {
         return map.getCameraPosition().zoom;
+    }
+
+    public void addLine(){
+
     }
 }

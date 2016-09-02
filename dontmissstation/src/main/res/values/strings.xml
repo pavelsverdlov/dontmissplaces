@@ -67,7 +67,7 @@
     <string name="title_activity_test_maps">Map</string>
 
     <!--
-    Add new subway
+    draw new subway
     -->
     <string name="add_subway_city_country">Country*</string>
     <string name="add_subway_city_name">City*</string>
@@ -77,7 +77,7 @@
     <string name="title_activity_add_subway_line">AddSubwayLineActivity</string>
 
     <!--
-        Add subway line
+        draw subway line
     -->
     <string name="add_subway_line_name">Name*</string>
     <string name="add_subway_line_color">Color</string>
@@ -86,7 +86,7 @@
     <string name="add_subway_line_stations">Stations</string>
 
     <!--
-        Add subway station
+        draw subway station
     -->
     <string name="add_subway_station_name">Name*</string>
     <string name="add_subway_station_longitude">Longitude*</string>

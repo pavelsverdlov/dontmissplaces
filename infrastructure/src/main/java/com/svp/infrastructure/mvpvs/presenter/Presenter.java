@@ -1,6 +1,7 @@
 package com.svp.infrastructure.mvpvs.presenter;
 
 import android.app.Activity;
+import android.content.Intent;
 
 import com.svp.infrastructure.mvpvs.view.IActivityView;
 import com.svp.infrastructure.mvpvs.ViewStateContainer;
@@ -34,5 +35,8 @@ public abstract class Presenter<V extends IActivityView, VS extends IViewState>
     protected void onAttachedView(V view){}
     protected void onDetachedView(V view){}
 
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+
+    }
 
 }

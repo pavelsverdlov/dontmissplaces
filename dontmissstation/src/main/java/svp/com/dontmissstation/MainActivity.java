@@ -22,12 +22,20 @@ import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
 
 import org.osmdroid.util.BoundingBoxE6;
 
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Vector;
+
 import svp.app.map.GoogleMapView;
 import svp.app.map.IMapView;
 import svp.app.map.OnMapClickListener;
+import svp.app.map.model.IMapPolyline;
 import svp.app.map.model.Point2D;
 import svp.com.dontmissstation.presenters.MainPresenter;
 import svp.com.dontmissstation.ui.activities.ActivityOperationResult;
+import svp.com.dontmissstation.ui.model.SubwayLineView;
+import svp.com.dontmissstation.ui.model.SubwayStationView;
+import svp.com.dontmissstation.ui.model.SubwayView;
 
 public class MainActivity extends AppCompatActivityView<MainPresenter>
         implements NavigationView.OnNavigationItemSelectedListener, ICommutativeElement{
@@ -43,9 +51,11 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
     }
 
     public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<MainActivity> {
-
+        SubwayView subwayCache;
+        private Vector<IMapPolyline> polylinesCache;
         public ViewState(MainActivity view) {
             super(view);
+            polylinesCache = new Vector<>();
         }
 
         @Override
@@ -56,6 +66,26 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
         @Override
         public void saveState() {
 
+        }
+
+        public void showSubway(SubwayView subway){
+            this.subwayCache =subway;
+
+            for (SubwayLineView line: subway.getLines()){
+                Iterator<SubwayStationView> stations = line.getStations().iterator();
+                Point2D prev = stations.next().getCoordinate();
+                while (stations.hasNext()){
+                    IMapPolyline pl = view.mapView.createPolyline();
+                    Vector<Point2D> points = new Vector<>();
+                    points.add(prev);
+                    prev = stations.next().getCoordinate();
+                    points.add(prev);
+                    pl.draw(line.getColor(),4,points);
+                    polylinesCache.add(pl);
+
+                }
+
+            }
         }
 
         @Override
@@ -143,7 +173,7 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
         uih.post(new Runnable() {
             @Override
             public void run() {
-                mapView.moveTo(new Point2D(48.859,2.296));
+                mapView.moveTo(new Point2D(48.216667, 16.373333));
             }
         });
 

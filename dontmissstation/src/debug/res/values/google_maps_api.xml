@@ -6,7 +6,7 @@
 
     https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=08:77:B4:80:A1:4C:34:E6:A0:3F:CE:27:22:7C:AA:7D:64:F2:B1:74%3Bsvp.com.dontmissstation.ui.activities
 
-    You can also add your credentials to an existing key, using this line:
+    You can also draw your credentials to an existing key, using this line:
     08:77:B4:80:A1:4C:34:E6:A0:3F:CE:27:22:7C:AA:7D:64:F2:B1:74;svp.com.dontmissstation.ui.activities
 
     Alternatively, follow the directions here:

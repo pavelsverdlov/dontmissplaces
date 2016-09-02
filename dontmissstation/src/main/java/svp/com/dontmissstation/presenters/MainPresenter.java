@@ -19,9 +19,9 @@ public class MainPresenter extends CommutativePreferencePresenter<MainActivity,M
     private static final String TAG = "";
     private final Repository repository;
     public IGPSProvider gps;
+    SubwayView showedSubway;
 
     public MainPresenter(Repository repository) {
-
         this.repository = repository;
     }
 
@@ -29,7 +29,10 @@ public class MainPresenter extends CommutativePreferencePresenter<MainActivity,M
     @Override
     protected void incomingResultFrom(ActivityOperationItem from, Intent data) {
         if(ActivityOperationResult.ListSubways.is(from)){
-
+            SubwayBundleProvider bundle = new SubwayBundleProvider(data);
+            long id = bundle.getSubwayId();
+            showedSubway = repository.getSubwayById(id);
+            state.showSubway(showedSubway);
         }
     }
 
@@ -48,10 +51,6 @@ public class MainPresenter extends CommutativePreferencePresenter<MainActivity,M
                 }
             });
             gps = gpsp;
-
-            SubwayBundleProvider bundle = new SubwayBundleProvider(intent);
-            long id = bundle.getSubwayId();
-            SubwayView subway = repository.getSubwayById(id);
         } catch (Exception e) {
             e.printStackTrace();
         }

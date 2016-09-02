@@ -13,6 +13,7 @@ public abstract class CommutativePresenter
         extends Presenter<V,VS> {
     protected ActivityCommutator commutator;
 
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         if (Activity.RESULT_CANCELED == resultCode) {
             return;

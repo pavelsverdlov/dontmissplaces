@@ -17,6 +17,7 @@ import java.util.UUID;
 
 import svp.app.map.GoogleMapView;
 import svp.app.map.OnMapClickListener;
+import svp.app.map.model.IMapPolyline;
 import svp.com.dontmissplaces.R;
 import svp.app.map.model.Point2D;
 import svp.com.dontmissplaces.presenters.MapsPresenter;
@@ -131,6 +132,11 @@ public class DNMPGoogleMapView
     @Override
     public void removeMarker(UUID id) {
         mapView.removeMarker(id);
+    }
+
+    @Override
+    public IMapPolyline createPolyline() {
+        return null;
     }
 
     public void enableMyLocation() {
