@@ -1,7 +1,6 @@
 package svp.com.dontmissplaces.presenters;
 
 import android.content.Intent;
-import android.database.MatrixCursor;
 import android.util.Log;
 
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
@@ -11,9 +10,8 @@ import java.util.Vector;
 
 import svp.com.dontmissplaces.db.Place;
 import svp.com.dontmissplaces.db.Repository;
-import svp.com.dontmissplaces.model.PlaceProvider;
+import svp.app.map.android.PlaceProvider;
 import svp.com.dontmissplaces.model.nominatim.SearchByText;
-import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.activities.SearchPlacesActivity;
 
 public class SearchPlacesPresenter extends CommutativePresenter<SearchPlacesActivity,SearchPlacesActivity.ViewState> {

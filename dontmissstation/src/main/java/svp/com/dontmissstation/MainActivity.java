@@ -38,7 +38,7 @@ import svp.com.dontmissstation.ui.model.SubwayStationView;
 import svp.com.dontmissstation.ui.model.SubwayView;
 
 public class MainActivity extends AppCompatActivityView<MainPresenter>
-        implements NavigationView.OnNavigationItemSelectedListener, ICommutativeElement{
+        implements NavigationView.OnNavigationItemSelectedListener, ICommutativeElement,OnMapClickListener{
 
     @Override
     public ActivityOperationItem getOperation() {
@@ -82,9 +82,7 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
                     points.add(prev);
                     pl.draw(line.getColor(),4,points);
                     polylinesCache.add(pl);
-
                 }
-
             }
         }
 
@@ -100,7 +98,6 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
 
     private IMapView mapView;
     private final ActivityPermissions permissions;
-
 
 
     public MainActivity(){
@@ -143,27 +140,7 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
         permissions.checkPermissionExternalStorage();
         permissions.checkPermissionFineLocation();
 
-        mapView.setOnMapClickListener(new OnMapClickListener() {
-            @Override
-            public void onMapClick(Point2D point) {
-
-            }
-
-            @Override
-            public void onZoom(int zoom, BoundingBoxE6 box) {
-
-            }
-
-            @Override
-            public void onScroll(int zoom, BoundingBoxE6 box) {
-
-            }
-
-            @Override
-            public void onMapLongClick(Point2D point) {
-
-            }
-        });
+        mapView.setOnMapClickListener(this);
 
         mapView.onCreate(null);
 
@@ -251,5 +228,30 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
         } else {
             this.permissions.fineLocationPermissionDenied = true;
         }
+    }
+
+
+    /**
+     * OnMapClickListener
+     * */
+    @Override
+    public void onMapClick(Point2D point) {
+        getPresenter().pickOnPlace(point);
+
+    }
+
+    @Override
+    public void onZoom(int zoom, BoundingBoxE6 box) {
+
+    }
+
+    @Override
+    public void onScroll(int zoom, BoundingBoxE6 box) {
+
+    }
+
+    @Override
+    public void onMapLongClick(Point2D point) {
+
     }
 }

@@ -1,4 +1,4 @@
-package svp.com.dontmissplaces.model;
+package svp.app.map.android;
 
 import android.app.Activity;
 import android.location.Address;
@@ -12,7 +12,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 
-import svp.com.dontmissplaces.db.Place;
+import svp.app.map.model.Place;
+
 
 public class PlaceProvider {
     private final Activity activity;
