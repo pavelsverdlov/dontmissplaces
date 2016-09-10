@@ -22,7 +22,6 @@ import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
 
 import org.osmdroid.util.BoundingBoxE6;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -60,14 +59,23 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
 
         @Override
         protected void restore() {
-
+            if(hasSubwayCached()){
+                view.initSubwayMenu();
+            }else{
+                view.initGeneralMenu();
+            }
         }
 
         @Override
         public void saveState() {
-
+            //TODO: implement approach for caching data
         }
-
+        public boolean hasSubwayCached(){
+            return subwayCache != null;
+        }
+        public SubwayView getSubwayCached() {
+            return subwayCache;
+        }
         public void showSubway(SubwayView subway){
             this.subwayCache =subway;
 
@@ -86,6 +94,7 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
             }
         }
 
+
         @Override
         public Activity getActivity() {
             return view;
@@ -98,7 +107,6 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
 
     private IMapView mapView;
     private final ActivityPermissions permissions;
-
 
     public MainActivity(){
         permissions = new ActivityPermissions(this);
@@ -122,17 +130,27 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+//            @Override
+//            public void onDrawerStateChanged(int newState) {
+//                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//                if( newState == DrawerLayout.STATE_SETTLING) {
+//                    boolean o =drawer.isDrawerOpen(GravityCompat.START) ;
+//                }
+//            }
+        };
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.activity_main_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        initGeneralMenu();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
+
 
 //        mapView = new OsmdroidMapView(getActivity(),R.id.osmdroid_map,getPresenter().gps);
         mapView = new GoogleMapView(this,R.id.google_map);
@@ -253,5 +271,20 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
     @Override
     public void onMapLongClick(Point2D point) {
 
+    }
+
+    /**
+    * Drawer menu
+    * */
+    private void initGeneralMenu(){
+        NavigationView navigationView = (NavigationView) findViewById(R.id.activity_main_nav_view);
+        navigationView.getMenu().clear();
+        navigationView.inflateMenu(R.menu.activity_main_drawer_menu_general);
+
+    }
+    private void initSubwayMenu(){
+        NavigationView navigationView = (NavigationView) findViewById(R.id.activity_main_nav_view);
+        navigationView.getMenu().clear();
+        navigationView.inflateMenu(R.menu.activity_main_drawer_menu_selected_subway);
     }
 }

@@ -34,7 +34,7 @@ public class MapsPresenter extends Presenter<IDNMPMapView,IMapViewState> impleme
 
     @Override
     protected void onDetachedView(IDNMPMapView view){
-        state.saveState();
+
     }
     @Override
     protected void onAttachedView(IDNMPMapView view){

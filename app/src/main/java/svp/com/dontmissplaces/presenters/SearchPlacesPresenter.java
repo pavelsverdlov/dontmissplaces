@@ -45,8 +45,8 @@ public class SearchPlacesPresenter extends CommutativePresenter<SearchPlacesActi
 
             PlaceProvider pp = new PlaceProvider(state.getActivity());
             Vector<SearchPlacesActivity.PlaceSearchResult> places = new Vector<>() ;
-            for (Place p : pp.getPlace(newText)){
-                places.add(new SearchPlacesActivity.PlaceSearchResult(p));
+            for (svp.app.map.model.Place p : pp.getPlace(newText)){
+                places.add(new SearchPlacesActivity.PlaceSearchResult(new Place(p.longitude,p.latitude)));
             }
 
             if(places.isEmpty()){

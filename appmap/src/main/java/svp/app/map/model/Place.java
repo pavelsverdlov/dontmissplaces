@@ -1,9 +1,8 @@
 package svp.app.map.model;
 
-/**
- * Created by Pasha on 9/2/2016.
- */
 public class Place {
+    public final double longitude;
+    public final double latitude;
     public String city;
     public String country;
     public String title;
@@ -12,5 +11,7 @@ public class Place {
 
     public Place(double longitude, double latitude) {
 
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
 }

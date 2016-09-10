@@ -54,6 +54,11 @@ public class MainPresenter extends CommutativePreferencePresenter<MainActivity,M
                 }
             });
             gps = gpsp;
+            if(state.hasSubwayCached()) {
+                showedSubway = state.getSubwayCached();
+                state.refresh(view);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
