@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="all">
         <item
-            android:id="@+id/main_activity_drawer_add_subways"
             android:icon="@drawable/ic_menu_camera"
             android:title="Route" />
     </group>
+    <group
+        android:checkableBehavior="all"
+        android:id="@+id/main_activity_nave_menu_lines_group">
 
-    <item android:title="Lines">
+    </group>
+<!--
+    <item android:title="Lines" >
         <menu>
             <item
                 android:id="@+id/nav_share"
@@ -20,5 +24,6 @@
                 android:title="B" />
         </menu>
     </item>
+    -->
 
 </menu>

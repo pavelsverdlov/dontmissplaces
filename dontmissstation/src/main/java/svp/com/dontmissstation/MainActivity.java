@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.svp.infrastructure.ActivityPermissions;
+import com.svp.infrastructure.common.view.NavigationViewDecorator;
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 import com.svp.infrastructure.mvpvs.commutate.ICommutativeElement;
 import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
@@ -32,6 +33,7 @@ import svp.app.map.model.IMapPolyline;
 import svp.app.map.model.Point2D;
 import svp.com.dontmissstation.presenters.MainPresenter;
 import svp.com.dontmissstation.ui.activities.ActivityOperationResult;
+import svp.com.dontmissstation.ui.model.MainNavigationView;
 import svp.com.dontmissstation.ui.model.SubwayLineView;
 import svp.com.dontmissstation.ui.model.SubwayStationView;
 import svp.com.dontmissstation.ui.model.SubwayView;
@@ -60,9 +62,9 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
         @Override
         protected void restore() {
             if(hasSubwayCached()){
-                view.initSubwayMenu();
+                view.navigationView.initSubwayMenu(subwayCache);
             }else{
-                view.initGeneralMenu();
+                view.navigationView.initGeneralMenu();
             }
         }
 
@@ -107,9 +109,11 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
 
     private IMapView mapView;
     private final ActivityPermissions permissions;
+    private final MainNavigationView navigationView;
 
     public MainActivity(){
         permissions = new ActivityPermissions(this);
+        navigationView = new MainNavigationView(this);
     }
 
     @Override
@@ -141,9 +145,8 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
         };
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-        NavigationView navigationView = (NavigationView) findViewById(R.id.activity_main_nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        initGeneralMenu();
+        navigationView.setItemSelectedListener(this);
+        navigationView.initGeneralMenu();
     }
 
     @Override
@@ -208,8 +211,6 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -273,18 +274,4 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
 
     }
 
-    /**
-    * Drawer menu
-    * */
-    private void initGeneralMenu(){
-        NavigationView navigationView = (NavigationView) findViewById(R.id.activity_main_nav_view);
-        navigationView.getMenu().clear();
-        navigationView.inflateMenu(R.menu.activity_main_drawer_menu_general);
-
-    }
-    private void initSubwayMenu(){
-        NavigationView navigationView = (NavigationView) findViewById(R.id.activity_main_nav_view);
-        navigationView.getMenu().clear();
-        navigationView.inflateMenu(R.menu.activity_main_drawer_menu_selected_subway);
-    }
 }
