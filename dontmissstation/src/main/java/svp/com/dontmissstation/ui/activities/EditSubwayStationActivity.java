@@ -94,7 +94,7 @@ public class EditSubwayStationActivity extends AppCompatActivityView<EditSubwayS
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.activity_edit_subway_station_pick_point_btn:
-
+                getPresenter().openMapActivity();
                 break;
         }
     }

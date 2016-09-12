@@ -98,5 +98,6 @@
     </string>
     <string name="title_activity_edit_station">EditStationActivity</string>
     <string name="title_activity_list_subways">ListSubwaysActivity</string>
+    <string name="title_activity_pick_on_map">Map</string>
 
 </resources>

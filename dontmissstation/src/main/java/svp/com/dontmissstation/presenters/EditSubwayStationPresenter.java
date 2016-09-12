@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Vector;
 
 import svp.com.dontmissstation.db.Repository;
+import svp.com.dontmissstation.ui.activities.ActivityOperationResult;
 import svp.com.dontmissstation.ui.activities.EditSubwayStationActivity;
 import svp.com.dontmissstation.ui.model.SubwayStationView;
 import svp.com.dontmissstation.ui.model.SubwayLineView;
@@ -43,5 +44,9 @@ public class EditSubwayStationPresenter extends CommutativePreferencePresenter<E
         SubwayBundleProvider bundle = new SubwayBundleProvider(intent);
         long id = bundle.getSubwayStationId();
         station = repository.getSubwayStationById(id);
+    }
+
+    public void openMapActivity() {
+        commutator.goTo(ActivityOperationResult.PickOnMap);
     }
 }

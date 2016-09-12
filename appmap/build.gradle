@@ -26,4 +26,12 @@ dependencies {
 
     compile 'org.osmdroid:osmdroid-android:5.1@aar'
     compile 'com.github.MKergall:osmbonuspack:v5.8.1'
+    compile 'com.google.code.gson:gson:+'
+    compile 'com.google.api-client:google-api-client:+'
+    compile 'com.google.api-client:google-api-client-android:+'
+    compile 'com.google.api-client:google-api-client-android2:+'
+    compile 'com.google.oauth-client:google-oauth-client:+'
+    compile 'com.google.http-client:google-http-client-jackson:+'
+
+//    compile 'com.google.api-client:google-api-client-android3:1.10.3-beta'
 }

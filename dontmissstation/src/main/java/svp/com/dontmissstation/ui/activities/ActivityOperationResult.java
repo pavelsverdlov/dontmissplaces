@@ -9,6 +9,7 @@ public class ActivityOperationResult {
     public static final ActivityOperationItem EditSubwayLine = new ActivityOperationItem(3);
     public static final ActivityOperationItem EditSubwayStation = new ActivityOperationItem(4);
     public static final ActivityOperationItem ListSubways = new ActivityOperationItem(5);
+    public static final ActivityOperationItem PickOnMap = new ActivityOperationItem(6);
 
     public static ActivityOperationItem get(int resultCode) {
         switch (resultCode){
@@ -22,6 +23,8 @@ public class ActivityOperationResult {
                 return EditSubwayStation;
             case 5:
                 return ListSubways;
+            case 6:
+                return PickOnMap;
             default:
                 return Undefined;
         }

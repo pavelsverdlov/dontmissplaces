@@ -30,6 +30,7 @@ public class App extends Application {
         ActivityCommutator.register(ActivityOperationResult.EditSubwayLine, EditSubwayLineScrollingActivity.class);
         ActivityCommutator.register(ActivityOperationResult.EditSubwayStation, EditSubwayStationActivity.class);
         ActivityCommutator.register(ActivityOperationResult.ListSubways, ListSubwaysActivity.class);
+        ActivityCommutator.register(ActivityOperationResult.PickOnMap, PickOnMapActivity.class);
 
         Registrator.register(MainActivity.class,
                 new PresenterContainer.IPresenterCreator() {
@@ -98,6 +99,20 @@ public class App extends Application {
                     @Override
                     public IViewState create(ListSubwaysActivity view) {
                         return new ListSubwaysActivity.ViewState(view);
+                    }
+                });
+
+        Registrator.register(PickOnMapActivity.class,
+                new PresenterContainer.IPresenterCreator() {
+                    @Override
+                    public IPresenter create() {
+                        return new PickOnMapPresenter(repository);
+                    }
+                },
+                new ViewStateContainer.IViewStateCreator<PickOnMapActivity>() {
+                    @Override
+                    public IViewState create(PickOnMapActivity view) {
+                        return new PickOnMapActivity.ViewState(view);
                     }
                 });
 
