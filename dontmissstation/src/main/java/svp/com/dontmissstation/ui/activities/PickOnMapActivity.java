@@ -99,6 +99,4 @@ public class PickOnMapActivity extends FragmentActivityView<PickOnMapPresenter>
     public void onMapLongClick(Point2D point) {
 
     }
-
-
 }

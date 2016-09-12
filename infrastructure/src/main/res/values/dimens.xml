@@ -6,4 +6,15 @@
     <dimen name="text_size_medium">20sp</dimen>
     <dimen name="text_size_medium_btn">14sp</dimen>
     <dimen name="text_size_medium_btn_12sp">12sp</dimen>
+
+    <dimen name="android_standard_headline">24sp</dimen>
+    <dimen name="android_standard_title">20sp</dimen>
+    <dimen name="android_standard_subheading">16sp</dimen>
+    <dimen name="android_standard_body_textsize">14sp</dimen>
+    <dimen name="android_standard_caption_textsize">12sp</dimen>
+    <dimen name="android_standard_toolbar_subtitle">48dp</dimen>
+    <dimen name="android_standard_list_item">72dp</dimen>
+
+    <dimen name="padding_8">8dp</dimen>
+    <dimen name="dp_22">22dp</dimen>
 </resources>
