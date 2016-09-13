@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.svp.infrastructure.ActivityPermissions;
-import com.svp.infrastructure.common.view.NavigationViewDecorator;
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 import com.svp.infrastructure.mvpvs.commutate.ICommutativeElement;
 import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
@@ -125,8 +122,9 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
         setSupportActionBar(toolbar);
 
         BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(findViewById(R.id.select_place_scrolling_act_content_view));
-
-        behavior.setPeekHeight(200);
+//
+        behavior.setPeekHeight(48);
+        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -152,7 +150,7 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
 
 
 //        mapView = new OsmdroidMapView(getActivity(),R.id.osmdroid_map,getPresenter().gps);
-        mapView = new GoogleMapView(this,R.id.google_map);
+        mapView = new GoogleMapView(this,R.id.activity_main_content_google_map);
 
         permissions.checkPermissionExternalStorage();
         permissions.checkPermissionFineLocation();
