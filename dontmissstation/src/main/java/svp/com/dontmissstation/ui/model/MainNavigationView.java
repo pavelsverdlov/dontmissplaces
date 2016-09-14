@@ -1,6 +1,7 @@
 package svp.com.dontmissstation.ui.model;
 
 import android.app.Activity;
+import android.graphics.drawable.ColorDrawable;
 import android.support.design.widget.NavigationView;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,13 +41,16 @@ public class MainNavigationView{
 //        lines.setTitle("lines");
         int index = 0;
         SubMenu submenu = menu.addSubMenu(R.id.main_activity_nave_menu_lines_group,Menu.NONE,0,"Lines");
-        submenu.setGroupCheckable(0,true,true);
+       // submenu.setGroupCheckable(0,true,true);
         for (SubwayLineView line : subway.getLines()) {
+//            menu.add(R.id.main_activity_nave_menu_lines_group,Menu.NONE,1,line.getName()).setCheckable(true)
+//                    .setIcon(android.R.drawable.ic_menu_share);
             submenu.add(line.getName())//.add(lines.getItemId(),Menu.NONE,0,line.getName())
-                    .setIcon(android.R.drawable.ic_menu_share);
+                    .setIcon(new ColorDrawable(0xff00ff))
+                    .setCheckable(true);
             index++;
         }
-
+//        menu.setGroupCheckable(1,true,true);
         setSubwayHeader(subway);
     }
 

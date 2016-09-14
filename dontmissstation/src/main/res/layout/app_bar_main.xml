@@ -29,7 +29,7 @@
         android:id="@+id/select_place_scrolling_act_content_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+        android:background="@color/colorPrimaryDark"
         android:gravity="bottom|center_horizontal"
         android:orientation="vertical"
         app:layout_behavior="android.support.design.widget.BottomSheetBehavior">

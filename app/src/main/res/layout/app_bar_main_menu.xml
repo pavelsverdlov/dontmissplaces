@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/android_standard_toolbar_subtitle"
             android:layout_gravity="fill|fill_horizontal"
-
+            android:background="@color/common_signin_btn_default_background"
             android:gravity="fill|fill_horizontal"
             android:orientation="horizontal">
 
