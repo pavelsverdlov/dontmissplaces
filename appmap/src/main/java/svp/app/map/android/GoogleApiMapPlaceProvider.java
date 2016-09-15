@@ -130,7 +130,8 @@ public class GoogleApiMapPlaceProvider {
             if(types != null)
                 request.getUrl().put("types", types);
 
-            PlacesList list = request.execute().parseAs(PlacesList.class);
+            HttpResponse result = request.execute();
+            PlacesList list = result.parseAs(PlacesList.class);
             // Check log cat for places response status
             Log.d("Places Status", "" + list.status);
             return list;

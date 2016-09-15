@@ -2,9 +2,15 @@ package svp.com.dontmissstation.presenters;
 
 
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.widget.ListAdapter;
 
+import com.svp.infrastructure.AlertDialogManager;
 import com.svp.infrastructure.ConnectionDetector;
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import svp.app.map.android.GoogleApiMapPlaceProvider;
 import svp.app.map.android.PlaceProvider;
@@ -30,15 +36,143 @@ public class PickOnMapPresenter  extends CommutativePreferencePresenter<PickOnMa
         ConnectionDetector cd = new ConnectionDetector(state.getActivity());
 
         if(cd.isConnectingToInternet()){
-            return;
+        //    return;
         }
 
-        GoogleApiMapPlaceProvider.PlacesList places;
-        try {
-            GoogleApiMapPlaceProvider p = new GoogleApiMapPlaceProvider();
-            places = p.search(point.latitude, point.longitude, 1000, "cafe|restaurant");
-        } catch (Exception e) {
-            e.printStackTrace();
+//        GoogleApiMapPlaceProvider.PlacesList places;
+//        try {
+//            GoogleApiMapPlaceProvider p = new GoogleApiMapPlaceProvider();
+//            places = p.search(point.latitude, point.longitude, 1000, "cafe|restaurant");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+        this.point = point;
+        new LoadPlaces().execute();
+
+    }
+
+    GoogleApiMapPlaceProvider googlePlaces;
+    GoogleApiMapPlaceProvider.PlacesList nearPlaces;
+    Point2D point;
+    AlertDialogManager alert = new AlertDialogManager();
+    ArrayList<HashMap<String, String>> placesListItems = new ArrayList<HashMap<String,String>>();
+
+
+    class LoadPlaces extends AsyncTask<String, String, String> {
+
+        /**
+         * Before starting background thread Show Progress Dialog
+         * */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+//            pDialog = new ProgressDialog(MainActivity.this);
+//            pDialog.setMessage(Html.fromHtml("<b>Search</b><br/>Loading Places..."));
+//            pDialog.setIndeterminate(false);
+//            pDialog.setCancelable(false);
+//            pDialog.show();
+        }
+
+        /**
+         * getting Places JSON
+         * */
+        protected String doInBackground(String... args) {
+            googlePlaces = new GoogleApiMapPlaceProvider();
+            try {
+                String types = "subway_station";
+                //meters
+                double radius = 100;
+                nearPlaces = googlePlaces.search(point.latitude,
+                        point.longitude, radius, types);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        /**
+         * After completing background task Dismiss the progress dialog
+         * and show the data in UI
+         * Always use runOnUiThread(new Runnable()) to update UI from background
+         * thread, otherwise you will get error
+         * **/
+        protected void onPostExecute(String file_url) {
+            // dismiss the dialog after getting all products
+//            pDialog.dismiss();
+            // updating UI from Background Thread
+           state.getActivity().runOnUiThread(new Runnable() {
+                public void run() {
+                    // Get json response status
+                    String status = nearPlaces.status;
+
+                    // Check for all possible status
+                    if(status.equals("OK")){
+                        // Successfully got places details
+                        if (nearPlaces.results != null) {
+                            // loop through each place
+                            for (GoogleApiMapPlaceProvider.Place p : nearPlaces.results) {
+                                HashMap<String, String> map = new HashMap<String, String>();
+
+                                // Place reference won't display in listview - it will be hidden
+                                // Place reference is used to get "place full details"
+                                map.put("reference", p.reference);
+
+                                // Place name
+                                map.put("name", p.name);
+
+
+                                // adding HashMap to ArrayList
+                                placesListItems.add(map);
+                            }
+                            // list adapter
+//                            ListAdapter adapter = new SimpleAdapter(MainActivity.this, placesListItems,
+//                                    R.layout.list_item,
+//                                    new String[] { KEY_REFERENCE, KEY_NAME}, new int[] {
+//                                    R.id.reference, R.id.name });
+//
+//                            // Adding data into listview
+//                            lv.setAdapter(adapter);
+                        }
+                    }
+                    else if(status.equals("ZERO_RESULTS")){
+                        // Zero results found
+//                        alert.showAlertDialog(MainActivity.this, "Near Places",
+//                                "Sorry no places found. Try to change the types of places",
+//                                false);
+                    }
+                    else if(status.equals("UNKNOWN_ERROR"))
+                    {
+//                        alert.showAlertDialog(MainActivity.this, "Places Error",
+//                                "Sorry unknown error occured.",
+//                                false);
+                    }
+                    else if(status.equals("OVER_QUERY_LIMIT"))
+                    {
+//                        alert.showAlertDialog(MainActivity.this, "Places Error",
+//                                "Sorry query limit to google places is reached",
+//                                false);
+                    }
+                    else if(status.equals("REQUEST_DENIED"))
+                    {
+//                        alert.showAlertDialog(MainActivity.this, "Places Error",
+//                                "Sorry error occured. Request is denied",
+//                                false);
+                    }
+                    else if(status.equals("INVALID_REQUEST"))
+                    {
+//                        alert.showAlertDialog(MainActivity.this, "Places Error",
+//                                "Sorry error occured. Invalid Request",
+//                                false);
+                    }
+                    else
+                    {
+//                        alert.showAlertDialog(MainActivity.this, "Places Error",
+//                                "Sorry error occured.",
+//                                false);
+                    }
+                }
+            });
+
         }
 
     }
