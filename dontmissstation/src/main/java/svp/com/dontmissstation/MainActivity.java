@@ -1,6 +1,8 @@
 package svp.com.dontmissstation;
 
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -13,6 +15,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.SearchView;
 
 import com.svp.infrastructure.ActivityPermissions;
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
@@ -120,7 +123,6 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
         setContentView(R.layout.activity_main); 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(findViewById(R.id.select_place_scrolling_act_content_view));
 //
         behavior.setPeekHeight(48);
@@ -141,6 +143,7 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
         toggle.syncState();
         navigationView.setItemSelectedListener(this);
         navigationView.initGeneralMenu();
+
     }
 
     @Override
@@ -200,6 +203,14 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+        // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.main_menu_action_search).getActionView();
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(true); //
+
         return true;
     }
 

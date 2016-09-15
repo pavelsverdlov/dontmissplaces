@@ -41,6 +41,7 @@
         android:id="@+id/activity_edit_subway_station_latitude_edittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
         android:labelFor="@id/label_station_latitude"
         />
 
@@ -54,6 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:labelFor="@id/label_station_longitude"
+        android:inputType="numberDecimal"
         />
     <Button
         android:id="@+id/activity_edit_subway_station_pick_point_btn"

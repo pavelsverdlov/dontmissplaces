@@ -22,6 +22,7 @@ import java.util.Vector;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import svp.app.map.model.Point2D;
 import svp.com.dontmissstation.R;
 import svp.com.dontmissstation.presenters.EditSubwayStationPresenter;
 import svp.com.dontmissstation.ui.model.SubwayStationView;
@@ -63,8 +64,8 @@ public class EditSubwayStationActivity extends AppCompatActivityView<EditSubwayS
 
     @Bind(R.id.activity_edit_subway_station_lines) Spinner linesSpinner;
     @Bind(R.id.activity_edit_subway_station_name_edittext) TextView nameView;
-//    activity_edit_subway_station_latitude_edittext
-//    activity_edit_subway_station_longitude_edittext
+    @Bind(R.id.activity_edit_subway_station_latitude_edittext) TextView latitudeView;
+    @Bind(R.id.activity_edit_subway_station_longitude_edittext) TextView longitudeView;
     @Bind(R.id.activity_edit_subway_station_pick_point_btn) Button pickPointBtn;
 
     private SubwayStationView station;
@@ -105,6 +106,9 @@ public class EditSubwayStationActivity extends AppCompatActivityView<EditSubwayS
         station = getPresenter().getStation();
 
         nameView.setText(station.getName());
+        Point2D coor = station.getCoordinate();
+        longitudeView.setText(String.valueOf(coor.longitude));
+        latitudeView.setText(String.valueOf(coor.latitude));
 
         Vector<String> lines = new Vector<String>();
         for (SubwayLineView line : getPresenter().getAvailableLines()) {
