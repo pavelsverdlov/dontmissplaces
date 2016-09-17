@@ -1,13 +1,21 @@
 package svp.com.dontmissstation.ui.model;
 
 import android.app.Activity;
-import android.graphics.drawable.ColorDrawable;
+import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.Paint;
+import android.graphics.PixelFormat;
+import android.graphics.RectF;
+import android.graphics.Shader;
+import android.graphics.drawable.Drawable;
 import android.support.design.widget.NavigationView;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.SubMenu;
 import android.widget.TextView;
 
+import com.svp.infrastructure.common.DrawableEx;
 import com.svp.infrastructure.common.view.NavigationViewDecorator;
 
 import svp.com.dontmissstation.R;
@@ -37,25 +45,59 @@ public class MainNavigationView{
         nd.setMenu(R.menu.activity_main_drawer_menu_selected_subway);
 
         Menu menu = nd.getMenu();
-//        MenuItem lines = menu.findItem(R.id.main_activity_nave_menu_lines_group);
-//        lines.setTitle("lines");
-        int index = 0;
         SubMenu submenu = menu.addSubMenu(R.id.main_activity_nave_menu_lines_group,Menu.NONE,0,"Lines");
-       // submenu.setGroupCheckable(0,true,true);
         for (SubwayLineView line : subway.getLines()) {
-//            menu.add(R.id.main_activity_nave_menu_lines_group,Menu.NONE,1,line.getName()).setCheckable(true)
-//                    .setIcon(android.R.drawable.ic_menu_share);
-            submenu.add(line.getName())//.add(lines.getItemId(),Menu.NONE,0,line.getName())
-                    .setIcon(new ColorDrawable(0xff00ff))
+            MyRoundCornerDrawable testD = new MyRoundCornerDrawable(
+                    DrawableEx.getBitmapFromDrawableRes(activity,R.drawable.ic_subway_black_24dp));
+
+            DrawableEx.changeColor(testD,line.getColor());
+            submenu.add(line.getName())
+                    .setIcon(testD)
                     .setCheckable(true);
-            index++;
         }
-//        menu.setGroupCheckable(1,true,true);
         setSubwayHeader(subway);
     }
 
     private void setSubwayHeader(SubwayView subway) {
         ((TextView)getNavigationView().findViewById(R.id.activity_main_nav_header_subway_name))
                 .setText(subway.getCountry() + " " + subway.getCity());
+    }
+
+    public class MyRoundCornerDrawable extends Drawable {
+
+        private Paint paint;
+
+        public MyRoundCornerDrawable(Bitmap bitmap) {
+            BitmapShader shader;
+            shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP,
+                    Shader.TileMode.CLAMP);
+            paint = new Paint();
+            paint.setAntiAlias(true);
+            paint.setShader(shader);
+        }
+
+        @Override
+        public void draw(Canvas canvas) {
+            int height = getBounds().height();
+            int width = getBounds().width();
+            RectF rect = new RectF(0.0f, 0.0f, width, height);
+            canvas.drawRoundRect(rect, 30, 30, paint);
+        }
+
+        @Override
+        public void setAlpha(int alpha) {
+            paint.setAlpha(alpha);
+        }
+
+        @Override
+        public void setColorFilter(ColorFilter cf) {
+            paint.setColorFilter(cf);
+        }
+
+        @Override
+        public int getOpacity() {
+            return PixelFormat.TRANSLUCENT;
+        }
+
     }
 }

@@ -92,7 +92,7 @@ public class GoogleApiMapPlaceProvider {
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 
     // Google API Key
-    private static final String API_KEY = "AIzaSyCRLa4LQZWNQBcjCYcIVYA45i9i8zfClqc";
+    private static final String API_KEY = "AIzaSyD76hAcDE2CBYJE14l61rhzyG2xnAzOz6s";
 
     // Google Places serach url's
     private static final String PLACES_SEARCH_URL = "https://maps.googleapis.com/maps/api/place/search/json?";
