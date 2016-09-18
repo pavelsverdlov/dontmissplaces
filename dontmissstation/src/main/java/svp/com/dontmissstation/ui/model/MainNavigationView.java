@@ -47,7 +47,7 @@ public class MainNavigationView{
         Menu menu = nd.getMenu();
         SubMenu submenu = menu.addSubMenu(R.id.main_activity_nave_menu_lines_group,Menu.NONE,0,"Lines");
         for (SubwayLineView line : subway.getLines()) {
-            MyRoundCornerDrawable testD = new MyRoundCornerDrawable(
+            BitmapWrapperDrawable testD = new BitmapWrapperDrawable(
                     DrawableEx.getBitmapFromDrawableRes(activity,R.drawable.ic_subway_black_24dp));
 
             DrawableEx.changeColor(testD,line.getColor());
@@ -63,11 +63,11 @@ public class MainNavigationView{
                 .setText(subway.getCountry() + " " + subway.getCity());
     }
 
-    public class MyRoundCornerDrawable extends Drawable {
+    public class BitmapWrapperDrawable extends Drawable {
 
         private Paint paint;
 
-        public MyRoundCornerDrawable(Bitmap bitmap) {
+        public BitmapWrapperDrawable(Bitmap bitmap) {
             BitmapShader shader;
             shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP,
                     Shader.TileMode.CLAMP);
