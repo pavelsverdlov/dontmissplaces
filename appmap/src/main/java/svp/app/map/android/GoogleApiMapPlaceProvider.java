@@ -11,7 +11,11 @@ import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.Key;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class GoogleApiMapPlaceProvider {
@@ -119,18 +123,27 @@ public class GoogleApiMapPlaceProvider {
         this._radius = radius;
 
         try {
-
+            DecimalFormat format = new DecimalFormat("#.#######");
             HttpRequestFactory httpRequestFactory = createRequestFactory(HTTP_TRANSPORT);
             HttpRequest request = httpRequestFactory
                     .buildGetRequest(new GenericUrl(PLACES_SEARCH_URL));
             request.getUrl().put("key", API_KEY);
-            request.getUrl().put("location", _latitude + "," + _longitude);
+            request.getUrl().put("location", format.format(_latitude) + "," +format.format( _longitude));
             request.getUrl().put("radius", _radius); // in meters
             request.getUrl().put("sensor", "false");
-            if(types != null)
+            if(types != null){
                 request.getUrl().put("types", types);
+            }
 
             HttpResponse result = request.execute();
+//            InputStreamReader str = new InputStreamReader(result.getContent());
+//            BufferedReader reader = new BufferedReader(str);
+//            String readLine;
+//            String responseBody = "";
+//            while (((readLine = reader.readLine()) != null)) {
+//                responseBody += "\n" + readLine;
+//            }
+
             PlacesList list = result.parseAs(PlacesList.class);
             // Check log cat for places response status
             Log.d("Places Status", "" + list.status);

@@ -10,9 +10,12 @@ import com.svp.infrastructure.mvpvs.view.FragmentActivityView;
 
 import org.osmdroid.util.BoundingBoxE6;
 
+import java.util.HashMap;
+
 import svp.app.map.GoogleMapView;
 import svp.app.map.IMapView;
 import svp.app.map.OnMapClickListener;
+import svp.app.map.android.GoogleApiMapPlaceProvider;
 import svp.app.map.model.Point2D;
 import svp.com.dontmissstation.R;
 import svp.com.dontmissstation.presenters.PickOnMapPresenter;
@@ -49,6 +52,10 @@ public class PickOnMapActivity extends FragmentActivityView<PickOnMapPresenter>
         @Override
         public Activity getActivity() {
             return view;
+        }
+
+        public void showOnMap(GoogleApiMapPlaceProvider.Place stringStringHashMap) {
+
         }
     }
 

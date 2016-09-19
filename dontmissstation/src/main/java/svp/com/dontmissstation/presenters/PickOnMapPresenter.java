@@ -59,27 +59,14 @@ public class PickOnMapPresenter  extends CommutativePreferencePresenter<PickOnMa
 
 
     class LoadPlaces extends AsyncTask<String, String, String> {
-
-        /**
-         * Before starting background thread Show Progress Dialog
-         * */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-//            pDialog = new ProgressDialog(MainActivity.this);
-//            pDialog.setMessage(Html.fromHtml("<b>Search</b><br/>Loading Places..."));
-//            pDialog.setIndeterminate(false);
-//            pDialog.setCancelable(false);
-//            pDialog.show();
         }
-
-        /**
-         * getting Places JSON
-         * */
         protected String doInBackground(String... args) {
             googlePlaces = new GoogleApiMapPlaceProvider();
             try {
-                String types = "subway_station";
+                String types = "cafe|restaurant";// "subway_station";
                 //meters
                 double radius = 100;
                 nearPlaces = googlePlaces.search(point.latitude,
@@ -90,21 +77,10 @@ public class PickOnMapPresenter  extends CommutativePreferencePresenter<PickOnMa
             return null;
         }
 
-        /**
-         * After completing background task Dismiss the progress dialog
-         * and show the data in UI
-         * Always use runOnUiThread(new Runnable()) to update UI from background
-         * thread, otherwise you will get error
-         * **/
         protected void onPostExecute(String file_url) {
-            // dismiss the dialog after getting all products
-//            pDialog.dismiss();
-            // updating UI from Background Thread
            state.getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    // Get json response status
                     String status = nearPlaces.status;
-
                     // Check for all possible status
                     if(status.equals("OK")){
                         // Successfully got places details
@@ -124,6 +100,11 @@ public class PickOnMapPresenter  extends CommutativePreferencePresenter<PickOnMa
                                 // adding HashMap to ArrayList
                                 placesListItems.add(map);
                             }
+                            if(nearPlaces.results.size() > 0) {
+                                PickOnMapPresenter.this.state.showOnMap(nearPlaces.results.get(0));
+                            }
+
+
                             // list adapter
 //                            ListAdapter adapter = new SimpleAdapter(MainActivity.this, placesListItems,
 //                                    R.layout.list_item,
