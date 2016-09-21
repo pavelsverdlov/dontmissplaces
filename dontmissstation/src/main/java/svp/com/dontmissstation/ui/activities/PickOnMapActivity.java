@@ -55,7 +55,7 @@ public class PickOnMapActivity extends FragmentActivityView<PickOnMapPresenter>
         }
 
         public void showOnMap(GoogleApiMapPlaceProvider.Place stringStringHashMap) {
-
+            //view.mapView.addMarker()
         }
     }
 

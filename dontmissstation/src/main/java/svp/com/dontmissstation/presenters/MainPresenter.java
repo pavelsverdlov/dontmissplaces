@@ -28,6 +28,13 @@ public class MainPresenter extends CommutativePreferencePresenter<MainActivity,M
         this.repository = repository;
     }
 
+    public boolean isSubwayVisualizeMode(){
+        return showedSubway != null;
+    }
+    public void clearSelectedSubway() {
+        showedSubway = null;
+        state.clearCache();
+    }
 
     @Override
     protected void incomingResultFrom(ActivityOperationItem from, Intent data) {
@@ -83,4 +90,6 @@ public class MainPresenter extends CommutativePreferencePresenter<MainActivity,M
 //        PlaceProvider pp = new PlaceProvider(state.getActivity());
 //        Place res = pp.getPlace(point.getLatLng());
     }
+
+
 }

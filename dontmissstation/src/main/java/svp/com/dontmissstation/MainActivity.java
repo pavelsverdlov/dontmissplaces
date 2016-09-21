@@ -79,6 +79,10 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
         public SubwayView getSubwayCached() {
             return subwayCache;
         }
+        public void clearCache(){
+            subwayCache = null;
+            polylinesCache.clear();
+        }
         public void showSubway(SubwayView subway){
             this.subwayCache =subway;
 
@@ -195,7 +199,12 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if(getPresenter().isSubwayVisualizeMode()){
+                getPresenter().clearSelectedSubway();
+                navigationView.initGeneralMenu();
+            }else {
+                super.onBackPressed();
+            }
         }
     }
 
