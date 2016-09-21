@@ -41,7 +41,7 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/track_recording_start_btn"
+                android:id="@+id/activity_main_get_stations_near_me"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -50,7 +50,7 @@
                 android:src="@mipmap/ic_near_me_white_48dp" />
 
             <ImageButton
-
+                android:id="@+id/activity_main_init_route"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
@@ -68,7 +68,7 @@
                 android:src="@drawable/ic_gps_fixed_white_48dp" />
 
             <ImageButton
-                android:id="@+id/move_to_my_location"
+                android:id="@+id/activity_main_move_to_my_location"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"

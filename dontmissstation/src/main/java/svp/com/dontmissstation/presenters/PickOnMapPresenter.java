@@ -30,6 +30,11 @@ public class PickOnMapPresenter  extends CommutativePreferencePresenter<PickOnMa
 
     }
 
+    @Override
+    protected void onAttachedView(PickOnMapActivity view,  Intent intent){
+        super.onAttachedView(view,intent);
+
+    }
     public void searchNearestStation(Point2D point) {
 //        PlaceProvider pp = new PlaceProvider(state.getActivity());
 //        Place res = pp.getPlace(point.getLatLng());

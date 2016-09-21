@@ -17,19 +17,13 @@
             android:icon="@drawable/ic_menu_camera"
             android:title="Route" />
     </group>
-<!--
-    <item android:title="Lines" >
+    <item android:title="Recent routes" >
         <menu>
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
-                android:title="A" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_share"
-                android:title="B" />
+                android:title="Station 1 -> Station 2" />
         </menu>
     </item>
-    -->
 
 </menu>

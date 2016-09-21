@@ -19,6 +19,7 @@ import svp.app.map.android.GoogleApiMapPlaceProvider;
 import svp.app.map.model.Point2D;
 import svp.com.dontmissstation.R;
 import svp.com.dontmissstation.presenters.PickOnMapPresenter;
+import svp.com.dontmissstation.ui.model.POIView;
 
 public class PickOnMapActivity extends FragmentActivityView<PickOnMapPresenter>
         implements ICommutativeElement,OnMapClickListener{
@@ -54,8 +55,8 @@ public class PickOnMapActivity extends FragmentActivityView<PickOnMapPresenter>
             return view;
         }
 
-        public void showOnMap(GoogleApiMapPlaceProvider.Place stringStringHashMap) {
-            //view.mapView.addMarker()
+        public void showOnMap(GoogleApiMapPlaceProvider.Place place) {
+            view.mapView.addMarker(new POIView(place),-1);
         }
     }
 

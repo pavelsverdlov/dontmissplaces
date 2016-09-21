@@ -40,7 +40,7 @@ import svp.com.dontmissstation.ui.model.SubwayStationView;
 import svp.com.dontmissstation.ui.model.SubwayView;
 
 public class MainActivity extends AppCompatActivityView<MainPresenter>
-        implements NavigationView.OnNavigationItemSelectedListener, ICommutativeElement,OnMapClickListener{
+        implements NavigationView.OnNavigationItemSelectedListener, ICommutativeElement, OnMapClickListener, View.OnClickListener {
 
     @Override
     public ActivityOperationItem getOperation() {
@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
             subwayCache = null;
             polylinesCache.clear();
         }
+
         public void showSubway(SubwayView subway){
             this.subwayCache =subway;
 
@@ -100,7 +101,18 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
                 }
             }
         }
-
+        public void MapCameraMoveTo(final Point2D p){
+            if(p.isEmpty()){
+                getToast( "GPS location disabled.").show();
+            }else {
+                view.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        view.mapView.moveTo(p);
+                    }
+                });
+            }
+        }
 
         @Override
         public Activity getActivity() {
@@ -148,6 +160,23 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
         navigationView.setItemSelectedListener(this);
         navigationView.initGeneralMenu();
 
+        findViewById(R.id.activity_main_get_stations_near_me).setOnClickListener(this);
+        findViewById(R.id.activity_main_init_route).setOnClickListener(this);
+        findViewById(R.id.activity_main_move_to_my_location).setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.activity_main_get_stations_near_me:
+                break;
+            case R.id.activity_main_init_route:
+                getPresenter().openRouteActivity();
+                break;
+            case R.id.activity_main_move_to_my_location:
+                getPresenter().onMoveToMyLocation();
+                break;
+        }
     }
 
     @Override

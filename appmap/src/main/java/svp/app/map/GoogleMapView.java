@@ -174,7 +174,7 @@ public class GoogleMapView implements IMapView, MapZoomController.IMapZoom, OnMa
 //            @Override
 //            public void run() {
 
-               Marker marker = map.addMarker(new MarkerOptions().snippet("dfdsfsd")
+               Marker marker = map.addMarker(new MarkerOptions()//.snippet("dfdsfsd")
                         .position(poi.getPoint().getLatLng())
                         .icon(BitmapDescriptorFactory.defaultMarker())
                 );

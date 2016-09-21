@@ -71,6 +71,17 @@ public class MainPresenter extends CommutativePreferencePresenter<MainActivity,M
         }
     }
 
+
+    public void onMoveToMyLocation() {
+        Point2D point = Point2D.empty();
+        try {
+            point = new Point2D(gps.getLocation());
+        } catch (Exception e) {
+            Log.e(TAG, "onMoveToMyLocation", e);
+        }
+        state.MapCameraMoveTo(point);
+    }
+
     /**
      * Settings
      * */
@@ -81,15 +92,15 @@ public class MainPresenter extends CommutativePreferencePresenter<MainActivity,M
     public void openAddNewSubway() {
         commutator.goTo(ActivityOperationResult.EditNewSubway);
     }
-
     public void openListSubwaysActivity() {
         commutator.goTo(ActivityOperationResult.ListSubways);
     }
-
+    public void openRouteActivity() { commutator.goTo(ActivityOperationResult.Route); }
     public void pickOnPlace(Point2D point) {
 //        PlaceProvider pp = new PlaceProvider(state.getActivity());
 //        Place res = pp.getPlace(point.getLatLng());
     }
+
 
 
 }

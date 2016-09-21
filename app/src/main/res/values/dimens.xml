@@ -13,12 +13,11 @@
     <dimen name="android_standard_button_textsize">14sp</dimen>
 
 
-
     <dimen name="android_standard_list_item_padding">16dp</dimen>
 
     <dimen name="android_standard_actionBarSize_inverted">-56.0dp</dimen>
-
-
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 
 
 </resources>
