@@ -11,9 +11,6 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.ui.PlacePicker;
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 import com.svp.infrastructure.mvpvs.commutate.ICommutativeElement;
 import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
@@ -77,10 +74,10 @@ public class EditSubwayStationActivity extends AppCompatActivityView<EditSubwayS
 
         ButterKnife.bind(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_route_toolbar_id);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.activity_route_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

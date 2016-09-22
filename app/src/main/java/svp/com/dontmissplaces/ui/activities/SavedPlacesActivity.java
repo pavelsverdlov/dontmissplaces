@@ -25,8 +25,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import svp.com.dontmissplaces.R;
 import svp.com.dontmissplaces.db.Place;
-import svp.com.dontmissplaces.model.Map.google.GPlaceAddressDetails;
-import svp.com.dontmissplaces.model.nominatim.PlaceAddressDetails;
 import svp.com.dontmissplaces.presenters.SavedPlacesPresenter;
 import svp.com.dontmissplaces.ui.ActivityCommutator;
 import svp.com.dontmissplaces.ui.model.PlaceView;
@@ -157,7 +155,7 @@ public class SavedPlacesActivity extends AppCompatActivityView<SavedPlacesPresen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_saved_places);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_route_toolbar);
         setSupportActionBar(toolbar);
 
         ButterKnife.bind(this);

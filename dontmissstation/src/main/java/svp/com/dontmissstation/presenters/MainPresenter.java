@@ -6,11 +6,9 @@ import android.util.Log;
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 
 import svp.app.map.MapViewTypes;
-import svp.app.map.android.PlaceProvider;
 import svp.app.map.android.gps.GPSService;
 import svp.app.map.android.gps.GPSServiceProvider;
 import svp.app.map.android.gps.IGPSProvider;
-import svp.app.map.model.Place;
 import svp.app.map.model.Point2D;
 import svp.com.dontmissstation.MainActivity;
 import svp.com.dontmissstation.db.Repository;
@@ -95,7 +93,7 @@ public class MainPresenter extends CommutativePreferencePresenter<MainActivity,M
     public void openListSubwaysActivity() {
         commutator.goTo(ActivityOperationResult.ListSubways);
     }
-    public void openRouteActivity() { commutator.goTo(ActivityOperationResult.Route); }
+    public void openRouteActivity() { commutator.goTo(ActivityOperationResult.RouteSelection); }
     public void pickOnPlace(Point2D point) {
 //        PlaceProvider pp = new PlaceProvider(state.getActivity());
 //        Place res = pp.getPlace(point.getLatLng());

@@ -19,7 +19,7 @@ import svp.app.map.model.Point2D;
 import svp.com.dontmissstation.db.Repository;
 import svp.com.dontmissstation.ui.activities.PickOnMapActivity;
 
-public class PickOnMapPresenter  extends CommutativePreferencePresenter<PickOnMapActivity,PickOnMapActivity.ViewState> {
+public class PickOnMapPresenter extends CommutativePreferencePresenter<PickOnMapActivity,PickOnMapActivity.ViewState> {
 
     public PickOnMapPresenter(Repository repository) {
 

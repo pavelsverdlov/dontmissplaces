@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main); 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_route_toolbar_id);
         setSupportActionBar(toolbar);
         BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(findViewById(R.id.select_place_scrolling_act_content_view));
 //

@@ -10,7 +10,7 @@ public class ActivityOperationResult {
     public static final ActivityOperationItem EditSubwayStation = new ActivityOperationItem(4);
     public static final ActivityOperationItem ListSubways = new ActivityOperationItem(5);
     public static final ActivityOperationItem PickOnMap = new ActivityOperationItem(6);
-    public static final ActivityOperationItem Route = new ActivityOperationItem(7);
+    public static final ActivityOperationItem RouteSelection = new ActivityOperationItem(7);
 
     public static ActivityOperationItem get(int resultCode) {
         switch (resultCode){
@@ -27,7 +27,7 @@ public class ActivityOperationResult {
             case 6:
                 return PickOnMap;
             case 7:
-                return Route;
+                return RouteSelection;
             default:
                 return Undefined;
         }

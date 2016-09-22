@@ -38,7 +38,7 @@ public abstract class EditScrollingActivity<P extends Presenter> extends AppComp
 
         ButterKnife.bind(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_route_toolbar_id);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         AppBarLayout mAppBarLayout = (AppBarLayout)findViewById(R.id.app_bar);
