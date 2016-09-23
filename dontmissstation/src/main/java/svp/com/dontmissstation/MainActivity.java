@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
                     polylinesCache.add(pl);
                 }
             }
+
         }
         public void MapCameraMoveTo(final Point2D p){
             if(p.isEmpty()){
@@ -139,10 +141,10 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
         setContentView(R.layout.activity_main); 
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_route_toolbar_id);
         setSupportActionBar(toolbar);
-        BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(findViewById(R.id.select_place_scrolling_act_content_view));
-//
-        behavior.setPeekHeight(48);
-        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+//        BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(findViewById(R.id.select_place_scrolling_act_content_view));
+       // behavior.setPeekHeight(32);
+       // behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

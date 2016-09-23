@@ -28,4 +28,14 @@ public class SubwayView extends SubwayElement{
     public void addLine(SubwayLineView line){
         lines.add(line);
     }
+
+    public Collection<SubwayStationView> getAllStations() {
+        Vector<SubwayStationView> stations = new Vector<>();
+        for (SubwayLineView line : lines){
+            for (SubwayStationView station : line.getStations()) {
+                stations.add(station);
+            }
+        }
+        return stations;
+    }
 }

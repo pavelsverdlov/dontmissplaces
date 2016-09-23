@@ -69,7 +69,22 @@ public class Repository {
     }
 
     public Collection<SubwayLineView> getSubwayLinesBySubwayId(long subwayId) {
+        if(subway.getId() != subwayId){
+            throw new InternalError();
+        }
         return subway.getLines();
+    }
+    public Collection<SubwayStationView> getAllStationsOfSubway(long subwayId) {
+        if(subway.getId() != subwayId){
+            throw new InternalError();
+        }
+        Vector<SubwayStationView> stations = new Vector<>();
+        for (SubwayLineView line : subway.getLines()){
+            for (SubwayStationView station : line.getStations()) {
+                stations.add(station);
+            }
+        }
+        return stations;
     }
 
     public Vector<SubwayView> getSubways() {

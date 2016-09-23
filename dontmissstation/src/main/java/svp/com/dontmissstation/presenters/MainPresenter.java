@@ -93,7 +93,11 @@ public class MainPresenter extends CommutativePreferencePresenter<MainActivity,M
     public void openListSubwaysActivity() {
         commutator.goTo(ActivityOperationResult.ListSubways);
     }
-    public void openRouteActivity() { commutator.goTo(ActivityOperationResult.RouteSelection); }
+    public void openRouteActivity() {
+        SubwayBundleProvider bundle = new SubwayBundleProvider();
+        commutator.goTo(ActivityOperationResult.RouteSelection, bundle.putSubwayId(showedSubway.getId()));
+    }
+
     public void pickOnPlace(Point2D point) {
 //        PlaceProvider pp = new PlaceProvider(state.getActivity());
 //        Place res = pp.getPlace(point.getLatLng());

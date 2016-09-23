@@ -41,7 +41,7 @@ public abstract class EditScrollingActivity<P extends Presenter> extends AppComp
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_route_toolbar_id);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        AppBarLayout mAppBarLayout = (AppBarLayout)findViewById(R.id.app_bar);
+        AppBarLayout mAppBarLayout = (AppBarLayout)findViewById(R.id.activity_route_app_bar);
 
         collapsingToolbar.setTitle(" ");
 
