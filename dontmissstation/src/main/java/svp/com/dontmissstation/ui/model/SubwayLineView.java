@@ -3,18 +3,23 @@ package svp.com.dontmissstation.ui.model;
 import android.graphics.Color;
 
 import java.util.Collection;
-import java.util.Vector;
+import java.util.Hashtable;
+import java.util.LinkedList;
 
 public class SubwayLineView extends SubwayElement{
-    private final Vector<SubwayStationView> stations;
+    private final LinkedList<SubwayStationView> stations;
+    private final Hashtable<Long,SubwayStationView> hashtable;
+    private final SubwayView owner;
     private String name;
     public final String colorStr;
 
-    public SubwayLineView(long id,String name, String colorStr){
+    public SubwayLineView(long id, String name, String colorStr,SubwayView owner){
         this.id = id;
-        stations = new Vector<>();
+        stations = new LinkedList<>();
+        hashtable = new Hashtable<>();
         this.name = name;
         this.colorStr = colorStr;
+        this.owner = owner;
     }
 
     public String getName(){
@@ -27,6 +32,7 @@ public class SubwayLineView extends SubwayElement{
     }
     public void addStation(SubwayStationView station){
         stations.add(station);
+       station.addOwnerLine(this);
     }
 
     public SubwayStationView getStartStation() {
@@ -37,5 +43,7 @@ public class SubwayLineView extends SubwayElement{
         return stations.get(stations.size()-1);
     }
 
-
+    public SubwayView getSubway() {
+        return owner;
+    }
 }

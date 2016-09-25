@@ -13,10 +13,30 @@ import svp.com.dontmissstation.ui.model.SubwayView;
 
 
 public class Repository {
+    /**
+    * нужна таблица связей между станциями
+     * id | FromStationId | ToStationId | Length
+    * */
+
+
     public final static String dbname = "dmsdb";
     private final SubwayView subway;
+    private final Vector<SubwayStationView> stations;
 
     public Repository(Context app) {
+        stations = new Vector<>();
+        Vector<Point2D> points  = new Vector<>();
+        points.add(new Point2D(48.1741,16.3781));
+        points.add(new Point2D(48.1797,16.376));
+        points.add(new Point2D(48.1869,16.3737));
+        points.add(new Point2D(48.1947,16.3699));
+        points.add(new Point2D(48.2007,16.3689));
+        points.add(new Point2D(48.2025,16.3614));
+
+        for (int j =0 ; j < 6 ; ++j){
+            stations.add(new SubwayStationView(j,UUID.randomUUID().toString().substring(0,6),points.get(j)));
+        }
+
         subway = new SubwayView(1,"Austria","Vienna");
         subway.addLine(create(0,UUID.randomUUID().toString().substring(0,1), "#009688"));
         subway.addLine(create(1,UUID.randomUUID().toString().substring(0,1), "#4CAF50"));
@@ -27,18 +47,9 @@ public class Repository {
     }
 
     private SubwayLineView create(int i, String substring, String s){
-        SubwayLineView line = new SubwayLineView(i, substring, s);
-
-        Vector<Point2D> points  = new Vector<>();
-        points.add(new Point2D(48.1741,16.3781));
-        points.add(new Point2D(48.1797,16.376));
-        points.add(new Point2D(48.1869,16.3737));
-        points.add(new Point2D(48.1947,16.3699));
-        points.add(new Point2D(48.2007,16.3689));
-        points.add(new Point2D(48.2025,16.3614));
-
+        SubwayLineView line = new SubwayLineView(i, substring, s, subway);
         for (int j =0 ; j < 6 ; ++j){
-            line.addStation(new SubwayStationView(j,UUID.randomUUID().toString().substring(0,6),points.get(j)));
+            line.addStation(stations.get(j));
         }
 
         return line;
