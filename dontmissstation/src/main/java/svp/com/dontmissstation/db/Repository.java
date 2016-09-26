@@ -7,6 +7,7 @@ import java.util.UUID;
 import java.util.Vector;
 
 import svp.app.map.model.Point2D;
+import svp.com.dontmissstation.model.SubwayGraph;
 import svp.com.dontmissstation.ui.model.SubwayStationView;
 import svp.com.dontmissstation.ui.model.SubwayLineView;
 import svp.com.dontmissstation.ui.model.SubwayView;
@@ -22,6 +23,7 @@ public class Repository {
     public final static String dbname = "dmsdb";
     private final SubwayView subway;
     private final Vector<SubwayStationView> stations;
+    private SubwayGraph graph;
 
     public Repository(Context app) {
         stations = new Vector<>();
@@ -38,7 +40,7 @@ public class Repository {
         points.add(new Point2D(48.2222,16.3676));
         points.add(new Point2D(48.2279,16.3639));
 
-        for (int j =0 ; j < 6 ; ++j){
+        for (int j =0 ; j < points.size() ; ++j){
             stations.add(new SubwayStationView(j,UUID.randomUUID().toString().substring(0,6),points.get(j)));
         }
 
@@ -49,7 +51,14 @@ public class Repository {
         for (SubwayLineView line: subway.getLines()) {
             line.addStation(stations.get(4));
         }
-
+        graph = new SubwayGraph();
+        graph.addNode(stations.get(0),stations.get(1),12);
+        graph.addNode(stations.get(1),stations.get(2),10);
+        graph.addNode(stations.get(2),stations.get(3),20);
+        graph.addNode(stations.get(4),stations.get(5),10);
+        graph.addNode(stations.get(5),stations.get(6),30);
+        graph.addNode(stations.get(6),stations.get(7),10);
+        graph.addNode(stations.get(7),stations.get(8),15);
 
 //        subway.addLine(create(2,UUID.randomUUID().toString().substring(0,1), "#CDDC39"));
 //        subway.addLine(create(3,UUID.randomUUID().toString().substring(0,1), "#FF9800"));
