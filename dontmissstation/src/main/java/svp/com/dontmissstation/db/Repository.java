@@ -31,24 +31,35 @@ public class Repository {
         points.add(new Point2D(48.1869,16.3737));
         points.add(new Point2D(48.1947,16.3699));
         points.add(new Point2D(48.2007,16.3689));
+
         points.add(new Point2D(48.2025,16.3614));
+        points.add(new Point2D(48.2118,16.3777));
+        points.add(new Point2D(48.2171,16.3713));
+        points.add(new Point2D(48.2222,16.3676));
+        points.add(new Point2D(48.2279,16.3639));
 
         for (int j =0 ; j < 6 ; ++j){
             stations.add(new SubwayStationView(j,UUID.randomUUID().toString().substring(0,6),points.get(j)));
         }
 
         subway = new SubwayView(1,"Austria","Vienna");
-        subway.addLine(create(0,UUID.randomUUID().toString().substring(0,1), "#009688"));
-        subway.addLine(create(1,UUID.randomUUID().toString().substring(0,1), "#4CAF50"));
-        subway.addLine(create(2,UUID.randomUUID().toString().substring(0,1), "#CDDC39"));
-        subway.addLine(create(3,UUID.randomUUID().toString().substring(0,1), "#FF9800"));
-        subway.addLine(create(4,UUID.randomUUID().toString().substring(0,1), "#795548"));
+        subway.addLine(create(0,UUID.randomUUID().toString().substring(0,1), "#009688",0,4));
+        subway.addLine(create(1,UUID.randomUUID().toString().substring(0,1), "#4CAF50",5,10));
+
+        for (SubwayLineView line: subway.getLines()) {
+            line.addStation(stations.get(4));
+        }
+
+
+//        subway.addLine(create(2,UUID.randomUUID().toString().substring(0,1), "#CDDC39"));
+//        subway.addLine(create(3,UUID.randomUUID().toString().substring(0,1), "#FF9800"));
+//        subway.addLine(create(4,UUID.randomUUID().toString().substring(0,1), "#795548"));
 
     }
 
-    private SubwayLineView create(int i, String substring, String s){
+    private SubwayLineView create(int i, String substring, String s, int startInx, int count){
         SubwayLineView line = new SubwayLineView(i, substring, s, subway);
-        for (int j =0 ; j < 6 ; ++j){
+        for (int j =startInx; j < count ; ++j){
             line.addStation(stations.get(j));
         }
 

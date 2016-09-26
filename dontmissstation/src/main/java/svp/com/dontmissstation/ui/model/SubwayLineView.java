@@ -32,7 +32,7 @@ public class SubwayLineView extends SubwayElement{
     }
     public void addStation(SubwayStationView station){
         stations.add(station);
-       station.addOwnerLine(this);
+        station.addOwnerLine(this);
     }
 
     public SubwayStationView getStartStation() {
