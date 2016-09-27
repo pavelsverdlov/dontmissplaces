@@ -60,6 +60,8 @@ public class Repository {
         graph.addNode(stations.get(6),stations.get(7),10);
         graph.addNode(stations.get(7),stations.get(8),15);
 
+        graph.getRoute(stations.get(0),stations.get(8));
+
 //        subway.addLine(create(2,UUID.randomUUID().toString().substring(0,1), "#CDDC39"));
 //        subway.addLine(create(3,UUID.randomUUID().toString().substring(0,1), "#FF9800"));
 //        subway.addLine(create(4,UUID.randomUUID().toString().substring(0,1), "#795548"));
