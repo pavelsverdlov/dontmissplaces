@@ -51,6 +51,7 @@ public class Repository {
         for (SubwayLineView line: subway.getLines()) {
             line.addStation(stations.get(4));
         }
+        try{
         graph = new SubwayGraph();
         graph.addNode(stations.get(0),stations.get(1),12);
         graph.addNode(stations.get(1),stations.get(2),10);
@@ -61,6 +62,9 @@ public class Repository {
         graph.addNode(stations.get(7),stations.get(8),15);
 
         graph.getRoute(stations.get(0),stations.get(8));
+        }catch (Exception ex){
+            ex.getMessage();
+        }
 
 //        subway.addLine(create(2,UUID.randomUUID().toString().substring(0,1), "#CDDC39"));
 //        subway.addLine(create(3,UUID.randomUUID().toString().substring(0,1), "#FF9800"));

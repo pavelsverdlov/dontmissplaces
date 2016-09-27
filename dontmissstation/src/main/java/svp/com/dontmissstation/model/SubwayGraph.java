@@ -24,13 +24,18 @@ public class SubwayGraph {
             this.nodes = nodes;
         }
     }
-    private final class Node{
+    private final class Node implements Comparable<Node>{
         final int index;
         final float length;
 
         public Node(Integer index, float length) {
             this.index =index;
             this.length = length;
+        }
+
+        @Override
+        public int compareTo(Node another) {
+            return Float.compare(length,another.length);
         }
     }
     private HashMap<SubwayStationView,Integer> map;
@@ -62,7 +67,7 @@ public class SubwayGraph {
         int index;
         if(!map.containsKey(station)){
             stations.add(station);
-            index = stations.size();
+            index = stations.size()-1;
             map.put(station,index);
             stationCurves.add(new Curve(stations.size(),new TreeSet<Node>()));
         }else{
