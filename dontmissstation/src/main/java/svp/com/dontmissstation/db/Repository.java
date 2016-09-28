@@ -56,6 +56,7 @@ public class Repository {
         graph.addNode(stations.get(0),stations.get(1),12);
         graph.addNode(stations.get(1),stations.get(2),10);
         graph.addNode(stations.get(2),stations.get(3),20);
+        graph.addNode(stations.get(3),stations.get(4),20);
         graph.addNode(stations.get(4),stations.get(5),10);
         graph.addNode(stations.get(5),stations.get(6),30);
         graph.addNode(stations.get(6),stations.get(7),10);

@@ -69,7 +69,7 @@ public class SubwayGraph {
             stations.add(station);
             index = stations.size()-1;
             map.put(station,index);
-            stationCurves.add(new Curve(stations.size(),new TreeSet<Node>()));
+            stationCurves.add(new Curve(index,new TreeSet<Node>()));
         }else{
             index = map.get(station);
         }
