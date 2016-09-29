@@ -27,7 +27,8 @@ import svp.com.dontmissstation.presenters.EditSubwayStationPresenter;
 import svp.com.dontmissstation.ui.model.SubwayStationView;
 import svp.com.dontmissstation.ui.model.SubwayLineView;
 
-public class EditSubwayStationActivity extends AppCompatActivityView<EditSubwayStationPresenter> implements ICommutativeElement, View.OnClickListener {
+public class EditSubwayStationActivity extends AppCompatActivityView<EditSubwayStationPresenter>
+        implements ICommutativeElement, View.OnClickListener {
 
     @Override
     public ActivityOperationItem getOperation() {

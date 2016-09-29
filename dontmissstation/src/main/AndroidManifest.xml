@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="svp.com.dontmissstation" >
+    package="svp.com.dontmissstation">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -19,11 +19,11 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -51,7 +51,7 @@
             android:name=".ui.activities.EditSubwayScrollingActivity"
             android:label="@string/title_activity_edit_subway_scrolling"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="svp.com.dontmissstation.MainActivity" />
@@ -60,7 +60,7 @@
             android:name=".ui.activities.EditSubwayLineScrollingActivity"
             android:label="@string/title_activity_edit_subway_line_scrolling"
             android:parentActivityName=".ui.activities.EditSubwayScrollingActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="svp.com.dontmissstation.ui.activities.EditSubwayScrollingActivity" />
@@ -72,7 +72,7 @@
         <activity
             android:name=".ui.activities.ListSubwaysActivity"
             android:label="@string/title_activity_list_subways"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="svp.com.dontmissstation.MainActivity" />
@@ -83,8 +83,11 @@
         <activity
             android:name=".ui.activities.RouteScrollingActivity"
             android:label="@string/title_activity_route_scrolling"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".ui.activities.StationListActivity"
+            android:label="@string/title_activity_station_list"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

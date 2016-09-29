@@ -100,13 +100,12 @@
     <string name="select_route_station_to">To</string>
 
 
-
     <string name="title_activity_edit_subway_scrolling">EditSubwayScrollingActivity</string>
     <string name="title_activity_edit_subway_line_scrolling">EditSubwayLineScrollingActivity</string>
     <string name="title_activity_edit_station">EditStationActivity</string>
     <string name="title_activity_list_subways">ListSubwaysActivity</string>
     <string name="title_activity_pick_on_map">Map</string>
-
+    <string name="title_activity_station_list">StationListActivity</string>
 
 
 </resources>
