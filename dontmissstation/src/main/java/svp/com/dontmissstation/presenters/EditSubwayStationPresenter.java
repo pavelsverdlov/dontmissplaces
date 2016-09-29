@@ -37,7 +37,8 @@ public class EditSubwayStationPresenter extends CommutativePreferencePresenter<E
     }
 
     public Collection<SubwayLineView> getAvailableLines() {
-        return repository.getSubwayLinesBySubwayId(station.getOwnSubwayId());
+        long sid = station.getOwnSubwayId();
+        return repository.getSubwayLinesBySubwayId(sid);
     }
 
     private void init(Intent intent){

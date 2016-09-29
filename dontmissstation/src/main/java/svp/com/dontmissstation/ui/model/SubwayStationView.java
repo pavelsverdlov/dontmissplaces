@@ -34,7 +34,7 @@ public class SubwayStationView extends SubwayElement{
 
 
     public long getOwnSubwayId() {
-        return lines.get(0).getSubway().getId();
+        return lines.values().iterator().next().getSubway().getId();
     }
 
     public Collection<SubwayLineView> getLines(){

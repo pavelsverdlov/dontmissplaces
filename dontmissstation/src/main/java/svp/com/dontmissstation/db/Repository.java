@@ -41,7 +41,7 @@ public class Repository {
         points.add(new Point2D(48.2279,16.3639));
 
         for (int j =0 ; j < points.size() ; ++j){
-            stations.add(new SubwayStationView(j,UUID.randomUUID().toString().substring(0,6),points.get(j)));
+            stations.add(new SubwayStationView(j,UUID.randomUUID().toString().substring(0,10),points.get(j)));
         }
 
         subway = new SubwayView(1,"Austria","Vienna");

@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -59,7 +61,8 @@ public class EditSubwayStationActivity extends AppCompatActivityView<EditSubwayS
 
     }
 
-    @Bind(R.id.activity_edit_subway_station_lines) Spinner linesSpinner;
+//    @Bind(R.id.activity_edit_subway_station_lines) Spinner linesSpinner;
+    @Bind(R.id.activity_edit_subway_station_lines) LinearLayout linesLayout;
     @Bind(R.id.activity_edit_subway_station_name_edittext) TextView nameView;
     @Bind(R.id.activity_edit_subway_station_latitude_edittext) TextView latitudeView;
     @Bind(R.id.activity_edit_subway_station_longitude_edittext) TextView longitudeView;
@@ -107,10 +110,24 @@ public class EditSubwayStationActivity extends AppCompatActivityView<EditSubwayS
         longitudeView.setText(String.valueOf(coor.longitude));
         latitudeView.setText(String.valueOf(coor.latitude));
 
-        Vector<String> lines = new Vector<String>();
-        for (SubwayLineView line : getPresenter().getAvailableLines()) {
-            lines.add(line.getName());
+        for (SubwayLineView line : station.getLines()) {
+            TextView linev = new TextView(this);
+            linev.setText(line.getName());
+            linev.setBackgroundColor(line.getColor());
+            linev.setTextSize(getResources().getDimension(R.dimen.text_size_medium_btn));
+            linev.setPadding(15,5,15,5);
+            linev.setTextColor(getResources().getColor(R.color.text_white));
+            LinearLayoutCompat.LayoutParams param = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.WRAP_CONTENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+            param.setMarginEnd(10);
+            linev.setLayoutParams(param);
+            linesLayout.addView(linev);
         }
-        linesSpinner.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,lines));
+
+
+//        Vector<String> lines = new Vector<String>();
+//        for (SubwayLineView line : getPresenter().getAvailableLines()) {
+//            lines.add(line.getName());
+//        }
+//        linesSpinner.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,lines));
     }
 }
