@@ -26,6 +26,7 @@ import butterknife.ButterKnife;
 import svp.com.dontmissstation.R;
 import svp.com.dontmissstation.presenters.ListSubwaysPresenter;
 import svp.com.dontmissstation.ui.RecyclerViewEx;
+import svp.com.dontmissstation.ui.adapters.RecyclerCursorAdapter;
 import svp.com.dontmissstation.ui.model.SubwayLineView;
 import svp.com.dontmissstation.ui.model.SubwayView;
 
@@ -63,36 +64,7 @@ public class ListSubwaysActivity extends AppCompatActivityView<ListSubwaysPresen
 
     }
 
-    public class RecyclerCursorAdapter extends RecyclerView.Adapter<RecyclerCursorAdapter.ViewHolder> {
-        private final Context context;
-        private final SavedPlacesCursorAdapter cursorAdapter;
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            public ViewHolder(View v) {
-                super(v);
-            }
-        }
-
-        public RecyclerCursorAdapter(Context context, Cursor c) {
-            this.context = context;
-            cursorAdapter = new SavedPlacesCursorAdapter(context, c);
-        }
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = cursorAdapter.newView(context, cursorAdapter.getCursor(), parent);
-            return new ViewHolder(v);
-        }
-        @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-           // cursorAdapter.getCursor().moveToPosition(position);
-            cursorAdapter.bindView(holder.itemView, context, cursorAdapter.getCursor());
-
-        }
-        @Override
-        public int getItemCount() {
-            return 1;//cursorAdapter.getCount();
-        }
-    }
     public class SavedPlacesCursorAdapter extends BaseCursorAdapter<SubwayCursorView> {
         public SavedPlacesCursorAdapter(Context context, Cursor c) {
             super(context, c);
@@ -111,6 +83,10 @@ public class ListSubwaysActivity extends AppCompatActivityView<ListSubwaysPresen
         @Override
         public void onItemClick(View view, SubwayCursorView item) {
             ListSubwaysActivity.this.getPresenter().subwaySelected(item.getSubway());
+        }
+        @Override
+        public int getCount() {
+            return ListSubwaysActivity.this.getPresenter().getSubways().size();
         }
     }
     public static class SubwayCursorView implements ICursorParcelable {
@@ -183,7 +159,7 @@ public class ListSubwaysActivity extends AppCompatActivityView<ListSubwaysPresen
     @Override
     public void onStart() {
         super.onStart();
-        RecyclerCursorAdapter mAdapter = new RecyclerCursorAdapter(this,null);
+        RecyclerCursorAdapter mAdapter = new RecyclerCursorAdapter(this,null,new SavedPlacesCursorAdapter(this, null));
         recyclerView.setAdapter(mAdapter);
     }
 

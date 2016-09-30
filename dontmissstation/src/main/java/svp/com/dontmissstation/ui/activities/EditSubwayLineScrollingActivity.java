@@ -131,7 +131,7 @@ public class EditSubwayLineScrollingActivity extends EditScrollingActivity<EditS
 
     @Override
     protected void onAddClick() {
-
+        getPresenter().openStationListActivity();
     }
 
     @Override

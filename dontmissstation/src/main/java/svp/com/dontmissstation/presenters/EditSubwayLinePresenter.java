@@ -44,4 +44,8 @@ public class EditSubwayLinePresenter extends CommutativePreferencePresenter<Edit
         long id = bundle.getSubwayLineId();
         subwayLine = repository.getSubwayLineById(id);
     }
+
+    public void openStationListActivity() {
+        commutator.goTo(ActivityOperationResult.StationList);
+    }
 }

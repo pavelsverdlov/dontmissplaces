@@ -37,7 +37,7 @@ public class SubwayStationView extends SubwayElement{
         return lines.values().iterator().next().getSubway().getId();
     }
 
-    public Collection<SubwayLineView> getLines(){
+    public Vector<SubwayLineView> getLines(){
         Vector<SubwayLineView> _lines = new Vector<>();
         for (SubwayLineView l: lines.values()){
             _lines.add(l);

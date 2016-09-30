@@ -130,4 +130,11 @@ public class Repository {
         s.add(subway);
         return s;
     }
+
+    public Vector<SubwayStationView> getSubwayStationsById(long subwayId) {
+        if(subway.getId() != subwayId){
+            throw new InternalError();
+        }
+        return stations;
+    }
 }
