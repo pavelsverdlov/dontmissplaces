@@ -24,6 +24,7 @@ import butterknife.ButterKnife;
 import svp.app.map.model.Point2D;
 import svp.com.dontmissstation.R;
 import svp.com.dontmissstation.presenters.EditSubwayStationPresenter;
+import svp.com.dontmissstation.ui.model.LineUIView;
 import svp.com.dontmissstation.ui.model.SubwayStationView;
 import svp.com.dontmissstation.ui.model.SubwayLineView;
 
@@ -112,16 +113,8 @@ public class EditSubwayStationActivity extends AppCompatActivityView<EditSubwayS
         latitudeView.setText(String.valueOf(coor.latitude));
 
         for (SubwayLineView line : station.getLines()) {
-            TextView linev = new TextView(this);
-            linev.setText(line.getName());
-            linev.setBackgroundColor(line.getColor());
-            linev.setTextSize(getResources().getDimension(R.dimen.text_size_medium_btn));
-            linev.setPadding(15,5,15,5);
-            linev.setTextColor(getResources().getColor(R.color.text_white));
-            LinearLayoutCompat.LayoutParams param = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.WRAP_CONTENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
-            param.setMarginEnd(10);
-            linev.setLayoutParams(param);
-            linesLayout.addView(linev);
+            LineUIView linev = new LineUIView(this, line);
+            linev.addTo(linesLayout);
         }
 
 

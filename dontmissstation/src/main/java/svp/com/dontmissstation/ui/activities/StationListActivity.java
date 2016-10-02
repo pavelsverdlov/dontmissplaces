@@ -29,6 +29,7 @@ import svp.com.dontmissstation.R;
 import svp.com.dontmissstation.presenters.StationListPresenter;
 import svp.com.dontmissstation.ui.RecyclerViewEx;
 import svp.com.dontmissstation.ui.adapters.RecyclerCursorAdapter;
+import svp.com.dontmissstation.ui.model.LineUIView;
 import svp.com.dontmissstation.ui.model.SubwayLineView;
 import svp.com.dontmissstation.ui.model.SubwayStationView;
 import svp.com.dontmissstation.ui.model.SubwayView;
@@ -98,7 +99,7 @@ public class StationListActivity extends AppCompatActivityView<StationListPresen
     public static class SubwayStationCursorView implements ICursorParcelable {
         private final SubwayStationView stationView;
         private TextView name;
-        private TextView lineView;
+        private LinearLayout linesLayout;
         private int position;
         private View view;
 
@@ -116,16 +117,17 @@ public class StationListActivity extends AppCompatActivityView<StationListPresen
 //            });
 
             name.setText(stationView.getName());
-            SubwayLineView line = stationView.getLines().get(0);
-            lineView.setText(line.getName());
-            lineView.setBackgroundColor(line.getColor());
+            for (SubwayLineView line : stationView.getLines()) {
+                LineUIView linev = new LineUIView(view.getContext(), line);
+                linev.addTo(linesLayout);
+            }
         }
 
         @Override
         public void initView(View view) {
             this.view = view;
             name = ViewExtensions.findViewById(view,R.id.activity_add_new_subway_station_name_textview);
-            lineView = ViewExtensions.findViewById(view,R.id.activity_add_new_subway_line_template_line_name);
+            linesLayout = ViewExtensions.findViewById(view,R.id.activity_add_new_subway_line_template_lines_layout);
         }
 
         public SubwayStationView getSubway() {

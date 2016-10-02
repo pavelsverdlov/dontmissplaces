@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.svp.infrastructure.common.ViewExtensions;
@@ -21,6 +22,7 @@ import java.util.Vector;
 import butterknife.Bind;
 import svp.com.dontmissstation.R;
 import svp.com.dontmissstation.presenters.*;
+import svp.com.dontmissstation.ui.model.LineUIView;
 import svp.com.dontmissstation.ui.model.SubwayStationView;
 import svp.com.dontmissstation.ui.model.SubwayLineView;
 
@@ -65,13 +67,15 @@ public class EditSubwayLineScrollingActivity extends EditScrollingActivity<EditS
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             private final TextView name;
-            private final TextView lineView;
+            private final LinearLayout linesLayout;
             private int position;
+            View view;
 
             public ViewHolder(View v) {
                 super(v);
+                this.view = v;
                 name = ViewExtensions.findViewById(v,R.id.activity_add_new_subway_station_name_textview);
-                lineView = ViewExtensions.findViewById(v,R.id.activity_add_new_subway_line_template_line_name);
+                linesLayout = ViewExtensions.findViewById(v,R.id.activity_add_new_subway_line_template_lines_layout);
             }
 
             public void bind(int p) {
@@ -86,9 +90,12 @@ public class EditSubwayLineScrollingActivity extends EditScrollingActivity<EditS
                 });
 
                 name.setText(station.getName());
-
-                lineView.setText(EditSubwayLineScrollingActivity.this.line.getName());
-                lineView.setBackgroundColor(EditSubwayLineScrollingActivity.this.line.getColor());
+                for (SubwayLineView line : station.getLines()) {
+                    LineUIView linev = new LineUIView(view.getContext(), line);
+                    linev.addTo(linesLayout);
+                }
+//                lineView.setText(EditSubwayLineScrollingActivity.this.line.getName());
+//                lineView.setBackgroundColor(EditSubwayLineScrollingActivity.this.line.getColor());
             }
         }
         public SubwayStationRecyclerAdapter(Context context, Collection<SubwayStationView> collection) {
