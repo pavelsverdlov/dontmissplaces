@@ -115,7 +115,7 @@ public class PickOnMapActivity extends FragmentActivityView<PickOnMapPresenter>
                 closeYesNotBottomPanel();
                 break;
             case R.id.activity_pick_on_map_place_ok:
-                onBackPressed();
+
                 break;
         }
     }

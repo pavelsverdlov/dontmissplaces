@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Vector;
 
 import svp.com.dontmissstation.db.Repository;
+import svp.com.dontmissstation.model.BundleRepository;
 import svp.com.dontmissstation.ui.activities.ActivityOperationResult;
 import svp.com.dontmissstation.ui.activities.EditSubwayStationActivity;
 import svp.com.dontmissstation.ui.model.SubwayStationView;
@@ -42,9 +43,7 @@ public class EditSubwayStationPresenter extends CommutativePreferencePresenter<E
     }
 
     private void init(Intent intent){
-        SubwayBundleProvider bundle = new SubwayBundleProvider(intent);
-        long id = bundle.getSubwayStationId();
-        station = repository.getSubwayStationById(id);
+        station = BundleRepository.getStation(intent,repository);
     }
 
     public void openMapActivity() {

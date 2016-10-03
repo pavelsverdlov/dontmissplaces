@@ -134,15 +134,8 @@ public class GoogleApiMapPlaceProvider {
             if(types != null){
                 request.getUrl().put("types", types);
             }
-
+//
             HttpResponse result = request.execute();
-//            InputStreamReader str = new InputStreamReader(result.getContent());
-//            BufferedReader reader = new BufferedReader(str);
-//            String readLine;
-//            String responseBody = "";
-//            while (((readLine = reader.readLine()) != null)) {
-//                responseBody += "\n" + readLine;
-//            }
 
             PlacesList list = result.parseAs(PlacesList.class);
             // Check log cat for places response status
