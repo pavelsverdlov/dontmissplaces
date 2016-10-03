@@ -111,7 +111,7 @@ public class EditSubwayStationActivity extends AppCompatActivityView<EditSubwayS
         Point2D coor = station.getCoordinate();
         longitudeView.setText(String.valueOf(coor.longitude));
         latitudeView.setText(String.valueOf(coor.latitude));
-
+        linesLayout.removeAllViews();
         for (SubwayLineView line : station.getLines()) {
             LineUIView linev = new LineUIView(this, line);
             linev.addTo(linesLayout);

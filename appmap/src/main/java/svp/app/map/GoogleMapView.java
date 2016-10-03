@@ -1,6 +1,7 @@
 package svp.app.map;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -40,6 +41,7 @@ public class GoogleMapView implements IMapView, MapZoomController.IMapZoom, OnMa
     private OnMapClickListener listener;
     private MapZoomController zoomController;
     private final HashMap<UUID, Marker> markers;
+    SupportMapFragment mapFragment;
 
     public GoogleMapView(FragmentActivity activity, int gmResourceId) {
         this.activity = activity;
@@ -113,9 +115,11 @@ public class GoogleMapView implements IMapView, MapZoomController.IMapZoom, OnMa
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        SupportMapFragment mapFragment = (SupportMapFragment)activity.getSupportFragmentManager()
+        mapFragment = (SupportMapFragment)activity.getSupportFragmentManager()
                 .findFragmentById(gmResourceId);
         mapFragment.getMapAsync(this);
+
+
 
         zoomController = new MapZoomController(activity,this);
     }
@@ -127,7 +131,12 @@ public class GoogleMapView implements IMapView, MapZoomController.IMapZoom, OnMa
 
     @Override
     public void onStop() {
-
+//        mapFragment.onDestroyView();
+//        FragmentManager fm = activity.getFragmentManager();
+//        fm.beginTransaction()
+//                .remove(fm.findFragmentById(gmResourceId))
+//                .commitAllowingStateLoss();
+//        fm.executePendingTransactions();
     }
 
     @Override

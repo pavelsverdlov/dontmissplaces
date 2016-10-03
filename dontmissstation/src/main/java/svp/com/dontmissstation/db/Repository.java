@@ -52,17 +52,18 @@ public class Repository {
             line.addStation(stations.get(4));
         }
         try{
-        graph = new SubwayGraph();
-        graph.addNode(stations.get(0),stations.get(1),12);
-        graph.addNode(stations.get(1),stations.get(2),10);
-        graph.addNode(stations.get(2),stations.get(3),20);
-        graph.addNode(stations.get(3),stations.get(4),20);
-        graph.addNode(stations.get(4),stations.get(5),10);
-        graph.addNode(stations.get(5),stations.get(6),30);
-        graph.addNode(stations.get(6),stations.get(7),10);
-        graph.addNode(stations.get(7),stations.get(8),15);
+            graph = new SubwayGraph();
+            graph.addNode(stations.get(0),stations.get(1),12);
+            graph.addNode(stations.get(1),stations.get(2),10);
+            graph.addNode(stations.get(2),stations.get(3),20);
+            graph.addNode(stations.get(3),stations.get(4),20);
+            //graph.addNode(stations.get(4),stations.get(5),10);
+            graph.addNode(stations.get(5),stations.get(6),30);
+            graph.addNode(stations.get(6),stations.get(7),10);
+            graph.addNode(stations.get(7),stations.get(8),15);
+            graph.addNode(stations.get(8),stations.get(9),15);
 
-        graph.getRoute(stations.get(0),stations.get(8));
+            graph.getRoute(stations.get(4),stations.get(5));
         }catch (Exception ex){
             ex.getMessage();
         }

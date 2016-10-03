@@ -66,6 +66,13 @@
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_test_maps">Map</string>
 
+
+    <!--
+    general
+    -->
+    <string name="_ok">OK</string>
+    <string name="_cancel">CANCEL</string>
+
     <!--
     draw new subway
     -->

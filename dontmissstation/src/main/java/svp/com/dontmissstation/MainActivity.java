@@ -180,6 +180,15 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
                 break;
         }
     }
+    @Override
+    protected void onStop(){
+        super.onStop();
+
+    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //No call for super(). Bug on API Level > 11.
+    }
 
     @Override
     protected void onStart() {
@@ -220,6 +229,7 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
         if (this.permissions.fineLocationPermissionDenied) {
             this.permissions.showMissingPermissionError();// Permission was not granted, display error dialog.
         }
+
         mapView.onResume();
         super.onResume();
     }

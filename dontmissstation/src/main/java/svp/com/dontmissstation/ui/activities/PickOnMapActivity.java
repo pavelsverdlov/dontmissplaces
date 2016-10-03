@@ -3,7 +3,10 @@ package svp.com.dontmissstation.ui.activities;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
+import com.svp.infrastructure.ActivityPermissions;
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 import com.svp.infrastructure.mvpvs.commutate.ICommutativeElement;
 import com.svp.infrastructure.mvpvs.view.FragmentActivityView;
@@ -12,6 +15,8 @@ import org.osmdroid.util.BoundingBoxE6;
 
 import java.util.HashMap;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import svp.app.map.GoogleMapView;
 import svp.app.map.IMapView;
 import svp.app.map.OnMapClickListener;
@@ -22,7 +27,7 @@ import svp.com.dontmissstation.presenters.PickOnMapPresenter;
 import svp.com.dontmissstation.ui.model.POIView;
 
 public class PickOnMapActivity extends FragmentActivityView<PickOnMapPresenter>
-        implements ICommutativeElement,OnMapClickListener{
+        implements ICommutativeElement,OnMapClickListener, View.OnClickListener {
 
     @Override
     public ActivityOperationItem getOperation() {
@@ -33,6 +38,8 @@ public class PickOnMapActivity extends FragmentActivityView<PickOnMapPresenter>
     public Activity getActivity() {
         return this;
     }
+
+
 
     public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<PickOnMapActivity> {
 
@@ -57,6 +64,7 @@ public class PickOnMapActivity extends FragmentActivityView<PickOnMapPresenter>
 
         public void showOnMap(GoogleApiMapPlaceProvider.Place place) {
             view.mapView.addMarker(new POIView(place),-1);
+            view.openYesNotBottomPanel();
         }
     }
 
@@ -66,12 +74,21 @@ public class PickOnMapActivity extends FragmentActivityView<PickOnMapPresenter>
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_on_map);
+
+        findViewById(R.id.activity_pick_on_map_place_cancel).setOnClickListener(this);
+        findViewById(R.id.activity_pick_on_map_place_ok).setOnClickListener(this);
     }
     @Override
     protected void onStart() {
         super.onStart();
 
+        ActivityPermissions  permissions = new ActivityPermissions(this);
+
         mapView = new GoogleMapView(this,R.id.activity_pick_on_map_fragment_map);
+
+        permissions.checkPermissionExternalStorage();
+        permissions.checkPermissionFineLocation();
+
         mapView.setOnMapClickListener(this);
         mapView.onCreate(null);
         mapView.onStart();
@@ -82,6 +99,25 @@ public class PickOnMapActivity extends FragmentActivityView<PickOnMapPresenter>
                 mapView.moveTo(new Point2D(48.216667, 16.373333));
             }
         });
+    }
+
+    private void openYesNotBottomPanel() {
+
+    }
+    private void closeYesNotBottomPanel() {
+
+    }
+    
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.activity_pick_on_map_place_cancel:
+                closeYesNotBottomPanel();
+                break;
+            case R.id.activity_pick_on_map_place_ok:
+                onBackPressed();
+                break;
+        }
     }
 
     /**

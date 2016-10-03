@@ -71,7 +71,7 @@ public class PickOnMapPresenter extends CommutativePreferencePresenter<PickOnMap
         protected String doInBackground(String... args) {
             googlePlaces = new GoogleApiMapPlaceProvider();
             try {
-                String types = "cafe|restaurant";// "subway_station";
+                String types = "subway_station";// "subway_station";
                 //meters
                 double radius = 100;
                 nearPlaces = googlePlaces.search(point.latitude,

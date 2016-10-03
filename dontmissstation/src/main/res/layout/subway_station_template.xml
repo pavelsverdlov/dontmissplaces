@@ -18,7 +18,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
@@ -28,7 +28,7 @@
                 android:id="@+id/activity_add_new_subway_station_name_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin_12dp"
                 android:layout_weight="1"
                 android:text="Heiligenstadt"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -36,7 +36,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
@@ -77,11 +77,11 @@
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_arrow_upward_black_24dp" />
-            <View
-                android:background="@color/general_border_gray"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                />
+            <!--<View-->
+                <!--android:background="@color/general_border_gray"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="1dp"-->
+                <!--/>-->
             <ImageButton
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_weight="1"
