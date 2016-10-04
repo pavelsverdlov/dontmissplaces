@@ -3,7 +3,6 @@ package svp.com.dontmissstation.presenters;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.widget.ListAdapter;
 
 import com.svp.infrastructure.AlertDialogManager;
 import com.svp.infrastructure.ConnectionDetector;
@@ -11,14 +10,12 @@ import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import svp.app.map.android.GoogleApiMapPlaceProvider;
-import svp.app.map.android.PlaceProvider;
-import svp.app.map.model.Place;
 import svp.app.map.model.Point2D;
 import svp.com.dontmissstation.db.Repository;
 import svp.com.dontmissstation.model.BundleRepository;
-import svp.com.dontmissstation.ui.activities.ActivityOperationResult;
 import svp.com.dontmissstation.ui.activities.PickOnMapActivity;
 import svp.com.dontmissstation.ui.model.SubwayStationView;
 
@@ -26,6 +23,7 @@ public class PickOnMapPresenter extends CommutativePreferencePresenter<PickOnMap
 
     private final Repository repository;
     private SubwayStationView station;
+    Point2D selectedPoint;
 
     public PickOnMapPresenter(Repository repository) {
         this.repository = repository;
@@ -46,11 +44,9 @@ public class PickOnMapPresenter extends CommutativePreferencePresenter<PickOnMap
         commutator.backTo(new SubwayBundleProvider().putStationId(station.getId()));
     }
 
-
-
     public void searchNearestStation(Point2D point) {
 //        PlaceProvider pp = new PlaceProvider(state.getActivity());
-//        Place res = pp.getPlace(point.getLatLng());
+//        Place res = pp.getPlace(selectedPoint.getLatLng());
         ConnectionDetector cd = new ConnectionDetector(state.getActivity());
 
         if (cd.isConnectingToInternet()) {
@@ -60,36 +56,45 @@ public class PickOnMapPresenter extends CommutativePreferencePresenter<PickOnMap
 //        GoogleApiMapPlaceProvider.PlacesList places;
 //        try {
 //            GoogleApiMapPlaceProvider p = new GoogleApiMapPlaceProvider();
-//            places = p.search(point.latitude, point.longitude, 1000, "cafe|restaurant");
+//            places = p.search(selectedPoint.latitude, selectedPoint.longitude, 1000, "cafe|restaurant");
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-        this.point = point;
+        this.selectedPoint = point;
         new LoadPlaces().execute();
 
     }
 
-    GoogleApiMapPlaceProvider googlePlaces;
-    GoogleApiMapPlaceProvider.PlacesList nearPlaces;
-    Point2D point;
-    AlertDialogManager alert = new AlertDialogManager();
-    ArrayList<HashMap<String, String>> placesListItems = new ArrayList<HashMap<String, String>>();
+    public void clearSelectedPlace(){
+        selectedPoint = Point2D.empty();
+    }
+
+    private void setSelectedPlace(List<GoogleApiMapPlaceProvider.Place> results){
+        if(results.size() > 0) {
+            GoogleApiMapPlaceProvider.Place place = results.get(0);
+            GoogleApiMapPlaceProvider.Place.Location loc = place.geometry.location;
+            selectedPoint = new Point2D(loc.lat, loc.lng);
+            state.showOnMap(place);
+            //state.
+        }
+    }
 
 
     class LoadPlaces extends AsyncTask<String, String, String> {
+        GoogleApiMapPlaceProvider.PlacesList nearPlaces;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
 
         protected String doInBackground(String... args) {
-            googlePlaces = new GoogleApiMapPlaceProvider();
+            GoogleApiMapPlaceProvider googlePlaces = new GoogleApiMapPlaceProvider();
             try {
                 String types = "subway_station";
                 //meters
                 double radius = 100;
-                nearPlaces = googlePlaces.search(point.latitude,
-                        point.longitude, radius, types);
+                nearPlaces = googlePlaces.search(selectedPoint.latitude,
+                        selectedPoint.longitude, radius, types);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -100,38 +105,9 @@ public class PickOnMapPresenter extends CommutativePreferencePresenter<PickOnMap
             state.getActivity().runOnUiThread(new Runnable() {
                 public void run() {
                     String status = nearPlaces.status;
-                    // Check for all possible status
                     if (status.equals("OK")) {
-                        // Successfully got places details
                         if (nearPlaces.results != null) {
-                            // loop through each place
-                            for (GoogleApiMapPlaceProvider.Place p : nearPlaces.results) {
-                                HashMap<String, String> map = new HashMap<String, String>();
-
-                                // Place reference won't display in listview - it will be hidden
-                                // Place reference is used to get "place full details"
-                                map.put("reference", p.reference);
-
-                                // Place name
-                                map.put("name", p.name);
-
-
-                                // adding HashMap to ArrayList
-                                placesListItems.add(map);
-                            }
-                            if (nearPlaces.results.size() > 0) {
-                                PickOnMapPresenter.this.state.showOnMap(nearPlaces.results.get(0));
-                            }
-
-
-                            // list adapter
-//                            ListAdapter adapter = new SimpleAdapter(MainActivity.this, placesListItems,
-//                                    R.layout.list_item,
-//                                    new String[] { KEY_REFERENCE, KEY_NAME}, new int[] {
-//                                    R.id.reference, R.id.name });
-//
-//                            // Adding data into listview
-//                            lv.setAdapter(adapter);
+                            setSelectedPlace(nearPlaces.results);
                         }
                     } else if (status.equals("ZERO_RESULTS")) {
                         // Zero results found

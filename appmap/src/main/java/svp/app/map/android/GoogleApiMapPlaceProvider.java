@@ -18,6 +18,8 @@ import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import svp.app.map.HttpResponseReader;
+
 public class GoogleApiMapPlaceProvider {
     public static class Place implements Serializable {
 
@@ -136,6 +138,10 @@ public class GoogleApiMapPlaceProvider {
             }
 //
             HttpResponse result = request.execute();
+
+            HttpResponseReader reader = new HttpResponseReader(result);
+
+            String text = reader.readToEnd();
 
             PlacesList list = result.parseAs(PlacesList.class);
             // Check log cat for places response status

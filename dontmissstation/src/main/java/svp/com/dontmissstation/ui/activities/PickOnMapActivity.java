@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.svp.infrastructure.ActivityPermissions;
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
@@ -64,19 +65,30 @@ public class PickOnMapActivity extends FragmentActivityView<PickOnMapPresenter>
 
         public void showOnMap(GoogleApiMapPlaceProvider.Place place) {
             view.mapView.addMarker(new POIView(place),-1);
-            view.openYesNotBottomPanel();
+            openYesNotBottomPanel();
+        }
+        private void openYesNotBottomPanel() {
+            view.bottomLayout.setVisibility(View.VISIBLE);
+        }
+        private void closeYesNotBottomPanel() {
+            view.bottomLayout.setVisibility(View.GONE);
         }
     }
 
     private IMapView mapView;
+    @Bind(R.id.select_place_scrolling_act_content_view) LinearLayout bottomLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_on_map);
 
+        ButterKnife.bind(this);
+
         findViewById(R.id.activity_pick_on_map_place_cancel).setOnClickListener(this);
         findViewById(R.id.activity_pick_on_map_place_ok).setOnClickListener(this);
+
+        bottomLayout.setVisibility(View.GONE);
     }
     @Override
     protected void onStart() {
@@ -101,18 +113,11 @@ public class PickOnMapActivity extends FragmentActivityView<PickOnMapPresenter>
         });
     }
 
-    private void openYesNotBottomPanel() {
-
-    }
-    private void closeYesNotBottomPanel() {
-
-    }
-    
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.activity_pick_on_map_place_cancel:
-                closeYesNotBottomPanel();
+                //closeYesNotBottomPanel();
                 break;
             case R.id.activity_pick_on_map_place_ok:
 

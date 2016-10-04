@@ -1,4 +1,4 @@
-package svp.com.dontmissstation.model;
+package svp.app.map;
 
 import com.google.api.client.http.HttpResponse;
 

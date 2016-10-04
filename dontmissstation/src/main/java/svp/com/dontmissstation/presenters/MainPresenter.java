@@ -100,7 +100,7 @@ public class MainPresenter extends CommutativePreferencePresenter<MainActivity,M
 
     public void pickOnPlace(Point2D point) {
 //        PlaceProvider pp = new PlaceProvider(state.getActivity());
-//        Place res = pp.getPlace(point.getLatLng());
+//        Place res = pp.getPlace(selectedPoint.getLatLng());
     }
 
 
