@@ -90,15 +90,20 @@ public class SubwayGraph {
         int indexFinish = map.get(to);
         while (true){
             if(indexGo == indexFinish){
+                route.add(stations.get(indexGo));
                 routes.add(route);
-                route = new Vector<>();
+                //route = new Vector<>();
                 indexGo = indexStart;
+                break;
             }
             Curve curve = temp.get(indexGo);
             Node node = curve.nodes.pollFirst();
             if(node == null){
                 //no ways any more
-                break;
+                //back prev station
+                indexGo = map.get(route.lastElement());
+                route.remove(route.size()-1);
+                continue;
             }
             route.add(stations.get(indexGo));
             indexGo = node.index;
