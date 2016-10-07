@@ -79,6 +79,10 @@ public class PickOnMapPresenter extends CommutativePreferencePresenter<PickOnMap
         }
     }
 
+    public void storeSelectedPlace() {
+        //repository.
+    }
+
 
     class LoadPlaces extends AsyncTask<String, String, String> {
         GoogleApiMapPlaceProvider.PlacesList nearPlaces;

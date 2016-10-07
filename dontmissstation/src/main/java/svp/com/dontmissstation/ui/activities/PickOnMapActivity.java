@@ -118,9 +118,11 @@ public class PickOnMapActivity extends FragmentActivityView<PickOnMapPresenter>
         switch (v.getId()){
             case R.id.activity_pick_on_map_place_cancel:
                 //closeYesNotBottomPanel();
+                getPresenter().clearSelectedPlace();
                 break;
             case R.id.activity_pick_on_map_place_ok:
-
+                getPresenter().storeSelectedPlace();
+                getPresenter().openEditStationActivity();
                 break;
         }
     }
