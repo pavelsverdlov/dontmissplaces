@@ -17,6 +17,8 @@ import svp.com.dontmissstation.ui.model.SubwayStationView;
 public class SubwayGraph {
     private final class Curve{
         final int index;
+        //TreeSet неподходи потому что если compareTo возвращает одинаковые значения
+        //новый елемент в колекцию не добалсяться
         final TreeSet<Node> nodes;
 
         private Curve(int index, TreeSet<Node> nodes) {
