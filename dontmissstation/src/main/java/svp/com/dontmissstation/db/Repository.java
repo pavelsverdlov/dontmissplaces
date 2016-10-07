@@ -14,11 +14,13 @@ import svp.com.dontmissstation.ui.model.SubwayView;
 
 
 public class Repository {
+
+
     /**
-    * нужна таблица связей между станциями
+     * нужна таблица связей между станциями
      * id | FromStationId | toStationId | length
-    * */
-    private class StationRoute{
+     */
+    private class StationRoute {
         public final long fromStationId;
         public final long toStationId;
         public final float length;
@@ -29,22 +31,24 @@ public class Repository {
             this.length = length;
         }
     }
+
     private final Vector<StationRoute> stationRoutes = new Vector<>();
 
     /**
      * id | stationId | indexInLine | lineId
-     * */
-    private class StationInLine{
+     */
+    private class StationInLine {
         public final long stationId;
         public final int indexInLine;
         public final float lineId;
 
-        private StationInLine(long stationId, int indexInLine, float lineId){
+        private StationInLine(long stationId, int indexInLine, float lineId) {
             this.stationId = stationId;
             this.indexInLine = indexInLine;
             this.lineId = lineId;
         }
     }
+
     private final Vector<StationInLine> stationsInLine = new Vector<>();
 
 
@@ -54,39 +58,38 @@ public class Repository {
     private SubwayGraph graph;
 
 
-
     public Repository(Context app) {
         int line1 = 0;
         int line2 = 1;
 
         stations = new Vector<>();
-        Vector<Point2D> points  = new Vector<>();
-        points.add(new Point2D(48.1741,16.3781));
-        points.add(new Point2D(48.1797,16.376));
-        points.add(new Point2D(48.1869,16.3737));
-        points.add(new Point2D(48.1947,16.3699));
-        points.add(new Point2D(48.2007,16.3689));
+        Vector<Point2D> points = new Vector<>();
+        points.add(new Point2D(48.1741, 16.3781));
+        points.add(new Point2D(48.1797, 16.376));
+        points.add(new Point2D(48.1869, 16.3737));
+        points.add(new Point2D(48.1947, 16.3699));
+        points.add(new Point2D(48.2007, 16.3689));
 
-        points.add(new Point2D(48.2025,16.3614));
-        points.add(new Point2D(48.2118,16.3777));
-        points.add(new Point2D(48.2171,16.3713));
-        points.add(new Point2D(48.2222,16.3676));
-        points.add(new Point2D(48.2279,16.3639));
+        points.add(new Point2D(48.2025, 16.3614));
+        points.add(new Point2D(48.2118, 16.3777));
+        points.add(new Point2D(48.2171, 16.3713));
+        points.add(new Point2D(48.2222, 16.3676));
+        points.add(new Point2D(48.2279, 16.3639));
 
-        for (int j =0 ; j < points.size() ; ++j){
-            stations.add(new SubwayStationView(j,UUID.randomUUID().toString().substring(0,10),points.get(j)));
+        for (int j = 0; j < points.size(); ++j) {
+            stations.add(new SubwayStationView(j, UUID.randomUUID().toString().substring(0, 10), points.get(j)));
         }
         //
-        stationRoutes.add(new StationRoute(stations.get(0).getId(),stations.get(1).getId(),12));
-        stationRoutes.add(new StationRoute(stations.get(1).getId(),stations.get(2).getId(),10));
-        stationRoutes.add(new StationRoute(stations.get(2).getId(),stations.get(4).getId(),10));
-        stationRoutes.add(new StationRoute(stations.get(4).getId(),stations.get(3).getId(),20));
+        stationRoutes.add(new StationRoute(stations.get(0).getId(), stations.get(1).getId(), 12));
+        stationRoutes.add(new StationRoute(stations.get(1).getId(), stations.get(2).getId(), 10));
+        stationRoutes.add(new StationRoute(stations.get(2).getId(), stations.get(4).getId(), 10));
+        stationRoutes.add(new StationRoute(stations.get(4).getId(), stations.get(3).getId(), 20));
 
-        stationRoutes.add(new StationRoute(stations.get(5).getId(),stations.get(4).getId(),30));
-        stationRoutes.add(new StationRoute(stations.get(4).getId(),stations.get(6).getId(),21));
-        stationRoutes.add(new StationRoute(stations.get(6).getId(),stations.get(7).getId(),10));
-        stationRoutes.add(new StationRoute(stations.get(7).getId(),stations.get(8).getId(),15));
-        stationRoutes.add(new StationRoute(stations.get(8).getId(),stations.get(9).getId(),15));
+        stationRoutes.add(new StationRoute(stations.get(5).getId(), stations.get(4).getId(), 30));
+        stationRoutes.add(new StationRoute(stations.get(4).getId(), stations.get(6).getId(), 21));
+        stationRoutes.add(new StationRoute(stations.get(6).getId(), stations.get(7).getId(), 10));
+        stationRoutes.add(new StationRoute(stations.get(7).getId(), stations.get(8).getId(), 15));
+        stationRoutes.add(new StationRoute(stations.get(8).getId(), stations.get(9).getId(), 15));
         //
         stationsInLine.add(new StationInLine(0, 0, line1));
         stationsInLine.add(new StationInLine(1, 1, line1));
@@ -100,19 +103,19 @@ public class Repository {
         stationsInLine.add(new StationInLine(7, 3, line2));
         stationsInLine.add(new StationInLine(8, 4, line2));
         //
-        subway = new SubwayView(1,"Austria","Vienna");
-        subway.addLine(create(line1,UUID.randomUUID().toString().substring(0,1), "#009688"));//,0,4
-        subway.addLine(create(line2,UUID.randomUUID().toString().substring(0,1), "#4CAF50"));//,5,10
+        subway = new SubwayView(1, "Austria", "Vienna");
+        subway.addLine(create(line1, UUID.randomUUID().toString().substring(0, 1), "#009688"));//,0,4
+        subway.addLine(create(line2, UUID.randomUUID().toString().substring(0, 1), "#4CAF50"));//,5,10
 
-        Vector<SubwayStationView> res= null;
-        try{
+        Vector<SubwayStationView> res = null;
+        try {
             graph = new SubwayGraph();
-            for (StationRoute route : stationRoutes){
-                graph.addNode(stations.get((int)route.fromStationId),stations.get((int)route.toStationId),route.length);
+            for (StationRoute route : stationRoutes) {
+                graph.addNode(stations.get((int) route.fromStationId), stations.get((int) route.toStationId), route.length);
             }
             res = graph.getRoute(stations.get(1), stations.get(7));
 
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.getMessage();
         }
         Vector<SubwayStationView> test = res;
@@ -123,15 +126,15 @@ public class Repository {
 
     }
 
-    private SubwayLineView create(int i, String substring, String s){
+    private SubwayLineView create(int i, String substring, String s) {
         Vector<StationInLine> sts = new Vector<>();
-        for (StationInLine st : stationsInLine){
-            if(st.lineId == i) {
+        for (StationInLine st : stationsInLine) {
+            if (st.lineId == i) {
                 sts.add(st);
             }
         }
         SubwayLineView line = new SubwayLineView(i, substring, s, sts.size(), subway);
-        for (StationInLine st : sts){
+        for (StationInLine st : sts) {
             line.addStation(stations.get((int) st.stationId), st.indexInLine);
         }
 
@@ -143,8 +146,8 @@ public class Repository {
     }
 
     public SubwayLineView getSubwayLineById(long id) {
-        for (SubwayLineView line : subway.getLines()){
-            if(line.getId() == id){
+        for (SubwayLineView line : subway.getLines()) {
+            if (line.getId() == id) {
                 return line;
             }
         }
@@ -152,7 +155,7 @@ public class Repository {
     }
 
     public SubwayStationView getSubwayStationById(long id) {
-        for (SubwayLineView line : subway.getLines()){
+        for (SubwayLineView line : subway.getLines()) {
             for (SubwayStationView station : line.getStations()) {
                 if (station.getId() == id) {
                     return station;
@@ -163,17 +166,18 @@ public class Repository {
     }
 
     public Collection<SubwayLineView> getSubwayLinesBySubwayId(long subwayId) {
-        if(subway.getId() != subwayId){
+        if (subway.getId() != subwayId) {
             throw new InternalError();
         }
         return subway.getLines();
     }
+
     public Collection<SubwayStationView> getAllStationsOfSubway(long subwayId) {
-        if(subway.getId() != subwayId){
+        if (subway.getId() != subwayId) {
             throw new InternalError();
         }
         Vector<SubwayStationView> stations = new Vector<>();
-        for (SubwayLineView line : subway.getLines()){
+        for (SubwayLineView line : subway.getLines()) {
             for (SubwayStationView station : line.getStations()) {
                 stations.add(station);
             }
@@ -188,9 +192,14 @@ public class Repository {
     }
 
     public Vector<SubwayStationView> getSubwayStationsById(long subwayId) {
-        if(subway.getId() != subwayId){
+        if (subway.getId() != subwayId) {
             throw new InternalError();
         }
         return stations;
+    }
+
+
+    public void updateStationCoordinate(SubwayStationView station, Point2D point) {
+        stations.get((int)station.getId()).updateCoordinate(point);
     }
 }

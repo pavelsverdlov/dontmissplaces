@@ -67,10 +67,10 @@ public class PickOnMapActivity extends FragmentActivityView<PickOnMapPresenter>
             view.mapView.addMarker(new POIView(place),-1);
             openYesNotBottomPanel();
         }
-        private void openYesNotBottomPanel() {
+        public void openYesNotBottomPanel() {
             view.bottomLayout.setVisibility(View.VISIBLE);
         }
-        private void closeYesNotBottomPanel() {
+        public void closeYesNotBottomPanel() {
             view.bottomLayout.setVisibility(View.GONE);
         }
     }

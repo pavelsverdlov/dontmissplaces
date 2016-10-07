@@ -62,11 +62,11 @@ public class PickOnMapPresenter extends CommutativePreferencePresenter<PickOnMap
 //        }
         this.selectedPoint = point;
         new LoadPlaces().execute();
-
     }
 
     public void clearSelectedPlace(){
         selectedPoint = Point2D.empty();
+        state.closeYesNotBottomPanel();
     }
 
     private void setSelectedPlace(List<GoogleApiMapPlaceProvider.Place> results){
@@ -75,14 +75,14 @@ public class PickOnMapPresenter extends CommutativePreferencePresenter<PickOnMap
             GoogleApiMapPlaceProvider.Place.Location loc = place.geometry.location;
             selectedPoint = new Point2D(loc.lat, loc.lng);
             state.showOnMap(place);
-            //state.
+            state.openYesNotBottomPanel();
         }
     }
 
     public void storeSelectedPlace() {
-        //repository.
+        repository.updateStationCoordinate(station,selectedPoint);
+        state.closeYesNotBottomPanel();
     }
-
 
     class LoadPlaces extends AsyncTask<String, String, String> {
         GoogleApiMapPlaceProvider.PlacesList nearPlaces;

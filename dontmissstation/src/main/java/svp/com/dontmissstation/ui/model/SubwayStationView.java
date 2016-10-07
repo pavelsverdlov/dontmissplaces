@@ -11,7 +11,7 @@ import java.util.Vector;
 import svp.app.map.model.Point2D;
 
 public class SubwayStationView extends SubwayElement{
-    private final Point2D location;
+    private Point2D location;
     private final HashMap<Long,SubwayLineView> lines;
     private String name;
 
@@ -43,5 +43,9 @@ public class SubwayStationView extends SubwayElement{
             _lines.add(l);
         }
         return _lines;
+    }
+
+    public void updateCoordinate(Point2D point) {
+        location = point;
     }
 }
