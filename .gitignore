@@ -14,3 +14,4 @@ app/src/main/res/values/google_maps_api.xml
 infrastructure/infrastructure.iml
 app/app.iml
 .idea/misc.xml
+dontmissstation/src/debug/res/values/google_maps_api.xml
