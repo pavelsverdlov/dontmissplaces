@@ -164,7 +164,7 @@ public class EditSubwayScrollingActivity extends EditScrollingActivity<EditSubwa
     }
 
     @Override
-    public void onClickRoute(View v) {
+    public void onClickEventRoute(View v) {
         switch (v.getId()){
             case R.id.activity_edit_add_line_fab:
                 break;

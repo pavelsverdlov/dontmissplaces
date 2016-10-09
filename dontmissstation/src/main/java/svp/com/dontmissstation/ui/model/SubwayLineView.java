@@ -35,6 +35,9 @@ public class SubwayLineView extends SubwayElement{
         stations.add(indexInLine, station);
         station.addOwnerLine(this);
     }
+    public void clearStations(){
+        stations.clear();
+    }
 
     public SubwayStationView getStartStation() {
         return stations.get(0);

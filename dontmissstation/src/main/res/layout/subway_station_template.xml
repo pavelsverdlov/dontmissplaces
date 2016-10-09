@@ -71,6 +71,7 @@
             android:orientation="vertical">
 
             <ImageButton
+                android:id="@+id/activity_add_new_subway_line_template_up_btn"
                 android:layout_weight="1"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
@@ -83,6 +84,7 @@
                 <!--android:layout_height="1dp"-->
                 <!--/>-->
             <ImageButton
+                android:id="@+id/activity_add_new_subway_line_template_down"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_weight="1"
                 android:layout_width="48dp"

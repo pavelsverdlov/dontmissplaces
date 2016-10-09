@@ -4,6 +4,8 @@ import android.content.Intent;
 
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 
+import java.util.Vector;
+
 import svp.com.dontmissstation.db.Repository;
 import svp.com.dontmissstation.ui.activities.ActivityOperationResult;
 import svp.com.dontmissstation.ui.activities.EditSubwayLineScrollingActivity;
@@ -47,5 +49,9 @@ public class EditSubwayLinePresenter extends CommutativePreferencePresenter<Edit
 
     public void openStationListActivity() {
         commutator.goTo(ActivityOperationResult.StationList);
+    }
+
+    public void saveStations(Vector<SubwayStationView> stations) {
+        repository.saveOrderedStations(subwayLine,stations);
     }
 }

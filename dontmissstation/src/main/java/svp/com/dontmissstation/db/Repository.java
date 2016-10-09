@@ -14,10 +14,8 @@ import svp.com.dontmissstation.ui.model.SubwayView;
 
 
 public class Repository {
-
-
     /**
-     * нужна таблица связей между станциями
+     *таблица связей между станциями
      * id | FromStationId | toStationId | length
      */
     private class StationRoute {
@@ -35,6 +33,7 @@ public class Repository {
     private final Vector<StationRoute> stationRoutes = new Vector<>();
 
     /**
+     * таблица
      * id | stationId | indexInLine | lineId
      */
     private class StationInLine {
@@ -201,5 +200,30 @@ public class Repository {
 
     public void updateStationCoordinate(SubwayStationView station, Point2D point) {
         stations.get((int)station.getId()).updateCoordinate(point);
+    }
+
+    public void saveOrderedStations(SubwayLineView linetosave, Vector<SubwayStationView> stations) {
+        Vector<StationRoute> temp = new Vector<>();
+        for (int i = 0; i < stations.size(); i++) {
+            SubwayStationView from = stations.get(i);
+            SubwayStationView to = stations.get(i+1);
+            temp.add(new StationRoute(from.getId(),to.getId(),20));
+        }
+        //stationRoutes
+        SubwayLineView linetoupdate = null;
+        for (SubwayLineView line : subway.getLines()){
+            if(line.getId() == linetosave.getId()){
+                line.clearStations();
+                linetoupdate = line;
+                break;
+            }
+        }
+        if(linetoupdate == null){
+            throw new InternalError();
+        }
+        for (int i = 0; i < stations.size(); i++) {
+            SubwayStationView s = stations.get(i);
+            linetoupdate.addStation(s,i);
+        }
     }
 }

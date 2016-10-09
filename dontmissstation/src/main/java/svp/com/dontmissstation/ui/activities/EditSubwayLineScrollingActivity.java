@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 import com.svp.infrastructure.mvpvs.commutate.ICommutativeElement;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Vector;
 
 import butterknife.Bind;
@@ -63,9 +65,9 @@ public class EditSubwayLineScrollingActivity extends EditScrollingActivity<EditS
 
     public class SubwayStationRecyclerAdapter extends RecyclerView.Adapter<SubwayStationRecyclerAdapter.ViewHolder> {
         private final Context context;
-        private final Vector<SubwayStationView> stations;
+        public final Vector<SubwayStationView> stations;
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
+        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             private final TextView name;
             private final LinearLayout linesLayout;
             private int position;
@@ -76,6 +78,26 @@ public class EditSubwayLineScrollingActivity extends EditScrollingActivity<EditS
                 this.view = v;
                 name = ViewExtensions.findViewById(v,R.id.activity_add_new_subway_station_name_textview);
                 linesLayout = ViewExtensions.findViewById(v,R.id.activity_add_new_subway_line_template_lines_layout);
+                ViewExtensions.findViewById(v,R.id.activity_add_new_subway_line_template_up_btn).setOnClickListener(this);
+                ViewExtensions.findViewById(v,R.id.activity_add_new_subway_line_template_down).setOnClickListener(this);
+            }
+
+            @Override
+            public void onClick(View v) {
+                int prev = position;
+                switch (v.getId()){
+                    case R.id.activity_add_new_subway_line_template_up_btn:
+                        if (position == 0){ return; }
+                        SubwayStationRecyclerAdapter.this.notifyItemMoved(prev,--position);
+                        break;
+                    case R.id.activity_add_new_subway_line_template_down:
+                        if (position == stations.size()-1){ return; }
+                        SubwayStationRecyclerAdapter.this.notifyItemMoved(prev,++position);
+                        break;
+                }
+                Collections.swap(SubwayStationRecyclerAdapter.this.stations, prev, position);
+                //update position other item
+                ((ViewHolder)recyclerView.findViewHolderForAdapterPosition(prev)).position = prev;
             }
 
             public void bind(int p) {
@@ -94,9 +116,9 @@ public class EditSubwayLineScrollingActivity extends EditScrollingActivity<EditS
                     LineUIView linev = new LineUIView(view.getContext(), line);
                     linev.addTo(linesLayout);
                 }
-//                lineView.setText(EditSubwayLineScrollingActivity.this.line.getName());
-//                lineView.setBackgroundColor(EditSubwayLineScrollingActivity.this.line.getColor());
             }
+
+
         }
         public SubwayStationRecyclerAdapter(Context context, Collection<SubwayStationView> collection) {
             this.context = context;
@@ -133,7 +155,7 @@ public class EditSubwayLineScrollingActivity extends EditScrollingActivity<EditS
 
     @Override
     protected void onApplyChangesClick() {
-
+        getPresenter().saveStations(linesAdapter.stations);
     }
 
     @Override
@@ -142,7 +164,7 @@ public class EditSubwayLineScrollingActivity extends EditScrollingActivity<EditS
     }
 
     @Override
-    protected void onClickRoute(View v) {
+    protected void onClickEventRoute(View v) {
 
     }
 

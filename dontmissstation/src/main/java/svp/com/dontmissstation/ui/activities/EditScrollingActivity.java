@@ -74,7 +74,7 @@ public abstract class EditScrollingActivity<P extends Presenter> extends AppComp
                 onApplyChangesClick();
                 break;
             default:
-                onClickRoute(v);
+                onClickEventRoute(v);
                 break;
         }
     }
@@ -82,13 +82,14 @@ public abstract class EditScrollingActivity<P extends Presenter> extends AppComp
     protected void setAdapter(RecyclerView.Adapter adapter) {
         itemsCountText.setText("("+adapter.getItemCount()+")");
         recyclerView.setAdapter(adapter);
+
     }
 
     protected abstract void onApplyChangesClick();
 
     protected abstract void onAddClick();
 
-    protected abstract void onClickRoute(View v);
+    protected abstract void onClickEventRoute(View v);
 
     public abstract String getToolbarTitle();
 

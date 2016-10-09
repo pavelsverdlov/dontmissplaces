@@ -53,13 +53,6 @@ public class PickOnMapPresenter extends CommutativePreferencePresenter<PickOnMap
             //    return;
         }
 
-//        GoogleApiMapPlaceProvider.PlacesList places;
-//        try {
-//            GoogleApiMapPlaceProvider p = new GoogleApiMapPlaceProvider();
-//            places = p.search(selectedPoint.latitude, selectedPoint.longitude, 1000, "cafe|restaurant");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
         this.selectedPoint = point;
         new LoadPlaces().execute();
     }
