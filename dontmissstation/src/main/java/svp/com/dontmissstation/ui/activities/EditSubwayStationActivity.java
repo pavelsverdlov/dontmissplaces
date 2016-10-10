@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -69,6 +70,7 @@ public class EditSubwayStationActivity extends AppCompatActivityView<EditSubwayS
     @Bind(R.id.activity_edit_subway_station_latitude_edittext) TextView latitudeView;
     @Bind(R.id.activity_edit_subway_station_longitude_edittext) TextView longitudeView;
     @Bind(R.id.activity_edit_subway_station_pick_point_btn) Button pickPointBtn;
+    @Bind(R.id.activity_edit_subway_station_connect_stations) ListView connectStationsView;
 
     private SubwayStationView station;
 

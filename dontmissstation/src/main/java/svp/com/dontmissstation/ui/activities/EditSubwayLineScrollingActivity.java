@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.svp.infrastructure.common.ViewExtensions;
@@ -188,6 +189,8 @@ public class EditSubwayLineScrollingActivity extends EditScrollingActivity<EditS
 
         lineNameText.setText(line.getName());
         changeColorBtn.setBackgroundColor(line.getColor());
+
+
     }
 
 

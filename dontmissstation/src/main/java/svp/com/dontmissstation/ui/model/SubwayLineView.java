@@ -34,6 +34,11 @@ public class SubwayLineView extends SubwayElement{
     public void addStation(SubwayStationView station, int indexInLine){
         stations.add(indexInLine, station);
         station.addOwnerLine(this);
+//        if(stations.size() > 1) {
+//            SubwayStationView prev = stations.get(stations.size() - 1);
+//            station.addPrev(prev);
+//            prev.addNext(station);
+//        }
     }
     public void clearStations(){
         stations.clear();

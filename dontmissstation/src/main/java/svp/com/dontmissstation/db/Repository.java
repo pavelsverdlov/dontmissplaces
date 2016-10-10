@@ -157,6 +157,16 @@ public class Repository {
         for (SubwayLineView line : subway.getLines()) {
             for (SubwayStationView station : line.getStations()) {
                 if (station.getId() == id) {
+                    station.clearConnects();
+                    long sid = station.getId();
+                    for (StationRoute route : stationRoutes){
+                        if(route.fromStationId == sid ){
+                            station.addNext(stations.get((int)route.toStationId));
+                        }else if(route.toStationId == sid ){
+                            station.addPrev(stations.get((int)route.fromStationId));
+                        }
+                    }
+                    //TODO: add line references
                     return station;
                 }
             }
