@@ -25,6 +25,7 @@ import butterknife.ButterKnife;
 import svp.app.map.model.Point2D;
 import svp.com.dontmissstation.R;
 import svp.com.dontmissstation.presenters.EditSubwayStationPresenter;
+import svp.com.dontmissstation.ui.activities.edit.subway.station.ConnectStationsAdapter;
 import svp.com.dontmissstation.ui.model.LineUIView;
 import svp.com.dontmissstation.ui.model.SubwayStationView;
 import svp.com.dontmissstation.ui.model.SubwayLineView;
@@ -119,6 +120,14 @@ public class EditSubwayStationActivity extends AppCompatActivityView<EditSubwayS
             linev.addTo(linesLayout);
         }
 
+        Vector<ConnectStationsAdapter.ConnectStation> sts = new Vector<>();
+        for (SubwayStationView s : station.getPrevs()){
+            sts.add(ConnectStationsAdapter.ConnectStation.getPrev(s));
+        }
+        for (SubwayStationView s : station.getNexts()){
+            sts.add(ConnectStationsAdapter.ConnectStation.getNext(s));
+        }
+        connectStationsView.setAdapter(new ConnectStationsAdapter(this.getLayoutInflater(),sts));
 
 //        Vector<String> lines = new Vector<String>();
 //        for (SubwayLineView line : getPresenter().getAvailableLines()) {
