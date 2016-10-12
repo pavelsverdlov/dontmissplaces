@@ -31,7 +31,7 @@ import svp.com.dontmissstation.ui.model.SubwayStationView;
 import svp.com.dontmissstation.ui.model.SubwayLineView;
 
 public class EditSubwayStationActivity extends AppCompatActivityView<EditSubwayStationPresenter>
-        implements ICommutativeElement, View.OnClickListener {
+        implements ICommutativeElement, View.OnClickListener, ConnectStationsAdapter.OnClickListener {
 
     @Override
     public ActivityOperationItem getOperation() {
@@ -42,6 +42,7 @@ public class EditSubwayStationActivity extends AppCompatActivityView<EditSubwayS
     public Activity getActivity() {
         return this;
     }
+
 
     public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<EditSubwayStationActivity> {
         public ViewState(EditSubwayStationActivity view) {
@@ -104,6 +105,10 @@ public class EditSubwayStationActivity extends AppCompatActivityView<EditSubwayS
                 break;
         }
     }
+    @Override
+    public void onClick(ConnectStationsAdapter.ConnectStation station) {
+
+    }
 
     @Override
     public void onStart(){
@@ -127,7 +132,9 @@ public class EditSubwayStationActivity extends AppCompatActivityView<EditSubwayS
         for (SubwayStationView s : station.getNexts()){
             sts.add(ConnectStationsAdapter.ConnectStation.getNext(s));
         }
-        connectStationsView.setAdapter(new ConnectStationsAdapter(this.getLayoutInflater(),sts));
+        ConnectStationsAdapter adapter = new ConnectStationsAdapter(this.getLayoutInflater(), sts);
+        adapter.setOnClickListener(this);
+        connectStationsView.setAdapter(adapter);
 
 //        Vector<String> lines = new Vector<String>();
 //        for (SubwayLineView line : getPresenter().getAvailableLines()) {

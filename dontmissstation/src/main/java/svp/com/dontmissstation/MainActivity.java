@@ -279,6 +279,9 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
             case R.id.main_activity_drawer_add_subways:
                 getPresenter().openListSubwaysActivity();
                 break;
+            case R.id.main_activity_drawer_route:
+                getPresenter().openSearchNewRouteActivity();
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

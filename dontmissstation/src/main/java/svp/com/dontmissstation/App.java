@@ -33,6 +33,7 @@ public class App extends Application {
         ActivityCommutator.register(ActivityOperationResult.PickOnMap, PickOnMapActivity.class);
         ActivityCommutator.register(ActivityOperationResult.RouteSelection, RouteScrollingActivity.class);
         ActivityCommutator.register(ActivityOperationResult.StationList, StationListActivity.class);
+        ActivityCommutator.register(ActivityOperationResult.SearchNewRoute, SearchNewRouteActivity.class);
 
         Registrator.register(MainActivity.class,
                 new PresenterContainer.IPresenterCreator() {
@@ -142,6 +143,19 @@ public class App extends Application {
                     @Override
                     public IViewState create(StationListActivity view) {
                         return new StationListActivity.ViewState(view);
+                    }
+                });
+        Registrator.register(SearchNewRouteActivity.class,
+                new PresenterContainer.IPresenterCreator() {
+                    @Override
+                    public IPresenter create() {
+                        return new SearchNewRoutePresenter(repository);
+                    }
+                },
+                new ViewStateContainer.IViewStateCreator<SearchNewRouteActivity>() {
+                    @Override
+                    public IViewState create(SearchNewRouteActivity view) {
+                        return new SearchNewRouteActivity.ViewState(view);
                     }
                 });
 

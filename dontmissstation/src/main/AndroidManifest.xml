@@ -83,10 +83,14 @@
         <activity
             android:name=".ui.activities.RouteScrollingActivity"
             android:label="@string/title_activity_route_scrolling"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.activities.StationListActivity"
             android:label="@string/title_activity_station_list"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.activities.SearchNewRouteActivity"
+            android:label="@string/title_activity_search_new_route"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

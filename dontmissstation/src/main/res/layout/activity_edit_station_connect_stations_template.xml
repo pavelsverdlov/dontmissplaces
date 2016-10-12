@@ -17,19 +17,26 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
+        <ImageButton
+            android:id="@+id/activity_add_new_subway_line_template_btn_back"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_arrow_back_black" />
+
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:padding="@dimen/activity_vertical_margin">
+            android:orientation="horizontal"
+            android:layout_gravity="center_vertical"
+            android:padding="@dimen/activity_horizontal_margin_12dp">
 
             <TextView
                 android:id="@+id/activity_edit_subway_station_from_station_name_textview"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin_12dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:text="Heiligenstadt"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textSize="@dimen/text_size_medium_btn" />
@@ -38,21 +45,20 @@
                 android:id="@+id/activity_edit_subway_station_from_lines_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
+                android:layout_gravity="center_horizontal"
                 android:background="@android:color/transparent"
-                android:gravity="center_vertical"
+                android:gravity="end"
                 android:orientation="horizontal"></LinearLayout>
         </LinearLayout>
 
 
         <ImageButton
-            android:id="@+id/activity_add_new_subway_line_template_btn"
+            android:id="@+id/activity_add_new_subway_line_template_btn_forward"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="48dp"
             android:layout_height="match_parent"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_arrow_upward_black_24dp" />
+            android:src="@drawable/ic_arrow_forward_black" />
 
     </LinearLayout>
 

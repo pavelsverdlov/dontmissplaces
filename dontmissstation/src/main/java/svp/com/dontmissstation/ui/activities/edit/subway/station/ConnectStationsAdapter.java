@@ -18,13 +18,15 @@ import svp.com.dontmissstation.ui.model.SubwayLineView;
 import svp.com.dontmissstation.ui.model.SubwayStationView;
 
 public class ConnectStationsAdapter extends BaseAdapter {
-    public static class ConnectStation{
-        public static ConnectStation getNext(SubwayStationView station){
-            return new ConnectStation(station,true,false);
+    public static class ConnectStation {
+        public static ConnectStation getNext(SubwayStationView station) {
+            return new ConnectStation(station, true, false);
         }
-        public  static ConnectStation getPrev(SubwayStationView station){
-            return new ConnectStation(station,false,true);
+
+        public static ConnectStation getPrev(SubwayStationView station) {
+            return new ConnectStation(station, false, true);
         }
+
         public final SubwayStationView station;
         private final boolean isNext;
         private final boolean isPrev;
@@ -35,10 +37,11 @@ public class ConnectStationsAdapter extends BaseAdapter {
             this.isPrev = isPrev;
         }
     }
+
     private OnClickListener listener;
 
-    public interface OnClickListener{
-        void onClick(SubwayStationView result);
+    public interface OnClickListener {
+        void onClick(ConnectStationsAdapter.ConnectStation result);
     }
 
     private final LayoutInflater layoutInflater;
@@ -71,27 +74,36 @@ public class ConnectStationsAdapter extends BaseAdapter {
         }
         ConnectStation cs = stations.get(position);
         SubwayStationView station = cs.station;
-        ViewExtensions.<TextView>findViewById(view,R.id.activity_edit_subway_station_from_station_name_textview)
+        ViewExtensions.<TextView>findViewById(view, R.id.activity_edit_subway_station_from_station_name_textview)
                 .setText(station.getName());
-        LinearLayout linesLayout = ViewExtensions.findViewById(view,R.id.activity_edit_subway_station_from_lines_layout);
+        LinearLayout linesLayout = ViewExtensions.findViewById(view, R.id.activity_edit_subway_station_from_lines_layout);
 
         linesLayout.removeAllViews();
         for (SubwayLineView line : station.getLines()) {
             LineUIView linev = new LineUIView(view.getContext(), line);
             linev.addTo(linesLayout);
         }
+        ImageButton arrow;
+        ImageButton nextbtn = ViewExtensions.findViewById(view, R.id.activity_add_new_subway_line_template_btn_forward);
+        ImageButton prevbtn = ViewExtensions.findViewById(view, R.id.activity_add_new_subway_line_template_btn_back);
+        if(cs.isNext){
+            prevbtn.setVisibility(View.GONE);
+            arrow = nextbtn;
+        }else{
+            nextbtn.setVisibility(View.GONE);
+            arrow = prevbtn;
+        }
+        arrow.setVisibility(View.VISIBLE);
+        arrow.setImageResource(cs.isNext ? R.drawable.ic_arrow_forward_black : R.drawable.ic_arrow_back_black);
 
-        ViewExtensions.<ImageButton>findViewById(view, R.id.activity_add_new_subway_line_template_btn)
-            .setImageResource(cs.isNext ? R.drawable.ic_arrow_forward_black : R.drawable.ic_arrow_back_black);
+        view.setTag(cs);
 
-        view.setTag(station);
-
-//        view.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                listener.onClick((SubwayStationView)v.getTag());
-//            }
-//        });
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onClick((ConnectStationsAdapter.ConnectStation)v.getTag());
+            }
+        });
 
         return view;
     }

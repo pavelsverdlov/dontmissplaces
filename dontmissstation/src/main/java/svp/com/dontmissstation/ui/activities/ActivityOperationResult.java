@@ -12,6 +12,7 @@ public class ActivityOperationResult {
     public static final ActivityOperationItem PickOnMap = new ActivityOperationItem(6);
     public static final ActivityOperationItem RouteSelection = new ActivityOperationItem(7);
     public static final ActivityOperationItem StationList= new ActivityOperationItem(8);
+    public static final ActivityOperationItem SearchNewRoute= new ActivityOperationItem(9);
 
     public static ActivityOperationItem get(int resultCode) {
         switch (resultCode){
@@ -31,6 +32,8 @@ public class ActivityOperationResult {
                 return RouteSelection;
             case 8:
                 return StationList;
+            case 9:
+                return SearchNewRoute;
             default:
                 return Undefined;
         }
