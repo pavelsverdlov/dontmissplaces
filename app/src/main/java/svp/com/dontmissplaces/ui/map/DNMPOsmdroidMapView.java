@@ -15,6 +15,7 @@ import java.util.UUID;
 import svp.app.map.OnMapClickListener;
 import svp.app.map.OsmdroidMapView;
 import svp.app.map.android.gps.IGPSProvider;
+import svp.app.map.model.IMapCircle;
 import svp.app.map.model.IMapPolyline;
 import svp.com.dontmissplaces.R;
 import svp.app.map.model.Point2D;
@@ -212,6 +213,11 @@ public class DNMPOsmdroidMapView extends View<MapsPresenter> implements IDNMPMap
 
     @Override
     public IMapPolyline createPolyline() {
+        return null;
+    }
+
+    @Override
+    public IMapCircle createCircle() {
         return null;
     }
 

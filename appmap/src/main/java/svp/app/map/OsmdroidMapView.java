@@ -43,6 +43,7 @@ import java.util.UUID;
 import svp.app.map.android.gps.IGPSProvider;
 import svp.app.map.android.gps.IGPSService;
 import svp.app.map.android.gps.OnLocationChangeListener;
+import svp.app.map.model.IMapCircle;
 import svp.app.map.model.IMapPolyline;
 import svp.app.map.model.IPOIView;
 import svp.app.map.model.Point2D;
@@ -151,6 +152,11 @@ public class OsmdroidMapView implements IMapView, MapEventsReceiver, MapListener
 
     @Override
     public IMapPolyline createPolyline() {
+        return null;
+    }
+
+    @Override
+    public IMapCircle createCircle() {
         return null;
     }
 

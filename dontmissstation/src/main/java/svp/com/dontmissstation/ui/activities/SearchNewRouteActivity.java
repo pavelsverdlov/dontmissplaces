@@ -7,7 +7,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.ListView;
 
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 import com.svp.infrastructure.mvpvs.commutate.ICommutativeElement;
@@ -100,5 +99,10 @@ public class SearchNewRouteActivity extends AppCompatActivityView<SearchNewRoute
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
         yourLocationTextView.setAdapter(adapter);
         chooseDestinationTextView.setAdapter(adapter);
+    }
+    private void initAutoCompleteTextView(AutoCompleteTextView acTextView, Vector<String> worlds){
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.select_dialog_singlechoice, worlds);
+        acTextView.setAdapter(adapter);
+        acTextView.setThreshold(1);
     }
 }

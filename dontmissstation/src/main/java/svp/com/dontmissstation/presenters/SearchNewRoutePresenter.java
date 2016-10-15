@@ -8,6 +8,7 @@ import java.util.Collection;
 
 import svp.com.dontmissstation.db.Repository;
 import svp.com.dontmissstation.model.BundleRepository;
+import svp.com.dontmissstation.ui.activities.PickOnMapActivity;
 import svp.com.dontmissstation.ui.activities.SearchNewRouteActivity;
 import svp.com.dontmissstation.ui.model.SubwayStationView;
 import svp.com.dontmissstation.ui.model.SubwayView;
@@ -23,6 +24,11 @@ public class SearchNewRoutePresenter extends CommutativePreferencePresenter<Sear
     @Override
     protected void incomingResultFrom(ActivityOperationItem from, Intent data) {
         subway = BundleRepository.getSubway(data,repository);
+    }
+    @Override
+    protected void onAttachedView(SearchNewRouteActivity view, Intent intent) {
+        super.onAttachedView(view, intent);
+        subway = BundleRepository.getSubway(intent,repository);
     }
 
     public void searchNewRoute(String from, String to) {

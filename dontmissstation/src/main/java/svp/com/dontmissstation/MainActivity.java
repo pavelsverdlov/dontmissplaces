@@ -95,9 +95,11 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
                     IMapPolyline pl = view.mapView.createPolyline();
                     Vector<Point2D> points = new Vector<>();
                     points.add(prev);
+                    view.mapView.createCircle().draw(line.getColor(),prev,8);
                     prev = stations.next().getCoordinate();
+                    view.mapView.createCircle().draw(line.getColor(),prev,8);
                     points.add(prev);
-                    pl.draw(line.getColor(),4,points);
+                    pl.draw(line.getColor(),8,points);
                     polylinesCache.add(pl);
                 }
             }
@@ -277,10 +279,8 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
                 getPresenter().openAddNewSubway();
                 break;
             case R.id.main_activity_drawer_add_subways:
-                getPresenter().openListSubwaysActivity();
-                break;
             case R.id.main_activity_drawer_route:
-                getPresenter().openSearchNewRouteActivity();
+                getPresenter().openListSubwaysActivity();
                 break;
         }
 

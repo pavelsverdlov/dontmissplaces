@@ -15,7 +15,8 @@
         android:layout_gravity="center_vertical"
         android:background="@android:color/transparent"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        >
 
         <ImageButton
             android:id="@+id/activity_add_new_subway_line_template_btn_back"
@@ -31,7 +32,8 @@
             android:layout_weight="1"
             android:orientation="horizontal"
             android:layout_gravity="center_vertical"
-            android:padding="@dimen/activity_horizontal_margin_12dp">
+            android:padding="@dimen/activity_horizontal_margin_12dp"
+            >
 
             <TextView
                 android:id="@+id/activity_edit_subway_station_from_station_name_textview"
@@ -43,8 +45,8 @@
 
             <LinearLayout
                 android:id="@+id/activity_edit_subway_station_from_lines_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:background="@android:color/transparent"
                 android:gravity="end"

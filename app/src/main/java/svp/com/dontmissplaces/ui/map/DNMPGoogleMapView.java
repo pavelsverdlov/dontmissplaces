@@ -17,6 +17,7 @@ import java.util.UUID;
 
 import svp.app.map.GoogleMapView;
 import svp.app.map.OnMapClickListener;
+import svp.app.map.model.IMapCircle;
 import svp.app.map.model.IMapPolyline;
 import svp.com.dontmissplaces.R;
 import svp.app.map.model.Point2D;
@@ -136,6 +137,11 @@ public class DNMPGoogleMapView
 
     @Override
     public IMapPolyline createPolyline() {
+        return null;
+    }
+
+    @Override
+    public IMapCircle createCircle() {
         return null;
     }
 

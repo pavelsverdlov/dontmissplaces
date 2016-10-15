@@ -31,7 +31,6 @@ public class App extends Application {
         ActivityCommutator.register(ActivityOperationResult.EditSubwayStation, EditSubwayStationActivity.class);
         ActivityCommutator.register(ActivityOperationResult.ListSubways, ListSubwaysActivity.class);
         ActivityCommutator.register(ActivityOperationResult.PickOnMap, PickOnMapActivity.class);
-        ActivityCommutator.register(ActivityOperationResult.RouteSelection, RouteScrollingActivity.class);
         ActivityCommutator.register(ActivityOperationResult.StationList, StationListActivity.class);
         ActivityCommutator.register(ActivityOperationResult.SearchNewRoute, SearchNewRouteActivity.class);
 
@@ -119,19 +118,7 @@ public class App extends Application {
                     }
                 });
 
-        Registrator.register(RouteScrollingActivity.class,
-                new PresenterContainer.IPresenterCreator() {
-                    @Override
-                    public IPresenter create() {
-                        return new RouteScrollingPresenter(repository);
-                    }
-                },
-                new ViewStateContainer.IViewStateCreator<RouteScrollingActivity>() {
-                    @Override
-                    public IViewState create(RouteScrollingActivity view) {
-                        return new RouteScrollingActivity.ViewState(view);
-                    }
-                });
+
         Registrator.register(StationListActivity.class,
                 new PresenterContainer.IPresenterCreator() {
                     @Override

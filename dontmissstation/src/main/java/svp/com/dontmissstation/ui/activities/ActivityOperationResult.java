@@ -10,7 +10,7 @@ public class ActivityOperationResult {
     public static final ActivityOperationItem EditSubwayStation = new ActivityOperationItem(4);
     public static final ActivityOperationItem ListSubways = new ActivityOperationItem(5);
     public static final ActivityOperationItem PickOnMap = new ActivityOperationItem(6);
-    public static final ActivityOperationItem RouteSelection = new ActivityOperationItem(7);
+//    public static final ActivityOperationItem RouteSelection = new ActivityOperationItem(7);
     public static final ActivityOperationItem StationList= new ActivityOperationItem(8);
     public static final ActivityOperationItem SearchNewRoute= new ActivityOperationItem(9);
 
@@ -28,8 +28,8 @@ public class ActivityOperationResult {
                 return ListSubways;
             case 6:
                 return PickOnMap;
-            case 7:
-                return RouteSelection;
+//            case 7:
+//                return RouteSelection;
             case 8:
                 return StationList;
             case 9:

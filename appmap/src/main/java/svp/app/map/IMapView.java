@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import java.util.UUID;
 
+import svp.app.map.model.IMapCircle;
 import svp.app.map.model.IMapPolyline;
 import svp.app.map.model.IPOIView;
 import svp.app.map.model.Point2D;
@@ -26,4 +27,6 @@ public interface IMapView {
     void removeMarker(UUID id);
 
     IMapPolyline createPolyline();
+    IMapCircle createCircle();
 }
+

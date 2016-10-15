@@ -25,7 +25,9 @@ import java.util.UUID;
 
 import svp.app.map.IMapView;
 import svp.app.map.OnMapClickListener;
+import svp.app.map.android.GMapCircle;
 import svp.app.map.android.GMapPolyline;
+import svp.app.map.model.IMapCircle;
 import svp.app.map.model.IMapPolyline;
 import svp.app.map.model.IPOIView;
 import svp.app.map.model.Point2D;
@@ -174,6 +176,10 @@ public class GoogleMapView implements IMapView, MapZoomController.IMapZoom, OnMa
     @Override
     public IMapPolyline createPolyline() {
         return new GMapPolyline(map);
+    }
+    @Override
+    public IMapCircle createCircle() {
+        return new GMapCircle(map);
     }
 
     @Override
