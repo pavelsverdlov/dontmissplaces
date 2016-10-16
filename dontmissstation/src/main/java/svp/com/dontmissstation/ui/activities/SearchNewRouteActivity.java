@@ -4,10 +4,17 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
+import com.svp.infrastructure.PreferenceSettings;
+import com.svp.infrastructure.common.ViewExtensions;
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 import com.svp.infrastructure.mvpvs.commutate.ICommutativeElement;
 import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
@@ -19,6 +26,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import svp.com.dontmissstation.R;
 import svp.com.dontmissstation.presenters.SearchNewRoutePresenter;
+import svp.com.dontmissstation.ui.activities.edit.subway.station.ConnectStationsAdapter;
 import svp.com.dontmissstation.ui.model.SubwayStationView;
 
 public class SearchNewRouteActivity extends AppCompatActivityView<SearchNewRoutePresenter>
@@ -55,10 +63,14 @@ public class SearchNewRouteActivity extends AppCompatActivityView<SearchNewRoute
             return view;
         }
 
+        public void addRoutes(Vector<SearchNewRoutePresenter.RouteView> routes) {
+            view.routesListView.setAdapter(new RoutesAdapter(view.getLayoutInflater(), routes));
+        }
     }
 
     @Bind(R.id.activity_search_new_route_your_location) AutoCompleteTextView yourLocationTextView;
     @Bind(R.id.activity_search_new_route_choose_destination) AutoCompleteTextView chooseDestinationTextView;
+    @Bind(R.id.activity_search_new_route_list_routes) ListView routesListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,13 +108,54 @@ public class SearchNewRouteActivity extends AppCompatActivityView<SearchNewRoute
             names.add(s.getName());
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
-        yourLocationTextView.setAdapter(adapter);
-        chooseDestinationTextView.setAdapter(adapter);
+        initAutoCompleteTextView(yourLocationTextView,names);
+        initAutoCompleteTextView(chooseDestinationTextView,names);
     }
     private void initAutoCompleteTextView(AutoCompleteTextView acTextView, Vector<String> worlds){
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.select_dialog_singlechoice, worlds);
         acTextView.setAdapter(adapter);
         acTextView.setThreshold(1);
+    }
+
+    public static class RoutesAdapter extends BaseAdapter{
+        private final LayoutInflater layoutInflater;
+        private final Vector<SearchNewRoutePresenter.RouteView> routes;
+
+        public RoutesAdapter(LayoutInflater layoutInflater, Vector<SearchNewRoutePresenter.RouteView> route) {
+            this.layoutInflater = layoutInflater;
+            this.routes = route;
+        }
+
+        @Override
+        public int getCount() {
+            return routes.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return routes.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View view, ViewGroup parent) {
+            if (view == null) {
+                view = layoutInflater.inflate(R.layout.activity_search_new_route_template, parent, false);
+            }
+
+            SearchNewRoutePresenter.RouteView route = routes.get(position);
+
+            ViewExtensions.<TextView>findViewById(view,R.id.activity_search_new_route_template_name_from_to)
+                    .setText(route.getTitle());
+            ViewExtensions.<TextView>findViewById(view,R.id.activity_search_new_route_template_stations)
+                    .setText(route.getCountStations());
+            ViewExtensions.<TextView>findViewById(view,R.id.activity_search_new_route_template_lines)
+                    .setText(route.getLines());
+            return view;
+        }
     }
 }

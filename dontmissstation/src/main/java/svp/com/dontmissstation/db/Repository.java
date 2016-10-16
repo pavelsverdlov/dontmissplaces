@@ -18,7 +18,7 @@ public class Repository {
      *таблица связей между станциями
      * id | FromStationId | toStationId | length
      */
-    private class StationRoute {
+    public class StationRoute {
         public final long fromStationId;
         public final long toStationId;
         public final float length;
@@ -105,7 +105,7 @@ public class Repository {
         subway = new SubwayView(1, "Austria", "Vienna");
         subway.addLine(create(line1, UUID.randomUUID().toString().substring(0, 1), "#009688"));//,0,4
         subway.addLine(create(line2, UUID.randomUUID().toString().substring(0, 1), "#4CAF50"));//,5,10
-
+/*
         Vector<SubwayStationView> res = null;
         try {
             graph = new SubwayGraph();
@@ -118,7 +118,7 @@ public class Repository {
             ex.getMessage();
         }
         Vector<SubwayStationView> test = res;
-
+*/
 //        subway.addLine(create(2,UUID.randomUUID().toString().substring(0,1), "#CDDC39"));
 //        subway.addLine(create(3,UUID.randomUUID().toString().substring(0,1), "#FF9800"));
 //        subway.addLine(create(4,UUID.randomUUID().toString().substring(0,1), "#795548"));
@@ -236,4 +236,9 @@ public class Repository {
             linetoupdate.addStation(s,i);
         }
     }
+
+    public Vector<StationRoute> getStationRoutes(long subwayId){
+        return stationRoutes;
+    }
+
 }

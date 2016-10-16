@@ -41,13 +41,13 @@
 
                 <AutoCompleteTextView
                     android:id="@+id/activity_search_new_route_your_location"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     />
 
                 <AutoCompleteTextView
                     android:id="@+id/activity_search_new_route_choose_destination"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                      />
 
