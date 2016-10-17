@@ -90,7 +90,7 @@ public class SearchNewRouteActivity extends AppCompatActivityView<SearchNewRoute
         switch (v.getId()){
             case R.id.activity_search_new_route_get_route_fab:
                 String from = yourLocationTextView.getText().toString();
-                String to = yourLocationTextView.getText().toString();
+                String to = chooseDestinationTextView.getText().toString();
 
                 getPresenter().searchNewRoute(from, to);
                 break;
@@ -147,14 +147,22 @@ public class SearchNewRouteActivity extends AppCompatActivityView<SearchNewRoute
                 view = layoutInflater.inflate(R.layout.activity_search_new_route_template, parent, false);
             }
 
-            SearchNewRoutePresenter.RouteView route = routes.get(position);
+            try {
+                SearchNewRoutePresenter.RouteView route = routes.get(position);
 
-            ViewExtensions.<TextView>findViewById(view,R.id.activity_search_new_route_template_name_from_to)
-                    .setText(route.getTitle());
-            ViewExtensions.<TextView>findViewById(view,R.id.activity_search_new_route_template_stations)
-                    .setText(route.getCountStations());
-            ViewExtensions.<TextView>findViewById(view,R.id.activity_search_new_route_template_lines)
-                    .setText(route.getLines());
+                ViewExtensions.<TextView>findViewById(view, R.id.activity_search_new_route_template_name_from_to)
+                        .setText(route.getTitle());
+                TextView test = (TextView)view.findViewById(R.id.activity_search_new_route_template_station_count);
+                test.setText(route.getCountStations());
+                View tes1 = view.findViewById(R.id.activity_search_new_route_template_lines);
+                
+//                ViewExtensions.<TextView>findViewById(view, R.id.activity_search_new_route_template_station_count)
+//                        .setText(route.getCountStations());
+//                ViewExtensions.<TextView>findViewById(view, R.id.activity_search_new_route_template_lines)
+//                        .setText(route.getLines());
+            }catch (Exception ex){
+                ex.getStackTrace();
+            }
             return view;
         }
     }

@@ -24,10 +24,11 @@ import svp.com.dontmissstation.ui.model.SubwayView;
 public class SearchNewRoutePresenter extends CommutativePreferencePresenter<SearchNewRouteActivity,SearchNewRouteActivity.ViewState>{
     public static class RouteView{
         private final Vector<SubwayStationView> route;
-        private HashSet<SubwayLineView> lines;
+        private final HashSet<SubwayLineView> lines;
 
         public RouteView(Vector<SubwayStationView> route){
             this.route = route;
+            lines = new HashSet<>();
             for (SubwayStationView s : route){
                 lines.addAll(s.getLines());
             }
