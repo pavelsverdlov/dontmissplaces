@@ -1,9 +1,16 @@
 package svp.com.dontmissstation.presenters;
 
 import android.content.Intent;
+import android.location.Location;
+import android.os.RemoteException;
 import android.util.Log;
 
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
+
+import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.GeoPoint;
+
+import java.util.Vector;
 
 import svp.app.map.MapViewTypes;
 import svp.app.map.android.gps.GPSService;
@@ -13,6 +20,7 @@ import svp.app.map.model.Point2D;
 import svp.com.dontmissstation.MainActivity;
 import svp.com.dontmissstation.db.Repository;
 import svp.com.dontmissstation.ui.activities.ActivityOperationResult;
+import svp.com.dontmissstation.ui.model.SubwayStationView;
 import svp.com.dontmissstation.ui.model.SubwayView;
 
 public class MainPresenter extends CommutativePreferencePresenter<MainActivity,MainActivity.ViewState> {
@@ -104,5 +112,21 @@ public class MainPresenter extends CommutativePreferencePresenter<MainActivity,M
     }
 
 
+    public void findNearStation() {
+        try {
+            Location loc = gps.getLocation();
+            Point2D current = new Point2D(loc);
+            int maxD = 100;
+            GeoPoint p = current.getGeoPoint();
+            BoundingBoxE6 bb = new BoundingBoxE6(p.getLatitudeE6() + maxD,
+                    p.getLongitudeE6() + maxD,
+                    p.getLatitudeE6() - maxD,
+                    p.getLongitudeE6() - maxD);
 
+            Vector<SubwayStationView> stations = repository.getNearStations(bb);
+            state.showStations(stations);
+        } catch (RemoteException e) {
+            Log.e(TAG,"",e);
+        }
+    }
 }

@@ -36,6 +36,7 @@ import svp.app.map.model.Point2D;
 import svp.com.dontmissstation.presenters.MainPresenter;
 import svp.com.dontmissstation.ui.activities.ActivityOperationResult;
 import svp.com.dontmissstation.ui.model.MainNavigationView;
+import svp.com.dontmissstation.ui.model.POIStationView;
 import svp.com.dontmissstation.ui.model.SubwayLineView;
 import svp.com.dontmissstation.ui.model.SubwayStationView;
 import svp.com.dontmissstation.ui.model.SubwayView;
@@ -117,6 +118,11 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
                 });
             }
         }
+        public void showStations(Vector<SubwayStationView> stations) {
+            for (SubwayStationView s : stations) {
+                view.mapView.addMarker(new POIStationView(s), -1 );
+            }
+        }
 
         @Override
         public Activity getActivity() {
@@ -126,6 +132,8 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
         public ActivityPermissions getPermissions() {
             return view.permissions;
         }
+
+
     }
 
     private IMapView mapView;
@@ -173,6 +181,7 @@ public class MainActivity extends AppCompatActivityView<MainPresenter>
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.activity_main_get_stations_near_me:
+                getPresenter().findNearStation();
                 break;
             case R.id.activity_main_init_route:
                 getPresenter().openRouteActivity();

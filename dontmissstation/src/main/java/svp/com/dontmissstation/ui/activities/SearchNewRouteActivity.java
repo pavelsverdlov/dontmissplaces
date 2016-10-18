@@ -3,6 +3,7 @@ package svp.com.dontmissstation.ui.activities;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,12 +15,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.svp.infrastructure.PreferenceSettings;
+import com.svp.infrastructure.common.StringEx;
 import com.svp.infrastructure.common.ViewExtensions;
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 import com.svp.infrastructure.mvpvs.commutate.ICommutativeElement;
 import com.svp.infrastructure.mvpvs.view.AppCompatActivityView;
 
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Vector;
 
 import butterknife.Bind;
@@ -43,14 +46,15 @@ public class SearchNewRouteActivity extends AppCompatActivityView<SearchNewRoute
     }
 
     public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<SearchNewRouteActivity> {
-
+        private final Vector<SearchNewRoutePresenter.RouteView> routes;
         public ViewState(SearchNewRouteActivity view) {
             super(view);
+            routes = new Vector<>();
         }
 
         @Override
         protected void restore() {
-
+            this.routes.clear();
         }
 
         @Override
@@ -64,7 +68,9 @@ public class SearchNewRouteActivity extends AppCompatActivityView<SearchNewRoute
         }
 
         public void addRoutes(Vector<SearchNewRoutePresenter.RouteView> routes) {
-            view.routesListView.setAdapter(new RoutesAdapter(view.getLayoutInflater(), routes));
+            this.routes.addAll(routes);
+            view.routesListView.setAdapter(new RoutesAdapter(view.getLayoutInflater(), this.routes));
+            view.routesListView.postInvalidate();
         }
     }
 
@@ -117,7 +123,7 @@ public class SearchNewRouteActivity extends AppCompatActivityView<SearchNewRoute
         acTextView.setThreshold(1);
     }
 
-    public static class RoutesAdapter extends BaseAdapter{
+    public static class RoutesAdapter extends BaseAdapter implements View.OnClickListener {
         private final LayoutInflater layoutInflater;
         private final Vector<SearchNewRoutePresenter.RouteView> routes;
 
@@ -150,20 +156,24 @@ public class SearchNewRouteActivity extends AppCompatActivityView<SearchNewRoute
             try {
                 SearchNewRoutePresenter.RouteView route = routes.get(position);
 
+                (view).setOnClickListener(this);
+                view.setTag(route);
+
                 ViewExtensions.<TextView>findViewById(view, R.id.activity_search_new_route_template_name_from_to)
                         .setText(route.getTitle());
-                TextView test = (TextView)view.findViewById(R.id.activity_search_new_route_template_station_count);
-                test.setText(route.getCountStations());
-                View tes1 = view.findViewById(R.id.activity_search_new_route_template_lines);
-                
-//                ViewExtensions.<TextView>findViewById(view, R.id.activity_search_new_route_template_station_count)
-//                        .setText(route.getCountStations());
-//                ViewExtensions.<TextView>findViewById(view, R.id.activity_search_new_route_template_lines)
-//                        .setText(route.getLines());
+                ViewExtensions.<TextView>findViewById(view, R.id.activity_search_new_route_template_station_count)
+                        .setText(StringEx.toString(route.getCountStations()));
+                ViewExtensions.<TextView>findViewById(view, R.id.activity_search_new_route_template_lines)
+                        .setText(StringEx.toString(route.getLines()));
             }catch (Exception ex){
                 ex.getStackTrace();
             }
             return view;
+        }
+
+        @Override
+        public void onClick(View v) {
+            SearchNewRoutePresenter.RouteView route = (SearchNewRoutePresenter.RouteView) v.getTag();
         }
     }
 }

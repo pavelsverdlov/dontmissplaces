@@ -2,6 +2,8 @@ package svp.com.dontmissstation.db;
 
 import android.content.Context;
 
+import org.osmdroid.util.BoundingBoxE6;
+
 import java.util.Collection;
 import java.util.UUID;
 import java.util.Vector;
@@ -14,6 +16,8 @@ import svp.com.dontmissstation.ui.model.SubwayView;
 
 
 public class Repository {
+
+
     /**
      *таблица связей между станциями
      * id | FromStationId | toStationId | length
@@ -241,4 +245,7 @@ public class Repository {
         return stationRoutes;
     }
 
+    public Vector<SubwayStationView> getNearStations(BoundingBoxE6 bb) {
+        return stations;
+    }
 }
