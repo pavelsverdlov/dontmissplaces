@@ -29,7 +29,8 @@ public class EditSubwayPresenter extends CommutativePreferencePresenter<EditSubw
         subway = BundleRepository.getSubway(intent,repository);
         if(subway == null){
             //create new subway
-            subway = repository.addNewSubway();
+//            subway = repository.addNewSubway();
+            subway = repository.getSubwayById(1);
         }
     }
 

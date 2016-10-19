@@ -96,7 +96,7 @@ public class StationListActivity extends AppCompatActivityView<StationListPresen
             return StationListActivity.this.stations.size();
         }
     }
-    public static class SubwayStationCursorView implements ICursorParcelable {
+    public static class SubwayStationCursorView implements ICursorParcelable, View.OnClickListener {
         private final SubwayStationView stationView;
         private TextView name;
         private LinearLayout linesLayout;
@@ -116,7 +116,10 @@ public class StationListActivity extends AppCompatActivityView<StationListPresen
 //                }
 //            });
 
+            view.setOnClickListener(this);
+            view.setTag(stationView);
             name.setText(stationView.getName());
+            linesLayout.removeAllViews();
             for (SubwayLineView line : stationView.getLines()) {
                 LineUIView linev = new LineUIView(view.getContext(), line);
                 linev.addTo(linesLayout);
@@ -132,6 +135,11 @@ public class StationListActivity extends AppCompatActivityView<StationListPresen
 
         public SubwayStationView getSubway() {
             return stationView;
+        }
+
+        @Override
+        public void onClick(View v) {
+
         }
     }
 
