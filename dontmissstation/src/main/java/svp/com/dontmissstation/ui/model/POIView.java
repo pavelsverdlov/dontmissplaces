@@ -18,6 +18,11 @@ public class POIView implements IPOIView {
         point = new Point2D(place.geometry.location.lat,place.geometry.location.lng);
         address = place.formatted_address;
     }
+    public POIView(String name,String address, Point2D point) {
+        this.name = name;
+        this.address = address;
+        this.point = point;
+    }
 
     @Override
     public String getName() {

@@ -8,9 +8,9 @@ import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import svp.app.map.android.GeocoderPlaceProvider;
 import svp.com.dontmissplaces.db.Place;
 import svp.com.dontmissplaces.db.Repository;
-import svp.app.map.android.PlaceProvider;
 import svp.com.dontmissplaces.model.nominatim.SearchByText;
 import svp.com.dontmissplaces.ui.activities.SearchPlacesActivity;
 
@@ -43,7 +43,7 @@ public class SearchPlacesPresenter extends CommutativePresenter<SearchPlacesActi
         if(!query.isEmpty() && !processing.equals(query) && query.length() > 3){
             processing = query;
 
-            PlaceProvider pp = new PlaceProvider(state.getActivity());
+            GeocoderPlaceProvider pp = new GeocoderPlaceProvider(state.getActivity());
             Vector<SearchPlacesActivity.PlaceSearchResult> places = new Vector<>() ;
             for (svp.app.map.model.Place p : pp.getPlace(newText)){
                 places.add(new SearchPlacesActivity.PlaceSearchResult(new Place(p.longitude,p.latitude)));

@@ -5,6 +5,7 @@ import android.content.Intent;
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 
 import svp.com.dontmissstation.db.Repository;
+import svp.com.dontmissstation.model.BundleRepository;
 import svp.com.dontmissstation.ui.activities.*;
 import svp.com.dontmissstation.ui.model.SubwayStationView;
 import svp.com.dontmissstation.ui.model.SubwayLineView;
@@ -20,12 +21,16 @@ public class EditSubwayPresenter extends CommutativePreferencePresenter<EditSubw
 
     @Override
     protected void incomingResultFrom(ActivityOperationItem from, Intent data) {
-        initSubway(data);
+        subway = BundleRepository.getSubway(data,repository);
     }
     @Override
     protected void onAttachedView(EditSubwayScrollingActivity view,  Intent intent){
         super.onAttachedView(view,intent);
-        initSubway(intent);
+        subway = BundleRepository.getSubway(intent,repository);
+        if(subway == null){
+            //create new subway
+            subway = repository.addNewSubway();
+        }
     }
 
     public void openEditLineActivity(SubwayLineView line) {
@@ -41,11 +46,6 @@ public class EditSubwayPresenter extends CommutativePreferencePresenter<EditSubw
         return subway;
     }
 
-    private void initSubway(Intent data){
-        SubwayBundleProvider bundle = new SubwayBundleProvider(data);
-        long id = bundle.getSubwayId();
-        subway = repository.getSubwayById(id);
-    }
 
 //    public void placeSelected(SavedPlacesActivity.SavePlaceView item) {
 //        commutator.backTo(new SearchPlacesActivity.SearchPlacesBundleProvider().putFoundPlaceId(item.getPlace().id));

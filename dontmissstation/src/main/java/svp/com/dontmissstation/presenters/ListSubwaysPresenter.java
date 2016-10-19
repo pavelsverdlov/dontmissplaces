@@ -34,4 +34,10 @@ public class ListSubwaysPresenter extends CommutativePreferencePresenter<ListSub
     public Vector<SubwayView> getSubways() {
         return repository.getSubways();
     }
+
+    public void addNewSubway() {
+        SubwayView sub = repository.addNewSubway();
+        commutator.goTo(ActivityOperationResult.EditNewSubway,
+                new SubwayBundleProvider().putSubwayId(sub.getId()));
+    }
 }

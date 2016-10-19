@@ -63,8 +63,8 @@ public class PickOnMapActivity extends FragmentActivityView<PickOnMapPresenter>
             return view;
         }
 
-        public void showOnMap(GoogleApiMapPlaceProvider.Place place) {
-            view.mapView.addMarker(new POIView(place),-1);
+        public void showOnMap(POIView place) {
+            view.mapView.addMarker(place,-1);
             openYesNotBottomPanel();
         }
         public void openYesNotBottomPanel() {

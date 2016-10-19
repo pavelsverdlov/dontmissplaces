@@ -15,11 +15,11 @@ import java.util.Vector;
 import svp.app.map.model.Place;
 
 
-public class PlaceProvider {
+public class GeocoderPlaceProvider {
     private final Activity activity;
     private final Geocoder geocoder;
 
-    public PlaceProvider(Activity activity) {
+    public GeocoderPlaceProvider(Activity activity) {
         this.activity = activity;
         Locale locale = Locale.getDefault();
         geocoder = new Geocoder(activity, locale);

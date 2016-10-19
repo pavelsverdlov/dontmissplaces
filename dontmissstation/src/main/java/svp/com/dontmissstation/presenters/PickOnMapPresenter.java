@@ -12,11 +12,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import svp.app.map.android.GeocoderPlaceProvider;
 import svp.app.map.android.GoogleApiMapPlaceProvider;
+import svp.app.map.model.Place;
 import svp.app.map.model.Point2D;
 import svp.com.dontmissstation.db.Repository;
 import svp.com.dontmissstation.model.BundleRepository;
 import svp.com.dontmissstation.ui.activities.PickOnMapActivity;
+import svp.com.dontmissstation.ui.model.POIView;
 import svp.com.dontmissstation.ui.model.SubwayStationView;
 
 public class PickOnMapPresenter extends CommutativePreferencePresenter<PickOnMapActivity, PickOnMapActivity.ViewState> {
@@ -45,7 +48,7 @@ public class PickOnMapPresenter extends CommutativePreferencePresenter<PickOnMap
     }
 
     public void searchNearestStation(Point2D point) {
-//        PlaceProvider pp = new PlaceProvider(state.getActivity());
+//        GeocoderPlaceProvider pp = new GeocoderPlaceProvider(state.getActivity());
 //        Place res = pp.getPlace(selectedPoint.getLatLng());
         ConnectionDetector cd = new ConnectionDetector(state.getActivity());
 
@@ -63,13 +66,20 @@ public class PickOnMapPresenter extends CommutativePreferencePresenter<PickOnMap
     }
 
     private void setSelectedPlace(List<GoogleApiMapPlaceProvider.Place> results){
+        POIView poi;
         if(results.size() > 0) {
             GoogleApiMapPlaceProvider.Place place = results.get(0);
             GoogleApiMapPlaceProvider.Place.Location loc = place.geometry.location;
             selectedPoint = new Point2D(loc.lat, loc.lng);
-            state.showOnMap(place);
-            state.openYesNotBottomPanel();
+            poi = new POIView(place);
+
+        }else{
+            GeocoderPlaceProvider pp = new GeocoderPlaceProvider(state.getActivity());
+            Place place = pp.getPlace(selectedPoint.getLatLng());
+            poi = new POIView(place.title, place.address,selectedPoint);;
         }
+        state.showOnMap(poi);
+        state.openYesNotBottomPanel();
     }
 
     public void storeSelectedPlace() {

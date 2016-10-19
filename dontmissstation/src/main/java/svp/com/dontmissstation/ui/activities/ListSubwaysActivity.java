@@ -30,7 +30,7 @@ import svp.com.dontmissstation.ui.adapters.RecyclerCursorAdapter;
 import svp.com.dontmissstation.ui.model.SubwayLineView;
 import svp.com.dontmissstation.ui.model.SubwayView;
 
-public class ListSubwaysActivity extends AppCompatActivityView<ListSubwaysPresenter> implements ICommutativeElement {
+public class ListSubwaysActivity extends AppCompatActivityView<ListSubwaysPresenter> implements ICommutativeElement, View.OnClickListener {
     @Override
     public ActivityOperationItem getOperation() {
         return ActivityOperationResult.ListSubways;
@@ -40,6 +40,7 @@ public class ListSubwaysActivity extends AppCompatActivityView<ListSubwaysPresen
     public Activity getActivity() {
         return this;
     }
+
 
     public static class ViewState extends com.svp.infrastructure.mvpvs.viewstate.ViewState<ListSubwaysActivity> {
 
@@ -133,6 +134,15 @@ public class ListSubwaysActivity extends AppCompatActivityView<ListSubwaysPresen
         }
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.activity_list_subways_addnew_fab:
+                getPresenter().addNewSubway();
+                break;
+        }
+    }
+
     @Bind(R.id.activity_list_subways_recyclerView) RecyclerView recyclerView;
 
     @Override
@@ -142,17 +152,11 @@ public class ListSubwaysActivity extends AppCompatActivityView<ListSubwaysPresen
 
         ButterKnife.bind(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_route_toolbar_id);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_list_subways_toolbar_id);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.activity_route_fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.activity_list_subways_addnew_fab);
+        fab.setOnClickListener(this);
         RecyclerViewEx.setCustomSettings(recyclerView,this);
     }
 

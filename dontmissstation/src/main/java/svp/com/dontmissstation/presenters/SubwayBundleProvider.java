@@ -10,6 +10,11 @@ public class SubwayBundleProvider extends BundleProvider {
     private static final String STATION_ID_KEY = "STATION_ID_KEY";
     private static final String LINE_ID_KEY = "LINE_ID_KEY";
     private static final String SUBWAY_ID_KEY = "SUBWAY_ID_KEY";
+    private static final long defaultId = -1;
+
+    public static boolean isValid(long id){
+        return id != defaultId;
+    }
 
     public SubwayBundleProvider(Intent intent) {
         super(intent);
@@ -39,15 +44,15 @@ public class SubwayBundleProvider extends BundleProvider {
     }
 
     public long getSubwayId() {
-        return bundle.getLong(SUBWAY_ID_KEY);
+        return bundle.getLong(SUBWAY_ID_KEY,defaultId);
     }
 
     public long getSubwayLineId() {
-        return bundle.getLong(LINE_ID_KEY);
+        return bundle.getLong(LINE_ID_KEY,defaultId);
     }
 
     public long getSubwayStationId() {
-        return bundle.getLong(STATION_ID_KEY);
+        return bundle.getLong(STATION_ID_KEY,defaultId);
     }
 
 

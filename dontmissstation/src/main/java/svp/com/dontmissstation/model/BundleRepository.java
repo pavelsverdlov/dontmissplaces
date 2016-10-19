@@ -11,11 +11,17 @@ public class BundleRepository {
     public static SubwayStationView getStation(Intent intent, Repository repository){
         SubwayBundleProvider bundle = new SubwayBundleProvider(intent);
         long id = bundle.getSubwayStationId();
+        if(!SubwayBundleProvider.isValid(id)){
+            return null;
+        }
         return repository.getSubwayStationById(id);
     }
     public static SubwayView getSubway(Intent data, Repository repository){
         SubwayBundleProvider bundle = new SubwayBundleProvider(data);
         long id = bundle.getSubwayId();
+        if(!SubwayBundleProvider.isValid(id)){
+            return null;
+        }
         return repository.getSubwayById(id);
     }
 }

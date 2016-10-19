@@ -17,7 +17,6 @@ import svp.com.dontmissstation.ui.model.SubwayView;
 
 public class Repository {
 
-
     /**
      *таблица связей между станциями
      * id | FromStationId | toStationId | length
@@ -56,7 +55,7 @@ public class Repository {
 
 
     public final static String dbname = "dmsdb";
-    private final SubwayView subway;
+    private final Vector<SubwayView> subways;
     private final Vector<SubwayStationView> stations;
     private SubwayGraph graph;
 
@@ -64,7 +63,7 @@ public class Repository {
     public Repository(Context app) {
         int line1 = 0;
         int line2 = 1;
-
+        subways = new Vector<>();
         stations = new Vector<>();
         Vector<Point2D> points = new Vector<>();
         points.add(new Point2D(48.1741, 16.3781));
@@ -106,9 +105,11 @@ public class Repository {
         stationsInLine.add(new StationInLine(7, 3, line2));
         stationsInLine.add(new StationInLine(8, 4, line2));
         //
-        subway = new SubwayView(1, "Austria", "Vienna");
+        SubwayView subway = new SubwayView(1, "Austria", "Vienna");
+        subways.add(subway);
         subway.addLine(create(line1, UUID.randomUUID().toString().substring(0, 1), "#009688"));//,0,4
         subway.addLine(create(line2, UUID.randomUUID().toString().substring(0, 1), "#4CAF50"));//,5,10
+
 /*
         Vector<SubwayStationView> res = null;
         try {
@@ -136,7 +137,7 @@ public class Repository {
                 sts.add(st);
             }
         }
-        SubwayLineView line = new SubwayLineView(i, substring, s, sts.size(), subway);
+        SubwayLineView line = new SubwayLineView(i, substring, s, sts.size(), subways.firstElement());
         for (StationInLine st : sts) {
             line.addStation(stations.get((int) st.stationId), st.indexInLine);
         }
@@ -145,50 +146,57 @@ public class Repository {
     }
 
     public SubwayView getSubwayById(long id) {
-        return subway;
+        for (SubwayView s : subways){
+            if(s.getId() == id){
+                return s;
+            }
+        }
+        throw new InternalError("No subway");
     }
 
     public SubwayLineView getSubwayLineById(long id) {
-        for (SubwayLineView line : subway.getLines()) {
-            if (line.getId() == id) {
-                return line;
-            }
-        }
-        return null;
-    }
-
-    public SubwayStationView getSubwayStationById(long id) {
-        for (SubwayLineView line : subway.getLines()) {
-            for (SubwayStationView station : line.getStations()) {
-                if (station.getId() == id) {
-                    station.clearConnects();
-                    long sid = station.getId();
-                    for (StationRoute route : stationRoutes){
-                        if(route.fromStationId == sid ){
-                            station.addNext(stations.get((int)route.toStationId));
-                        }else if(route.toStationId == sid ){
-                            station.addPrev(stations.get((int)route.fromStationId));
-                        }
-                    }
-                    //TODO: add line references
-                    return station;
+        for (SubwayView subway : subways) {
+            for (SubwayLineView line : subway.getLines()) {
+                if (line.getId() == id) {
+                    return line;
                 }
             }
         }
-        return null;
+        throw new InternalError("No line");
+    }
+
+    public SubwayStationView getSubwayStationById(long id) {
+        for (SubwayView subway : subways) {
+            for (SubwayLineView line : subway.getLines()) {
+                for (SubwayStationView station : line.getStations()) {
+                    if (station.getId() == id) {
+                        station.clearConnects();
+                        long sid = station.getId();
+                        for (StationRoute route : stationRoutes) {
+                            if (route.fromStationId == sid) {
+                                station.addNext(stations.get((int) route.toStationId));
+                            } else if (route.toStationId == sid) {
+                                station.addPrev(stations.get((int) route.fromStationId));
+                            }
+                        }
+                        //TODO: add line references
+                        return station;
+                    }
+                }
+            }
+        }
+        throw new InternalError("No station");
     }
 
     public Collection<SubwayLineView> getSubwayLinesBySubwayId(long subwayId) {
-        if (subway.getId() != subwayId) {
-            throw new InternalError();
-        }
+        SubwayView subway = getSubwayById(subwayId);
+
         return subway.getLines();
     }
 
-    public Collection<SubwayStationView> getAllStationsOfSubway(long subwayId) {
-        if (subway.getId() != subwayId) {
-            throw new InternalError();
-        }
+    public Vector<SubwayStationView> getSubwayStationsById(long subwayId) {
+        SubwayView subway = getSubwayById(subwayId);
+
         Vector<SubwayStationView> stations = new Vector<>();
         for (SubwayLineView line : subway.getLines()) {
             for (SubwayStationView station : line.getStations()) {
@@ -199,24 +207,20 @@ public class Repository {
     }
 
     public Vector<SubwayView> getSubways() {
-        Vector<SubwayView> s = new Vector<>();
-        s.add(subway);
+        return subways;
+    }
+    public SubwayView addNewSubway() {
+        SubwayView s = new SubwayView(subways.lastElement().getId()+1,"Country", "City");
+        subways.add(s);
         return s;
     }
-
-    public Vector<SubwayStationView> getSubwayStationsById(long subwayId) {
-        if (subway.getId() != subwayId) {
-            throw new InternalError();
-        }
-        return stations;
-    }
-
 
     public void updateStationCoordinate(SubwayStationView station, Point2D point) {
         stations.get((int)station.getId()).updateCoordinate(point);
     }
 
     public void saveOrderedStations(SubwayLineView linetosave, Vector<SubwayStationView> stations) {
+        long subwayId = linetosave.getSubway().getId();
         Vector<StationRoute> temp = new Vector<>();
         for (int i = 0; i < stations.size(); i++) {
             SubwayStationView from = stations.get(i);
@@ -225,6 +229,7 @@ public class Repository {
         }
         //stationRoutes
         SubwayLineView linetoupdate = null;
+        SubwayView subway = getSubwayById(subwayId);
         for (SubwayLineView line : subway.getLines()){
             if(line.getId() == linetosave.getId()){
                 line.clearStations();

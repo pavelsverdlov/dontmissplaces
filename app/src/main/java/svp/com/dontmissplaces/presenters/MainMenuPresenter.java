@@ -27,7 +27,6 @@ import svp.com.dontmissplaces.db.Track;
 import svp.com.dontmissplaces.db.Waypoint;
 import svp.app.map.model.Point2D;
 import svp.app.map.android.gps.OnLocationChangeListener;
-import svp.app.map.android.PlaceProvider;
 import svp.com.dontmissplaces.model.gps.GPSProvider;
 import svp.com.dontmissplaces.model.nominatim.PhraseProvider;
 import svp.com.dontmissplaces.model.nominatim.PlaceByPoint;
@@ -214,7 +213,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity, Ma
                     if (poi.size() > 0) {
                         PlaceView place = new PlaceView(poi.get(0), originalPoint);
                         state.showPlaceInfo(place, null);
-//                        PlaceProvider pp = new PlaceProvider(state.getActivity());
+//                        GeocoderPlaceProvider pp = new GeocoderPlaceProvider(state.getActivity());
 //                        String address = place.getName()+ "," + place.getAddress();
 //                        Vector<Place> places = pp.getPlace(address);
                         repository.poi.insertMany(poi);
@@ -224,7 +223,7 @@ public class MainMenuPresenter extends CommutativePresenter<MainMenuActivity, Ma
             /*
             switch (getMapViewType()) {
                 case Google:
-//                    PlaceProvider pp = new PlaceProvider(state.getActivity());
+//                    GeocoderPlaceProvider pp = new GeocoderPlaceProvider(state.getActivity());
 //                    Place place = pp.getPlace(point.getLatLng());
 //                    state.showPlaceInfo(new PlaceView(place,originalPoint), null);
 //                    repository.poi.insert(place);

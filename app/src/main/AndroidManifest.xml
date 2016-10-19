@@ -84,8 +84,8 @@
 
          
         <!-- <provider -->
-        <!-- android:name=".model.Map.google.PlaceProvider" -->
-        <!-- android:authorities="svp.com.dontmissplaces.model.Map.google.PlaceProvider" -->
+        <!-- android:name=".model.Map.google.GeocoderPlaceProvider" -->
+        <!-- android:authorities="svp.com.dontmissplaces.model.Map.google.GeocoderPlaceProvider" -->
         <!-- android:exported="false" /> -->
 
         <activity
