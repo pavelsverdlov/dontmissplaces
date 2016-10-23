@@ -35,7 +35,9 @@ public class SubwayStationView extends SubwayElement{
     public String getName(){
         return name;
     }
-
+    public void setName(String n){
+        name = n;
+    }
 
     public long getOwnSubwayId() {
         return lines.values().iterator().next().getSubway().getId();

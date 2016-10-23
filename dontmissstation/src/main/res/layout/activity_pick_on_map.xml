@@ -15,7 +15,7 @@
     <include layout="@layout/mapzoomlayout" />
 
     <LinearLayout
-        android:id="@+id/select_place_scrolling_act_content_view"
+        android:id="@+id/activity_pick_om_map_act_accept_place"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="bottom|center_horizontal"
@@ -23,34 +23,51 @@
         android:layout_gravity="bottom">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/android_standard_toolbar_subtitle"
+            android:layout_height="wrap_content"
             android:background="@color/colorAccent"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/activity_pick_on_map_place_ok"
-                style="?android:attr/borderlessButtonStyle"
+            android:orientation="vertical">
+            <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_height="@dimen/android_standard_toolbar_subtitle"
+                android:layout_gravity="center_vertical"
+                android:padding="@dimen/activity_horizontal_margin"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/activity_pick_on_selected_address_id"
+                    android:textColor="@color/text_white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="test address"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/android_standard_toolbar_subtitle"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/activity_pick_on_map_place_ok"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="@color/text_white"
+                    android:text="@string/_ok"
+                    android:scaleType="fitCenter"/>
+                <View
+                android:background="@color/general_border_gray"
+                android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:textColor="@color/text_white"
-                android:text="@string/_ok"
-                android:scaleType="fitCenter"/>
-            <View
-            android:background="@color/general_border_gray"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            />
-            <Button
-                android:id="@+id/activity_pick_on_map_place_cancel"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:textColor="@color/text_white"
-                android:text="@string/_cancel"
-                android:scaleType="fitCenter"/>
-
+                />
+                <Button
+                    android:id="@+id/activity_pick_on_map_place_cancel"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="@color/text_white"
+                    android:text="@string/_cancel"
+                    android:scaleType="fitCenter"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

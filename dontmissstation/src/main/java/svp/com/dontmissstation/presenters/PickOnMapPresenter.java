@@ -11,6 +11,7 @@ import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 
 import svp.app.map.android.GeocoderPlaceProvider;
 import svp.app.map.android.GoogleApiMapPlaceProvider;
@@ -26,6 +27,7 @@ public class PickOnMapPresenter extends CommutativePreferencePresenter<PickOnMap
 
     private final Repository repository;
     private SubwayStationView station;
+    private POIView poi;
     Point2D selectedPoint;
 
     public PickOnMapPresenter(Repository repository) {
@@ -66,7 +68,6 @@ public class PickOnMapPresenter extends CommutativePreferencePresenter<PickOnMap
     }
 
     private void setSelectedPlace(List<GoogleApiMapPlaceProvider.Place> results){
-        POIView poi;
         if(results.size() > 0) {
             GoogleApiMapPlaceProvider.Place place = results.get(0);
             GoogleApiMapPlaceProvider.Place.Location loc = place.geometry.location;
@@ -83,6 +84,7 @@ public class PickOnMapPresenter extends CommutativePreferencePresenter<PickOnMap
     }
 
     public void storeSelectedPlace() {
+        station.setName(poi.getAddress());
         repository.updateStationCoordinate(station,selectedPoint);
         state.closeYesNotBottomPanel();
     }
@@ -104,6 +106,8 @@ public class PickOnMapPresenter extends CommutativePreferencePresenter<PickOnMap
                         selectedPoint.longitude, radius, types);
             } catch (Exception e) {
                 e.printStackTrace();
+                nearPlaces = new GoogleApiMapPlaceProvider.PlacesList();
+                nearPlaces.results= new Vector<>();
             }
             return null;
         }
@@ -112,9 +116,13 @@ public class PickOnMapPresenter extends CommutativePreferencePresenter<PickOnMap
             state.getActivity().runOnUiThread(new Runnable() {
                 public void run() {
                     String status = nearPlaces.status;
+
+                    setSelectedPlace(nearPlaces.results);
+
+                    /*
                     if (status.equals("OK")) {
                         if (nearPlaces.results != null) {
-                            setSelectedPlace(nearPlaces.results);
+
                         }
                     } else if (status.equals("ZERO_RESULTS")) {
                         // Zero results found
@@ -142,6 +150,7 @@ public class PickOnMapPresenter extends CommutativePreferencePresenter<PickOnMap
 //                                "Sorry error occured.",
 //                                false);
                     }
+                    */
                 }
             });
 

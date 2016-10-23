@@ -17,6 +17,7 @@ import java.io.Reader;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Vector;
 
 import svp.app.map.HttpResponseReader;
 
@@ -75,7 +76,6 @@ public class GoogleApiMapPlaceProvider {
 
         @Key
         public List<Place> results;
-
     }
     public static class PlaceDetails implements Serializable {
 
@@ -150,7 +150,7 @@ public class GoogleApiMapPlaceProvider {
 
         } catch (HttpResponseException e) {
             Log.e("Error:", e.getMessage());
-            return null;
+            return new PlacesList();
         }
 
     }

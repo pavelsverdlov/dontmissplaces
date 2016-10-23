@@ -2,6 +2,7 @@ package svp.com.dontmissstation.presenters;
 
 import android.content.Intent;
 
+import com.svp.infrastructure.mvpvs.bundle.IBundleProvider;
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
 
 import java.util.Collection;
@@ -47,6 +48,8 @@ public class EditSubwayStationPresenter extends CommutativePreferencePresenter<E
     }
 
     public void openMapActivity() {
-        commutator.goTo(ActivityOperationResult.PickOnMap);
+        IBundleProvider bundle = new SubwayBundleProvider()
+                .putStationId(station.getId());
+        commutator.goTo(ActivityOperationResult.PickOnMap, bundle);
     }
 }

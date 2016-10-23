@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.svp.infrastructure.ActivityPermissions;
 import com.svp.infrastructure.mvpvs.commutate.ActivityOperationItem;
@@ -65,6 +66,7 @@ public class PickOnMapActivity extends FragmentActivityView<PickOnMapPresenter>
 
         public void showOnMap(POIView place) {
             view.mapView.addMarker(place,-1);
+            view.setectedAddressView.setText(place.getAddress());
             openYesNotBottomPanel();
         }
         public void openYesNotBottomPanel() {
@@ -76,7 +78,8 @@ public class PickOnMapActivity extends FragmentActivityView<PickOnMapPresenter>
     }
 
     private IMapView mapView;
-    @Bind(R.id.select_place_scrolling_act_content_view) LinearLayout bottomLayout;
+    @Bind(R.id.activity_pick_om_map_act_accept_place) LinearLayout bottomLayout;
+    @Bind(R.id.activity_pick_on_selected_address_id) TextView setectedAddressView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
